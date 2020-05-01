@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block container %}
+<div class="jumbotron">
+	<h1 class="display-5">A Web-based Application to Study The Dynamics of Animal-to-Human Mutation Transmission for Influenza Viruses</h1>
+	<p class="lead">This website service is free and open to all users and there is no login requirement</p>
+	<hr class="my-5">
+	<p>FLUA2H is a web-based application to study the dynamics of influenza A virus animal-to-human (A2H) mutation transmissions. The basic requirement of the application is the viral protein sequences of the animal and human viruses as an input. The comparative analyses between the co-aligned sequences of the animal and human host populations is based on a sliding window approach of size nine for statistical significance and data application to the major histocompatibility complex (MHC) and T-cell receptor (TCR) immune response mechanisms. The sequences at each of the aligned overlapping nonamer positions of the respective hosts are classified as four patterns of characteristic diversity motifs, as a basis for quantitative analysis: (i) "index", the most prevalent sequence; (ii) "major" variant, the second most common sequence and the single most prevalent variant of the index, with at least one amino acid mutation; (iii) "minor" variants, multiple different sequences, each with an incidence (percent occurrence) less than that of the major variant; and (iv) "unique" variants, each observed only once. The diversity motifs and their incidences at each of the nonamer positions allow evaluation of the mutation transmission dynamics and selectivity of the sequences in relation to the animal or the human hosts. FLUA2H greatly benefits from the high-performance computing back-end for analysis of massively large influenza sequence datasets. This application can be used for a detailed proteome-wide characterization of the composition and incidence of mutations present in the animal and human host populations for a better understanding of host tropism.</p>
+	<a class="btn btn-primary btn-lg" href="{{ url_for('vada.submitForm') }}" role="button">Start using VADA now!</a>
+	<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#showResult">Show Result</button>
+	<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#showStatus">Show Status</button>
+</div>
+<!-- Modal -->
+<div id="showResult" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Analysis Result</h4>
+	<button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+	<form method="post" action="{{ url_for('vada.showResult') }}">
+        <div class="form-group">
+    		<label for="jobId">Job ID:</label>
+    		<input type="text" name="jobId" class="form-control" id="jobId">
+  	</div>
+      </div>
+      <div class="modal-footer">
+	<button type="submit" class="btn btn-default">Submit</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      </div>
+	</form>
+    </div>
+  </div>
+</div>
+<div class="modal fade" tabindex="-1" role="dialog" id="jobStatus">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Job Status Information</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+        <span>Job Stage: <span id="Stage"></span></span><br/>
+	<span>Job Status: <span id="Status"></span></span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Modal -->
+<div id="showStatus" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Analysis Status</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="checkStatusForm">
+        <div class="form-group">
+                <label for="jobId">Job ID:</label>
+                <input type="text" name="jobId" class="form-control" id="jobId">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" name="checkStatusButton" class="btn btn-default">Submit</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      </div>
+        </form>
+    </div>
+  </div>
+</div>
+<script>
+    function addSubmit(ev) {
+      ev.preventDefault();
+      $.ajax({
+        method: 'POST',
+        url: '{{ url_for('vada.showStatus') }}',
+        data: $(this).serialize()
+      }).done(addShow);
+    }
+    function addShow(data) {
+      $('#Stage').text(data.stage);
+      $('#Status').text(data.status);
+      $('#jobStatus').modal('show');
+      $('#showStatus').modal('toggle');
+    }
+    $('#checkStatusForm').on('submit', addSubmit);
+</script>
+
+{% endblock %}

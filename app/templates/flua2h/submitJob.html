@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block container %}
+{% macro render_field(field, placeholder=None) %}
+{% if field.errors %}
+<div>
+{% elif field.flags.error %}
+<div>
+{% else %}
+<div>
+{% endif %}
+    {% set css_class = 'form-control ' + kwargs.pop('class', '') %}
+    {{ field(class=css_class, placeholder=placeholder, **kwargs) }}
+</div>
+{% endmacro %}
+
+<div>
+  <div>
+    <legend>FLUA2H Job Submission Form</legend>
+    {% with errors = get_flashed_messages(category_filter=["error"]) %}
+    {% if errors %}
+    <div>
+    {% for error in errors %}
+    {{ error }}<br>
+    {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    {% if form.errors %}
+    <div>
+    {% for field, error in form.errors.items() %}
+    {% for e in error %}
+    {{ e }}<br>
+    {% endfor %}
+    {% endfor %}
+    </div>
+    {% endif %}
+    <form id="submitJob" accept-charset="UTF-8" role="form">
+      {{ form.csrf_token }}
+      {{ form.index.label }}{{ render_field(form.index) }}
+      {{ form.protein.label }}{{ render_field(form.protein) }}
+      {{ form.hostSpecies.label }}{{ render_field(form.hostSpecies) }}
+      {{ form.year.label }}{{ render_field(form.year) }}
+      {{ form.gapThreshold.label }}{{ render_field(form.gapThreshold) }}
+      {{ form.removeRedundant.label }}
+    {% for options in form.removeRedundant %}
+      {{ options.label }}{{ options }}
+    {% endfor %}
+      <br/>
+      <button type="submit" name="submit">Submit</button>
+    </form>
+  </div>
+</div>
+<div class="modal fade" tabindex="-1" role="dialog" id="jobSubmission">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+	<h4 class="modal-title">Job Submission Information</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+        <span>Job ID: flua2h_<span id="jobId"></span></span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<script>
+    function addSubmit(ev) {
+      ev.preventDefault();
+      $.ajax({
+        method: 'POST',
+        url: 'http://viva-compute:8080/flua2h',
+        data: $(this).serialize()
+      }).done(addShow);
+    }
+    function addShow(data) {
+      $('#jobId').text(data.jobId);
+      $('#jobSubmission').modal('show');
+    }
+    $('#submitJob').on('submit', addSubmit);
+</script>
+{% endblock %}
