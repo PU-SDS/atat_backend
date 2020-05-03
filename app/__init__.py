@@ -53,30 +53,45 @@ def submit():
 		message="It seems there was a problem with your analysis request submission. Please check again your input file and/or analysis parameters. Should you need assistance, please do not hesitate to contact us."
 		return jsonify({'error' : message})
 
-# Protein Analysis Task Submission
+# ATAT Analysis Task Submission
 @celery.task(name='__init__.postJob')
 def postJob(analysisId,proteinName, hostInputSequenceFile,reservoirInputSequenceFile,removeDuplicates,gapThreshold,userEmail):
 	# Register the Task
 	registerAtatAnalysis(app,analysisId,proteinName)
 
 	# Preprocess the input file
-	preprocess(app,analysisId=analysisId,inputSequenceFile=inputSequenceFile,removeDuplicates=removeDuplicates,gapThreshold=gapThreshold)
+	(hostAlignedSequenceFile,reservoirAlignedSequenceFile)=preprocess(app,analysisId=analysisId,hostInputSequenceFile=hostInputSequenceFile,reservoirInputSequenceFile=reservoirInputSequenceFile,removeDuplicates=removeDuplicates,gapThreshold=gapThreshold)
 
-	# HUNANA Analysis
-	HUNANA=Hunana()
-	inputHunanaResult=HUNANA.run(id=analysisId,inputfile=app.config['UPLOADS_DEFAULT_DEST']+analysisId+"_Input.fasta",source="input",entropy=True)
-	outputstream=open(app.config['UPLOADS_DEFAULT_DEST']+analysisId+"_input.hunana","w")
-	json.dump(inputHunanaResult,outputstream)
-	outputstream.close()
-
-	# VADA Analysis
-	ATAT=Atat()
-	success=ATAT.run(id=analysisId,InputHunanaData=inputHunanaResult)
-	time.sleep(2)
+    # Run HUNANA and ATAT analysis
+    runAnalysis(analysisId,hostInputSequenceFile=hostAlignedSequenceFile,reservoirInputSequenceFile=reservoirAlignedSequenceFile,True)
 
         # Notify user if requested
 	if userEmail:
 		send_email_notification(app,userEmail,analysisId)
+
+# HUNANA and ATAT Analysis Task submission
+def runAnalysis(analysisId,hostInputSequenceFile, reservoirInputSequenceFile,entropy)
+    HUNANA=Hunana()
+
+    # Run HUNANA Analysis for Host
+    hostHunanaResult=HUNANA.run(id=analysisId,inputfile=inputFile,source="host",entropy=entropy)
+    hostHunanaOutputStream=open(app.config['UPLOADS_DEFAULT_DEST']+analysisId+"_host.hunana","w")
+    json.dump(hostHunanaResult,hostHunanaOutputStream)
+    hostHunanaOutputStream.close()
+
+    # Run HUNANA Analysis for Reservoir
+    reservoirHunanaResult=HUNANA.run(id=analysisId,inputfile=inputFile,source="reservoir",entropy=entropy)
+    reservoirHunanaOutputStream=open(app.config['UPLOADS_DEFAULT_DEST']+analysisId+"_reservoir.hunana","w")
+    json.dump(reservoirHunanaResult,reservoirHunanaOutputStream)
+    reservoirHunanaOutputStream.close()
+
+    ATAT=Atat()
+    atatResult=ATAT.run(id=analysisId,hostFastaFile=hostInputSequenceFile,hostHunanaData=hostHunanaResult,reservoirFastaFile=reservoirInputSequenceFile,reservoirHunanaData=reservoirHunanaResult)
+    atatOutputStream=open(app.config['UPLOADS_DEFAULT_DEST']+analysisId+"_"+source+".atat","w")
+    json.dump(atatResult,atatOutputStream)
+    atatOutputStream.close()
+    return True
+
 
 # Result Visualization
 @app.route('/viewresult', methods=['GET','POST'])

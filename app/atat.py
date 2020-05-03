@@ -8,8 +8,8 @@ import elasticsearch.helpers as eshelpers
 
 class Atat:
 
-	HumanFastaData=[]
-	AnimalFastaData=[]
+	hostFastaData=[]
+	reservoirFastaData=[]
 	id=""
 	elastic_host=["localhost"]
 	es = Elasticsearch(elastic_host,timeout=10000)
@@ -125,27 +125,27 @@ class Atat:
 
 	def getSource(self,sequences,dataSet):
 		listOfSource=[]
-		fastaData=self.AnimalFastaData
-		if dataSet=='Human':
-			fastaData=self.HumanFastaData
+		fastaData=self.reservoirFastaData
+		if dataSet=='host':
+			fastaData=self.hostFastaData
 		for data in fastaData:
 			if sequences in str(data.seq):
 				listOfHeader=str(data.description).split('|')
 				for headerItem in listOfHeader:
 					item=str(headerItem).split(':')
-					if item[0]=='countryCode' and dataSet=='Human':
+					if item[0]=='countryCode' and dataSet=='host':
 						listOfSource.append(item[1])
 						break
-					if item[0]=='host' and dataSet=='Animal':
+					if item[0]=='host' and dataSet=='reservoir':
 						listOfSource.append(item[1])
 						break
 		return listOfSource
 
 	def getStrain(self,sequences,dataSet):
 		listOfStrain=[]
-		fastaData=self.AnimalFastaData
-		if dataSet=='Human':
-			fastaData=self.HumanFastaData
+		fastaData=self.reservoirFastaData
+		if dataSet=='host':
+			fastaData=self.hostFastaData
 		for data in fastaData:
 			if sequences in str(data.seq):
 				listOfHeader=str(data.description).split('|')
@@ -158,9 +158,9 @@ class Atat:
 
 	def getId(self,sequences,dataSet):
                 listOfId=[]
-                fastaData=self.AnimalFastaData
-                if dataSet=='Human':
-                        fastaData=self.HumanFastaData
+                fastaData=self.reservoirFastaData
+                if dataSet=='host':
+                        fastaData=self.hostFastaData
                 for data in fastaData:
                         if sequences in str(data.seq):
                                 listOfHeader=str(data.description).split('|')
@@ -172,101 +172,101 @@ class Atat:
                 return listOfId
 
 
-	def run(self,id="",AnimalFastaFile="",AnimalHunanaData=[],HumanFastaFile="",HumanHunanaData=[]):
+	def run(self,id="",reservoirFastaFile="",reservoirHunanaData=[],hostFastaFile="",hostHunanaData=[]):
 		index='flua2h_'+str(id)
-		AnimalFastaFileStream=open(AnimalFastaFile)
-		HumanFastaFileStream=open(HumanFastaFile)
+		reservoirFastaFileStream=open(reservoirFastaFile)
+		hostFastaFileStream=open(hostFastaFile)
 
 
-		self.AnimalFastaData=list(SeqIO.parse(AnimalFastaFileStream, "fasta"))
-		AnimalFastaFileStream.close()
-		AnimalHunanaProcessedDataList,AnimalTotalData=self.processHunanaData(AnimalHunanaData)
-		SimplifiedAnimalHunanaProcessedDataList=self.simplifyHunanaData(AnimalTotalData,AnimalHunanaProcessedDataList)
-		AnimalHunanaProcessedDataListWithMotif=self.motifIdentification(SimplifiedAnimalHunanaProcessedDataList)
+		self.reservoirFastaData=list(SeqIO.parse(reservoirFastaFileStream, "fasta"))
+		reservoirFastaFileStream.close()
+		reservoirHunanaProcessedDataList,reservoirTotalData=self.processHunanaData(reservoirHunanaData)
+		SimplifiedreservoirHunanaProcessedDataList=self.simplifyHunanaData(reservoirTotalData,reservoirHunanaProcessedDataList)
+		reservoirHunanaProcessedDataListWithMotif=self.motifIdentification(SimplifiedreservoirHunanaProcessedDataList)
 
-		self.HumanFastaData=list(SeqIO.parse(HumanFastaFileStream, "fasta"))
-		HumanFastaFileStream.close()
-		HumanHunanaProcessedDataList,HumanTotalData=self.processHunanaData(HumanHunanaData)
-		SimplifiedHumanHunanaProcessedDataList=self.simplifyHunanaData(HumanTotalData,HumanHunanaProcessedDataList)
-		HumanHunanaProcessedDataListWithMotif=self.motifIdentification(SimplifiedHumanHunanaProcessedDataList)
+		self.hostFastaData=list(SeqIO.parse(hostFastaFileStream, "fasta"))
+		hostFastaFileStream.close()
+		hostHunanaProcessedDataList,hostTotalData=self.processHunanaData(hostHunanaData)
+		SimplifiedhostHunanaProcessedDataList=self.simplifyHunanaData(hostTotalData,hostHunanaProcessedDataList)
+		hostHunanaProcessedDataListWithMotif=self.motifIdentification(SimplifiedhostHunanaProcessedDataList)
 
 		finalResult=[]
-		for animalRecord in AnimalHunanaProcessedDataListWithMotif:
-			for humanRecord in HumanHunanaProcessedDataListWithMotif:
-				if humanRecord['position']==animalRecord['position']:
-					for animalSequence in animalRecord['sequences']:
-						data={"_index": index,"_type": "master",'Position':animalRecord['position'],'Sequence':"",'Animal':{},'Human':{}}
+		for reservoirRecord in reservoirHunanaProcessedDataListWithMotif:
+			for hostRecord in hostHunanaProcessedDataListWithMotif:
+				if hostRecord['position']==reservoirRecord['position']:
+					for reservoirSequence in reservoirRecord['sequences']:
+						data={"_index": index,"_type": "master",'Position':reservoirRecord['position'],'Sequence':"",'reservoir':{},'host':{}}
 						found=False
-						for humanSequence in humanRecord['sequences']:
-							if animalSequence['sequence']==humanSequence['sequence']:
-								data['Sequence']=humanSequence['sequence']
-								animalData = {\
-									'Motif':[animalSequence['motifShort'],animalSequence['motifLong']],\
-									'SeqCount':animalRecord['totalSupport'],\
-									'SupportPercentage':animalSequence['supportPercentage'],\
-									'Strain':self.getId(animalSequence['sequence'],'Animal'),\
-									'Source':self.getSource(animalSequence['sequence'],'Animal')\
+						for hostSequence in hostRecord['sequences']:
+							if reservoirSequence['sequence']==hostSequence['sequence']:
+								data['Sequence']=hostSequence['sequence']
+								reservoirData = {\
+									'Motif':[reservoirSequence['motifShort'],reservoirSequence['motifLong']],\
+									'SeqCount':reservoirRecord['totalSupport'],\
+									'SupportPercentage':reservoirSequence['supportPercentage'],\
+									'Strain':self.getId(reservoirSequence['sequence'],'reservoir'),\
+									'Source':self.getSource(reservoirSequence['sequence'],'reservoir')\
 									}
-								humanData = {\
-									'Motif':[humanSequence['motifShort'],humanSequence['motifLong']],\
-									'SeqCount':humanRecord['totalSupport'],\
-									'SupportPercentage':humanSequence['supportPercentage'],\
-									'Strain':self.getId(humanSequence['sequence'],'Human'),\
-									'Source':self.getSource(humanSequence['sequence'],'Human')\
+								hostData = {\
+									'Motif':[hostSequence['motifShort'],hostSequence['motifLong']],\
+									'SeqCount':hostRecord['totalSupport'],\
+									'SupportPercentage':hostSequence['supportPercentage'],\
+									'Strain':self.getId(hostSequence['sequence'],'host'),\
+									'Source':self.getSource(hostSequence['sequence'],'host')\
 									}
-								data['Animal']=animalData
-								data['Human']=humanData
+								data['reservoir']=reservoirData
+								data['host']=hostData
 								found=True
 								finalResult.append(data)
 								break
 						if not found:
-							data['Sequence']=animalSequence['sequence']
-							animalData = {\
-								'Motif':[animalSequence['motifShort'],animalSequence['motifLong']],\
-								'SeqCount':animalRecord['totalSupport'],\
-								'SupportPercentage':animalSequence['supportPercentage'],\
-								'Strain':self.getId(animalSequence['sequence'],'Animal'),\
-								'Source':self.getSource(animalSequence['sequence'],'Animal')\
+							data['Sequence']=reservoirSequence['sequence']
+							reservoirData = {\
+								'Motif':[reservoirSequence['motifShort'],reservoirSequence['motifLong']],\
+								'SeqCount':reservoirRecord['totalSupport'],\
+								'SupportPercentage':reservoirSequence['supportPercentage'],\
+								'Strain':self.getId(reservoirSequence['sequence'],'reservoir'),\
+								'Source':self.getSource(reservoirSequence['sequence'],'reservoir')\
 								}
-							humanData = {\
+							hostData = {\
 								'Motif':['X','None'],\
 								'SeqCount':0,\
 								'SupportPercentage':0.0,\
 								'Strain':[],\
 								'Source':[]\
 								}
-							data['Animal']=animalData
-							data['Human']=humanData
+							data['reservoir']=reservoirData
+							data['host']=hostData
 							finalResult.append(data)
 
-		for humanRecord in HumanHunanaProcessedDataListWithMotif:
-			for animalRecord in AnimalHunanaProcessedDataListWithMotif:
-				if humanRecord['position']==animalRecord['position']:
-					for humanSequence in humanRecord['sequences']:
-						data={"_index": index,"_type": "master",'Position':animalRecord['position'],'Sequence':"",'Animal':{},'Human':{}}
+		for hostRecord in hostHunanaProcessedDataListWithMotif:
+			for reservoirRecord in reservoirHunanaProcessedDataListWithMotif:
+				if hostRecord['position']==reservoirRecord['position']:
+					for hostSequence in hostRecord['sequences']:
+						data={"_index": index,"_type": "master",'Position':reservoirRecord['position'],'Sequence':"",'reservoir':{},'host':{}}
 						found=False
-						for animalSequence in animalRecord['sequences']:
-							if animalSequence['sequence']==humanSequence['sequence']:
+						for reservoirSequence in reservoirRecord['sequences']:
+							if reservoirSequence['sequence']==hostSequence['sequence']:
 								found=True
 								break
 						if not found:
-							data['Sequence']=humanSequence['sequence']
-							humanData = {\
-								'Motif':[humanSequence['motifShort'],humanSequence['motifLong']],\
-								'SeqCount':humanRecord['totalSupport'],\
-								'SupportPercentage':humanSequence['supportPercentage'],\
-								'Strain':self.getId(humanSequence['sequence'],'Human'),\
-								'Source':self.getSource(humanSequence['sequence'],'Human')\
+							data['Sequence']=hostSequence['sequence']
+							hostData = {\
+								'Motif':[hostSequence['motifShort'],hostSequence['motifLong']],\
+								'SeqCount':hostRecord['totalSupport'],\
+								'SupportPercentage':hostSequence['supportPercentage'],\
+								'Strain':self.getId(hostSequence['sequence'],'host'),\
+								'Source':self.getSource(hostSequence['sequence'],'host')\
 								}
-							animalData = {\
+							reservoirData = {\
 								'Motif':['X','None'],\
 								'SeqCount':0,\
 								'SupportPercentage':0.0,\
 								'Strain':[],\
 								'Source':[]\
 								}
-							data['Animal']=animalData
-							data['Human']=humanData
+							data['reservoir']=reservoirData
+							data['host']=hostData
 							finalResult.append(data)
 
 
