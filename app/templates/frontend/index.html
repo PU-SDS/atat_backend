@@ -1,5 +1,5 @@
 {% extends "frontend/base.html" %}
-{% block title %}VADA - Viral Antigenic Diversity Analyzer{% endblock %}
+{% block title %}ATA - Antigenic Transmissibility Analysis Tool{% endblock %}
 {% block scripts %}
 {{super()}}
 <script src="{{url_for('static',filename='submit.js')}}"></script>
@@ -39,18 +39,18 @@
       <span id="proteinNameHelpBlock" class="form-text text-muted">Default: None</span>
     </div>
   </div>
-  <div class="form-group row" id="reservoirSequenceFileDiv">
-    <label for="reservoirSequence" class="col-6 col-form-label">Reservoir Protein Sequence File</label>
+  <div class="form-group row" id="reservoirInputSequenceFileDiv">
+    <label for="reservoirInputSequence" class="col-6 col-form-label">Reservoir Protein Sequence File</label>
     <div class="col-6">
-      <input type="file" id="reservoirSequence" name="reservoirSequence" class="form-control" aria-describedby="reservoirSequenceHelpBlock">
-      <span id="reservoirSequenceHelpBlock" class="form-text text-muted">in FASTA format</span>
+      <input type="file" id="reservoirInputSequence" name="reservoirInputSequence" class="form-control" aria-describedby="reservoirInputSequenceHelpBlock">
+      <span id="reservoirInputSequenceHelpBlock" class="form-text text-muted">in FASTA format</span>
     </div>
   </div>
-  <div class="form-group row" id="hostSequenceFileDiv">
-    <label for="hostSequence" class="col-6 col-form-label">Host Protein Sequence File</label>
+  <div class="form-group row" id="hostInputSequenceFileDiv">
+    <label for="hostInputSequence" class="col-6 col-form-label">Host Protein Sequence File</label>
     <div class="col-6">
-      <input type="file" id="hostSequence" name="hostSequence" class="form-control" aria-describedby="hostSequenceHelpBlock">
-      <span id="hostSequenceHelpBlock" class="form-text text-muted">in FASTA format</span>
+      <input type="file" id="hostInputSequence" name="hostInputSequence" class="form-control" aria-describedby="hostInputSequenceHelpBlock">
+      <span id="hostInputSequenceHelpBlock" class="form-text text-muted">in FASTA format</span>
     </div>
   </div>
   <div class="form-group row" id="gapThresholdDiv">
