@@ -35,7 +35,7 @@ def sequence_alignmentqc(infile='',outfile='',gap='0.05'):
         return status
 
 def sequence_split(infile='',prefix='',host='',baseFolder=''):
-        os.system("csplit -z "+infile+" -f "+baseFolder+prefix+" '/Host/'")
+        os.system("csplit -z "+infile+" -f "+baseFolder+prefix+" '/tag=Host/'")
         os.rename(baseFolder+prefix+"00",baseFolder+prefix+"_Host.fasta")
         os.rename(baseFolder+prefix+"01",baseFolder+prefix+"_Reservoir.fasta")
 
@@ -44,10 +44,10 @@ def fasta2clustal(infile='',outfile=''):
 	AlignIO.write(align,outfile,"clustal")
 
 
-def preprocess(app,analysisId="atat",hostInputSequenceFile="",reservoirInputSequenceFile="",removeDuplicates=True,gapThreshold=""):
+def preprocess(app,analysisId="atat",hostSequenceFile="",reservoirSequenceFile="",removeDuplicates=True,gapThreshold=""):
 	baseFolder = app.config['UPLOADS_DEFAULT_DEST']
-	hostInputSequenceFile = baseFolder + "sequences/" + hostInputSequenceFile
-	reservoirInputSequenceFile = baseFolder + "sequences/" + reservoirInputSequenceFile
+	hostInputSequenceFile = baseFolder + "hostInputSequence/" + hostSequenceFile
+	reservoirInputSequenceFile = baseFolder + "reservoirInputSequence/" + reservoirSequenceFile
 
 	# Tag the sequence
 
@@ -55,13 +55,13 @@ def preprocess(app,analysisId="atat",hostInputSequenceFile="",reservoirInputSequ
 
 	with open(hostInputSequenceFile, "r") as handle:
 		for record in SeqIO.parse(handle, "fasta") :
-			record.id=record.id+"|Host"
+			record.id=record.id+"|tag=Host"
 			hostSequence.append(record)
 
 	reservoirSequence=[]
 	with open(reservoirInputSequenceFile, "r") as handle:
         	for record in SeqIO.parse(handle, "fasta") :
-            		record.id=record.id+"|Reservoir"
+            		record.id=record.id+"|tag=Reservoir"
             		reservoirSequence.append(record)
 
 	# Merge the sequences

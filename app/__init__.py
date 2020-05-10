@@ -60,7 +60,7 @@ def postJob(analysisId,proteinName, hostInputSequenceFile,reservoirInputSequence
 	registerAtatAnalysis(app,analysisId,proteinName)
 
 	# Preprocess the input file
-	(hostAlignedSequenceFile,reservoirAlignedSequenceFile)=preprocess(app,analysisId=analysisId,hostInputSequenceFile=hostInputSequenceFile,reservoirInputSequenceFile=reservoirInputSequenceFile,removeDuplicates=removeDuplicates,gapThreshold=gapThreshold)
+	(hostAlignedSequenceFile,reservoirAlignedSequenceFile)=preprocess(app,analysisId=analysisId,hostSequenceFile=hostInputSequenceFile,reservoirSequenceFile=reservoirInputSequenceFile,removeDuplicates=removeDuplicates,gapThreshold=gapThreshold)
 
 	# Run HUNANA and ATAT analysis
 	runAnalysis(analysisId,hostInputSequenceFile=hostAlignedSequenceFile,reservoirInputSequenceFile=reservoirAlignedSequenceFile,entropy=True)
