@@ -35,28 +35,37 @@ def sequence_alignmentqc(infile='',outfile='',gap='0.05'):
         return status
 
 def sequence_split(infile='',prefix='',host='',baseFolder=''):
-        os.system("csplit -z "+infile+" -f "+baseFolder+prefix+" '/Input/'")
-        os.rename(baseFolder+prefix+"00",baseFolder+prefix+"_Input.fasta")
+        os.system("csplit -z "+infile+" -f "+baseFolder+prefix+" '/Host/'")
+        os.rename(baseFolder+prefix+"00",baseFolder+prefix+"_Host.fasta")
+        os.rename(baseFolder+prefix+"01",baseFolder+prefix+"_Reservoir.fasta")
 
 def fasta2clustal(infile='',outfile=''):
 	align = AlignIO.read(infile,'fasta')
 	AlignIO.write(align,outfile,"clustal")
 
 
-def preprocess(app,analysisId="vada",animalSequenceFile="",inputSequenceFile="",removeDuplicates=True,gapThreshold=""):
+def preprocess(app,analysisId="atat",hostSequenceFile="",reservoirSequenceFile="",removeDuplicates=True,gapThreshold=""):
 	baseFolder = app.config['UPLOADS_DEFAULT_DEST']
-	inputSequenceFile = baseFolder + "inputSequence/" + inputSequenceFile
+	hostSequenceFile = baseFolder + "sequences/" + hostSequenceFile
+    reservoirSequenceFile = baseFolder + "sequences/" + reservoirSequenceFile
 
 	# Tag the sequence
 
-	inputSequence=[]
-	with open(inputSequenceFile, "r") as handle:
+	hostSequence=[]
+
+	with open(hostSequenceFile, "r") as handle:
 		for record in SeqIO.parse(handle, "fasta") :
-			record.id=record.id+"|Input"
-			inputSequence.append(record)
+			record.id=record.id+"|Host"
+			hostSequence.append(record)
+
+    reservoirSequence=[]
+    with open(reservoirSequenceFile, "r") as handle:
+        for record in SeqIO.parse(handle, "fasta") :
+            record.id=record.id+"|Reservoir"
+            reservoirSequence.append(record)
 
 	# Merge the sequences
-	listOfAllSequences=inputSequence
+	listOfAllSequences=hostSequence+reservoirSequence
 
 	# remove duplicates if necessary
 	#cleanSequenceList=sequence_removeDuplicates(sequences=listOfAllSequences)
@@ -76,5 +85,6 @@ def preprocess(app,analysisId="vada",animalSequenceFile="",inputSequenceFile="",
 
 	# Split Sequence
 	sequence_split(baseFolder=app.config['UPLOADS_DEFAULT_DEST'],infile=qcSequenceFile,prefix=analysisId)
-	#fasta2clustal(infile=app.config['UPLOADS_DEFAULT_DEST']+analysisId+"_Animal.fasta",outfile=app.config['UPLOADS_DEFAULT_DEST']+analysisId+"_Animal.aln")
+    return app.config['UPLOADS_DEFAULT_DEST']+analysisId+"_Host.fasta",app.config['UPLOADS_DEFAULT_DEST']+analysisId+"_Reservoir.fasta"
+    #fasta2clustal(infile=app.config['UPLOADS_DEFAULT_DEST']+analysisId+"_Animal.fasta",outfile=app.config['UPLOADS_DEFAULT_DEST']+analysisId+"_Animal.aln")
 	#fasta2clustal(infile=app.config['UPLOADS_DEFAULT_DEST']+analysisId+"_Input.fasta",outfile=app.config['UPLOADS_DEFAULT_DEST']+analysisId+"_Input.aln")
