@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block container %}
+{% macro render_field(field, placeholder=None) %}
+{% if field.errors %}
+<div>
+{% elif field.flags.error %}
+<div>
+{% else %}
+<div>
+{% endif %}
+    {% set css_class = 'form-control ' + kwargs.pop('class', '') %}
+    {{ field(class=css_class, placeholder=placeholder, **kwargs) }}
+</div>
+{% endmacro %}
+<div class="container">
+	<h2>Analysis Result</h2>
+  	<img src="data:image/png;base64, {{ animal_line_plot_url }}">
+	<br/>
+	<img src="data:image/png;base64, {{ animal_scatter_plot_url }}">
+	<br/>
+	<img src="data:image/png;base64, {{ animal_violin_plot_url }}">
+	<br/>
+	{% for plot_url in animal_dynamic_plot_url %}
+  		<img src="data:image/png;base64, {{ plot_url }}">
+  		<br/>
+  	{% endfor %}
+</div>
+{% endblock %}

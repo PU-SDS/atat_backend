@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+{% block container %}
+{% macro render_field(field, placeholder=None) %}
+{% if field.errors %}
+<div>
+{% elif field.flags.error %}
+<div>
+{% else %}
+<div>
+{% endif %}
+    {% set css_class = 'form-control ' + kwargs.pop('class', '') %}
+    {{ field(class=css_class, placeholder=placeholder, **kwargs) }}
+</div>
+{% endmacro %}
+<style>
+.my-custom-scrollbar {
+  position: relative;
+  height: 400px;
+  overflow: auto;
+}
+.table-wrapper-scroll-y {
+  display: block;
+}
+</style>
+<div class="container">
+  <h2>Analysis Result</h2>
+  <table class="table">
+    <tr>
+	<td>
+		<h5>Please select position that you want to view</h5><br/>
+		<form action="{{ url_for('flua2h.showResult') }}">
+		<input type="hidden" name="jobId" value="{{ jobId }}">
+		<select name="position" onchange="this.form.submit()">
+			{% for item in position %}
+			{% if item[1] == current_position %}
+					<option selected value={{ item[0] }}> {{ item[0] }} - {{ item[1] }}</option>
+			{% else %}
+				<option value={{ item[0] }}> {{ item[0] }} - {{ item[1] }}</option>
+			{% endif %}
+			{% endfor %}
+		</select>
+		</form>
+	</td>
+    </tr>
+   </table>
+  <table class="table">
+	<tr>
+		<th colspan="4"><h5>Advanced Analysis</h5></th>
+	</tr>
+	<tr>
+                <th colspan="4"><h5>A. Multi-Motif Analysis</h5></th>
+        </tr>
+	<tr>
+		<th>Animal Motif List</th>
+		<th>Incident Support</th>
+		<th>Human Motif List</th>
+		<th>Incident Support</th>
+	</tr>
+	<tr>
+		<td>Select all Motif: <input type="radio" name="animal_all" value="True" checked>&nbsp;Yes <input type="radio" name="animal_all" value="False">&nbsp;No</td>
+		<td>From: <input type="text" name="animal_all_min" size="4">&nbsp;% to <input type="text" name="animal_all_max" size="4">&nbsp;%</td>
+		<td>Select all Motif: <input type="radio" name="human_all" value="True" checked>&nbsp;Yes <input type="radio" name="human_all" value="False">&nbsp;No</td>
+                <td>From: <input type="text" name="human_all_min" size="4">&nbsp;% to <input type="text" name="human_all_max" size="4">&nbsp;%</td>
+	</tr>
+	{% for item in motif %}
+	<tr>
+		<td><input type="checkbox" name="animal_{{item}}">&nbsp;{{item}}</td>
+		<td>From: <input type="text" name="animal_{{item}}_min" size="4">&nbsp;% to <input type="text" name="animal_{{item}}_max" size="4">&nbsp;%</td>
+		<td><input type="checkbox" name="human_{{item}}">&nbsp;{{item}}</td>
+                <td>From: <input type="text" name="human_{{item}}_min" size="4">&nbsp;% to <input type="text" name="human_{{item}}_max" size="4">&nbsp;%</td>
+	</tr>
+	{% endfor %}
+	<tr>
+                <td><input type="checkbox" name="animal_none">&nbsp;None</th>
+                <td>(sequence not present)</td>
+                <td><input type="checkbox" name="human_none">&nbsp;None</th>
+                <td>(sequence not present)</td>
+        </tr>
+	<tr>
+                <th colspan="4"><h5>B. Transmission Selection</h5></th>
+        </tr>
+	<tr>
+		<td><input type="radio" name="transmission_selection" value="none" checked>&nbsp;No Selection</td>
+	</tr>
+	<tr>
+                <td><input type="radio" name="transmission_selection" value="positive">&nbsp;Positive Selection (Greater in Human)</td>
+        </tr>
+<tr>
+                <td><input type="radio" name="transmission_selection" value="negative">&nbsp;Negative Selection (Greater in Animal)</td>
+        </tr>
+  </table>
+  <table class="table">
+    <thead>
+      <tr>
+        <th style="vertical-align:middle;text-align:center;width:12%">Sequence</th>
+        <th style="vertical-align:middle;text-align:center;width:13%">Motif [Animal] (% incidents)</th>
+        <th style="vertical-align:middle;text-align:center;width:13%">Motif [Human] (% incidents)</th>
+        <th style="vertical-align:middle;text-align:center;width:14%">A2H Patterns</th>
+        <th style="vertical-align:middle;text-align:center;width:12%">Host Species [Animal]</th>
+        <th style="vertical-align:middle;text-align:center;width:12%">Strain Origin [Animal]</th>
+	<th style="vertical-align:middle;text-align:center;width:12%">Geographical Area [Human]</th>
+	<th style="vertical-align:middle;text-align:center;width:12%">Strain Origin [Human]</th>
+      </tr>
+     </thead>
+   </table>
+<div class="table-wrapper-scroll-y my-custom-scrollbar">
+  <table class="table table-striped mb-0">
+      {% for item in data %}
+	<tr>
+		<th scope="row" style="vertical-align:middle;text-align:center;width:12%">{{ item.Sequence }}</th>
+		<td style="vertical-align:middle;text-align:center;width:13%">{{ item.Animal.Motif[1] }} ({{ item.Animal.SupportPercentage }}%)</td>
+		<td style="vertical-align:middle;text-align:center;width:13%">{{ item.Human.Motif[1] }} ({{ item.Human.SupportPercentage }}%)</td>
+		<td style="vertical-align:middle;text-align:center;width:14%">{{ item.Animal.Motif[1] }} -> {{ item.Human.Motif[1] }}</td>
+		<td style="vertical-align:middle;text-align:center;width:12%">
+			<select style="width:100%">
+			{% for key,value in item.Animal.Source.items() %}
+				<option value="{{ key }}">{{ key }} ({{ value[1] }}%)</option>
+			{% endfor %}
+			</select>
+		</td>
+		<td style="vertical-align:middle;text-align:center;width:12%">
+                        <select style="width:100%">
+                        {% for animalStrain in item.Animal.Strain %}
+                                <option value="{{ animalStrain }}">{{ animalStrain }}
+                        {% endfor %}
+                        </select>
+                </td>
+		<td style="vertical-align:middle;text-align:center;width:12%">
+                        <select style="width:100%">
+                        {% for key,value in item.Human.Source.items() %}
+                                <option value="{{ key }}">{{ key }} ({{ value[1] }}%)</option>
+                        {% endfor %}
+                        </select>
+                </td>
+		<td style="vertical-align:middle;text-align:center;width:12%">
+                        <select style="width:100%">
+                        {% for humanStrain in item.Human.Strain %}
+                                <option value="{{ humanStrain }}">{{ humanStrain }}
+                        {% endfor %}
+                        </select>
+                </td>	
+	</tr>
+	{% endfor %}
+    </thead>
+    <tbody>
+      <tr>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,229 @@
+import csv
+import operator
+from Bio import SeqIO
+from operator import itemgetter
+
+class Atat:
+	HumanFastaData=[]
+	AnimalFastaData=[]
+
+	def processHunanaData(self,hunanaData):
+		hunanaList = []
+		highestPosition = 0
+		position = 0
+		for row in hunanaData:
+			for data in csv.reader(row,delimiter=":"):
+				if data[0] == "PROTEIN" or data[1] == "==========================" or data[1]== "NOT_ANALYZED":
+					continue
+				if data[0] == '':
+					position = int(data[3])
+				else:
+					position = int(data[2])
+				sequence = data[4]
+				support = data[5]
+				record = {'position': position, 'sequence': sequence, 'support': support}
+				hunanaList.append(record)
+				if position > highestPosition:
+					highestPosition=position
+
+		return hunanaList, highestPosition
+
+	def simplifyHunanaData(self,highestPosition,hunanaList):
+		simplifiedHunanaList = []
+		for position in range(5,highestPosition+1):
+			positionDic = {'position': position}
+			positionList = []
+			totalSupport = 0
+			for record in hunanaList:
+				if int(record['position'])==position:
+					totalSupport+=int(record['support'])
+					simplifiedDic={'sequence': record['sequence'], 'support': record['support']}
+					positionList.append(simplifiedDic)
+		
+			positionDic['totalSupport']=totalSupport
+			positionDic['sequences']=positionList
+			simplifiedHunanaList.append(positionDic)
+
+		
+		for record in simplifiedHunanaList:
+			sortedList = sorted(record['sequences'],key=itemgetter("support"),reverse=True)
+			record['sequences']=sortedList
+
+		return simplifiedHunanaList
+
+	def motifIdentification(self,simplifiedHunanaList):
+		for record in simplifiedHunanaList:
+			count = 1
+			for sequence in record['sequences']:
+				if int(count)==1:
+					if int(sequence['support'])>1:
+						sequence['motifShort']="I"
+						sequence['motifLong']="Index"
+				elif int(count)==2:
+					if int(sequence['support'])>1:
+						sequence['motifShort']="Ma"
+						sequence['motifLong']="Major"	
+				else:
+					sequence['motifShort']="Mi"
+					sequence['motifLong']="Minor"
+				if int(sequence['support'])==1:
+					sequence['motifShort']="U"
+					sequence['motifLong']="Unique"				
+				percent=round(100*float(sequence['support'])/float(record['totalSupport']),2)
+				sequence['supportPercentage']=percent
+				count+=1
+
+		return simplifiedHunanaList
+
+	def getStrain(self,sequences,dataSet):
+		listOfStrain=[]
+		fastaData=self.AnimalFastaData
+		if dataSet=='Human':
+			fastaData=self.HumanFastaData
+		for data in fastaData:
+			if sequences in str(data.seq):
+				header=str(data.id).split('|')
+				listOfStrain.append(header[0])
+		
+		return listOfStrain
+
+	def __init__(self,basePath="",AnimalFastaFile="",AnimalHunanaFile="",HumanFastaFile="",HumanHunanaFile=""):
+		file = [AnimalHunanaFile,AnimalFastaFile,HumanHunanaFile,HumanFastaFile]
+		fileStream=open(basePath+".atat","w")
+		
+		AnimalHunanaData=csv.reader(AnimalHunanaFile,delimiter="\n")
+		self.AnimalFastaData=list(SeqIO.parse(open(AnimalFastaFile), "fasta"))
+		AnimalHunanaProcessedDataList,AnimalTotalData=self.processHunanaData(AnimalHunanaData)
+		SimplifiedAnimalHunanaProcessedDataList=self.simplifyHunanaData(AnimalTotalData,AnimalHunanaProcessedDataList)
+		AnimalHunanaProcessedDataListWithMotif=self.motifIdentification(SimplifiedAnimalHunanaProcessedDataList)
+
+		HumanHunanaData=csv.reader(HumanHunanaFile,delimiter="\n")
+		self.HumanFastaData=list(SeqIO.parse(open(HumanFastaFile), "fasta"))
+		HumanHunanaProcessedDataList,HumanTotalData=self.processHunanaData(HumanHunanaData)
+		SimplifiedHumanHunanaProcessedDataList=self.simplifyHunanaData(HumanTotalData,HumanHunanaProcessedDataList)
+		HumanHunanaProcessedDataListWithMotif=self.motifIdentification(SimplifiedHumanHunanaProcessedDataList)
+		#for animalRecord in AnimalHunanaProcessedDataListWithMotif:
+		#	print animalRecord,"\n"
+		finalResult = []
+		for animalRecord in AnimalHunanaProcessedDataListWithMotif:
+			for humanRecord in HumanHunanaProcessedDataListWithMotif:
+				if humanRecord['position']==animalRecord['position']:
+					for animalSequence in animalRecord['sequences']:
+						data = { 'position':animalRecord['position'] }
+						found=False
+						for humanSequence in humanRecord['sequences']:
+							if animalSequence['sequence']==humanSequence['sequence']:
+								data['sequence']=animalSequence['sequence']
+								data['animalSeqCount']=animalRecord['totalSupport']
+								data['animalMotifShort']=animalSequence['motifShort']
+								data['animalMotifLong']=animalSequence['motifLong']
+								data['animalSupportPercentage']=animalSequence['supportPercentage']
+								data['humanSeqCount']=humanRecord['totalSupport']
+								data['humanMotifShort']=humanSequence['motifShort']
+								data['humanMotifLong']=humanSequence['motifLong']
+								data['humanSupportPercentage']=humanSequence['supportPercentage']
+								animalStrain=getStrain(animalSequence['sequence'],'Animal')
+								humanStrain=getStrain(animalSequence['sequence'],'Human')
+								data['animalStrain']=animalStrain
+								data['humanStrain']=humanStrain
+								finalResult.append(data)
+								found=True
+								break				 
+						if not found:
+							data['sequence']=animalSequence['sequence']
+							data['animalSeqCount']=animalRecord['totalSupport']
+							data['animalMotifShort']=animalSequence['motifShort']
+							data['animalMotifLong']=animalSequence['motifLong']
+							data['animalSupportPercentage']=animalSequence['supportPercentage']
+							data['humanSeqCount']=0
+							data['humanMotifShort']="X"
+							data['humanMotifLong']="None"
+							data['humanSupportPercentage']=0
+							animalStrain=getStrain(animalSequence['sequence'],'Animal')
+							humanStrain=getStrain(animalSequence['sequence'],'Human')
+							data['animalStrain']=animalStrain
+							data['humanStrain']=humanStrain
+							finalResult.append(data)
+
+		filestream.write("Position,Sequence,Sequence [Animal] (#),Motif [Animal] (% incidence),Sequence [Human] (#),Motif [Human] (% incidence),A2H Pattern,Host Species [Animal],Strain Origin [Animal],Geographica Area [Human],Strain Origin [Human]")
+		for result in finalResult:
+			strAnimalStrain=""
+			strAnimalSpecies=""
+			aStrainCount=0
+			speciesList={}
+			strHumanStrain=""
+			strHumanGeo=""
+			hStrainCount=0
+			geoList={}
+			if len(result['animalStrain']) == 1:
+				strAnimalStrain=str(result['animalStrain'][0])
+				header=strAnimalStrain.split('/')
+				species=(header[1].replace("_"," ")).title()
+				speciesList={species: 1}
+			else:
+				for aStrain in result['animalStrain']:
+					if aStrainCount==0:
+						strAnimalStrain=aStrain
+					else:
+						strAnimalStrain=strAnimalStrain+";"+aStrain
+					aStrainCount+=1
+					header=aStrain.split('/')
+					species=(header[1].replace("_"," ")).title()
+					if species in speciesList:
+						speciesList[species]+=1
+					else:
+						speciesList[species]=1
+			
+			sortedSpeciesList = sorted(speciesList.items(),key=operator.itemgetter(1),reverse=False)
+			for species,count in sortedSpeciesList:
+				divisor=float(result['animalSeqCount'])
+				incident=round(float(count)*100/divisor,2)
+				strAnimalSpecies=species+" ("+str(incident)+"%)"+";"+strAnimalSpecies
+				
+			if len(result['humanStrain']) == 1:
+				strHumanStrain=str(result['humanStrain'][0])
+				header=strHumanStrain.split('/')
+				geo=(header[1].replace("_"," ")).title()
+				geoList={geo: 1}
+			else:
+				for hStrain in result['humanStrain']:
+					if hStrainCount==0:
+						strHumanStrain=hStrain
+					else:
+						strHumanStrain=strHumanStrain+";"+hStrain
+					hStrainCount+=1
+					header=hStrain.split('/')
+					geo=(header[1].replace("_"," ")).title()
+					if geo in geoList:
+						geoList[geo]+=1
+					else:
+						geoList[geo]=1
+			sortedGeoList = sorted(geoList.items(),key=operator.itemgetter(1),reverse=False)
+			for geo,count in sortedGeoList:
+				divisor=float(result['humanSeqCount'])
+				incident=round(float(count)*100/divisor,2)
+				strHumanGeo=geo+" ("+str(incident)+"%)"+";"+strHumanGeo
+							
+			filestream.write(str(result['position'])+","+result['sequence']+","+str(result['animalSeqCount'])+","+result['animalMotifShort']+"("+str(result['animalSupportPercentage'])+"%),"+str(result['humanSeqCount'])+","+result['humanMotifShort']+"("+str(result['humanSupportPercentage'])+"%),"+result['animalMotifLong']+"->"+result['humanMotifLong']+","+strAnimalSpecies+","+strAnimalStrain+","+strHumanGeo+","+strHumanStrain+"\n")
+		'''
+		for record in AnimalHunanaProcessedDataListWithMotif:
+			print record,"\n\n"
+
+		for record in HumanHunanaProcessedDataListWithMotif:
+			print record,"\n\n"
+		'''
+		'''
+		for record in hunanaList:
+			for fastarecord in fastaData:
+				if str(fastarecord.seq).find(str(record['sequence'])) > -1:
+					if record.has_key('foundAt'):
+						record['foundAt'].append(fastarecord.id)
+					else:
+						record['foundAt'] = [fastarecord.id]
+
+				print record,"\n"
+		'''
+
+		for fstream in self.file:
+			fstream.close
+		filestream.close
