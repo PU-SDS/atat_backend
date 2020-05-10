@@ -7,7 +7,7 @@ from app.hunana import Hunana
 from app.atat import Atat
 from app.viewResult import getResult
 from app.sendNotification import send_email_notification
-from app.jobManagement import getAnalysisId,registerProteinAnalysis, registerProteomeAnalysis
+from app.jobManagement import getAnalysisId,registerAtatAnalysis
 from app.plot import generateDynamicPlot, generateLinePlot, generateViolinPlot, generateScatterPlot
 import json
 import time

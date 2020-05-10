@@ -44,22 +44,22 @@ def fasta2clustal(infile='',outfile=''):
 	AlignIO.write(align,outfile,"clustal")
 
 
-def preprocess(app,analysisId="atat",hostSequenceFile="",reservoirSequenceFile="",removeDuplicates=True,gapThreshold=""):
+def preprocess(app,analysisId="atat",hostInputSequenceFile="",reservoirInputSequenceFile="",removeDuplicates=True,gapThreshold=""):
 	baseFolder = app.config['UPLOADS_DEFAULT_DEST']
-	hostSequenceFile = baseFolder + "sequences/" + hostSequenceFile
-	reservoirSequenceFile = baseFolder + "sequences/" + reservoirSequenceFile
+	hostInputSequenceFile = baseFolder + "sequences/" + hostInputSequenceFile
+	reservoirInputSequenceFile = baseFolder + "sequences/" + reservoirInputSequenceFile
 
 	# Tag the sequence
 
 	hostSequence=[]
 
-	with open(hostSequenceFile, "r") as handle:
+	with open(hostInputSequenceFile, "r") as handle:
 		for record in SeqIO.parse(handle, "fasta") :
 			record.id=record.id+"|Host"
 			hostSequence.append(record)
 
 	reservoirSequence=[]
-	with open(reservoirSequenceFile, "r") as handle:
+	with open(reservoirInputSequenceFile, "r") as handle:
         	for record in SeqIO.parse(handle, "fasta") :
             		record.id=record.id+"|Reservoir"
             		reservoirSequence.append(record)
