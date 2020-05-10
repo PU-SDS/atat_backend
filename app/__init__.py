@@ -63,14 +63,14 @@ def postJob(analysisId,proteinName, hostInputSequenceFile,reservoirInputSequence
 	(hostAlignedSequenceFile,reservoirAlignedSequenceFile)=preprocess(app,analysisId=analysisId,hostInputSequenceFile=hostInputSequenceFile,reservoirInputSequenceFile=reservoirInputSequenceFile,removeDuplicates=removeDuplicates,gapThreshold=gapThreshold)
 
 	# Run HUNANA and ATAT analysis
-	runAnalysis(analysisId,hostInputSequenceFile=hostAlignedSequenceFile,reservoirInputSequenceFile=reservoirAlignedSequenceFile,True)
+	runAnalysis(analysisId,hostInputSequenceFile=hostAlignedSequenceFile,reservoirInputSequenceFile=reservoirAlignedSequenceFile,entropy=True)
 
         # Notify user if requested
 	if userEmail:
 		send_email_notification(app,userEmail,analysisId)
 
 # HUNANA and ATAT Analysis Task submission
-def runAnalysis(analysisId,hostInputSequenceFile, reservoirInputSequenceFile,entropy)
+def runAnalysis(analysisId,hostInputSequenceFile, reservoirInputSequenceFile,entropy):
     HUNANA=Hunana()
 
     # Run HUNANA Analysis for Host
@@ -102,7 +102,7 @@ def viewresult():
 		analysisId=request.form["analysisId"]
 	resultInput = getResult("vada_"+analysisId,'Input')
 	hosts=['Input']
-	return render_template('frontend/result.html',input_violin_plot_url=generateViolinPlot(resultInput),analysisId=analysisId,hosts=hosts)
+	return render_template('flua2h/result.html',input_violin_plot_url=generateViolinPlot(resultInput),analysisId=analysisId,hosts=hosts)
 
 # Get Raw Result
 @app.route('/result/<analysisId>/<host>', methods=['GET','POST'])
@@ -117,7 +117,7 @@ def getResultData(analysisId,host):
 # Main Application Interface
 @app.route('/')
 def index():
-	return render_template('frontend/index.html')
+	return render_template('flua2h/index.html')
 
 if __name__ == '__main__':
 	app.run(debug=True)
