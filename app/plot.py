@@ -71,7 +71,7 @@ def generateDynamicPlot(data_frame,tag):
 	img.seek(0)
 	plot_url = base64.b64encode(img.read()).decode('ascii')
 	listOfPlotUrl.append(plot_url)
-	
+
 	#minor and unique
 	fig, axes = plt.subplots()
 	axes.set_yticks(np.arange(0, 101, 25))
@@ -109,4 +109,3 @@ def generateScatterPlot(data_frame,tag):
 	img.seek(0)
 	plot_url = base64.b64encode(img.read()).decode('ascii')
 	return plot_url
-

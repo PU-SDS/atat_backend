@@ -102,7 +102,7 @@ def viewresult():
 		analysisId=request.form["analysisId"]
 	resultInput = getResult("vada_"+analysisId,'Input')
 	hosts=['Input']
-	return render_template('flua2h/result.html',input_violin_plot_url=generateViolinPlot(resultInput),analysisId=analysisId,hosts=hosts)
+	return render_template('frontend/result.html',input_violin_plot_url=generateViolinPlot(resultInput),analysisId=analysisId,hosts=hosts)
 
 # Get Raw Result
 @app.route('/result/<analysisId>/<host>', methods=['GET','POST'])
@@ -117,7 +117,7 @@ def getResultData(analysisId,host):
 # Main Application Interface
 @app.route('/')
 def index():
-	return render_template('flua2h/index.html')
+	return render_template('frontend/index.html')
 
 if __name__ == '__main__':
 	app.run(debug=True)
