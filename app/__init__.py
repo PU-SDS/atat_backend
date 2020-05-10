@@ -31,7 +31,7 @@ def submit():
 
 		# Upload the input files
 		hostInputSequenceFile=hostInputSequence.save(request.files['hostInputSequence'])
-        reservoirInputSequenceFile=reservoirInputSequence.save(request.files['reservoirInputSequence'])
+		reservoirInputSequenceFile=reservoirInputSequence.save(request.files['reservoirInputSequence'])
 
 		# Set Task parameters
 		proteinName=request.form["proteinName"]
@@ -62,8 +62,8 @@ def postJob(analysisId,proteinName, hostInputSequenceFile,reservoirInputSequence
 	# Preprocess the input file
 	(hostAlignedSequenceFile,reservoirAlignedSequenceFile)=preprocess(app,analysisId=analysisId,hostInputSequenceFile=hostInputSequenceFile,reservoirInputSequenceFile=reservoirInputSequenceFile,removeDuplicates=removeDuplicates,gapThreshold=gapThreshold)
 
-    # Run HUNANA and ATAT analysis
-    runAnalysis(analysisId,hostInputSequenceFile=hostAlignedSequenceFile,reservoirInputSequenceFile=reservoirAlignedSequenceFile,True)
+	# Run HUNANA and ATAT analysis
+	runAnalysis(analysisId,hostInputSequenceFile=hostAlignedSequenceFile,reservoirInputSequenceFile=reservoirAlignedSequenceFile,True)
 
         # Notify user if requested
 	if userEmail:

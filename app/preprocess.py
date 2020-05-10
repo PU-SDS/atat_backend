@@ -47,7 +47,7 @@ def fasta2clustal(infile='',outfile=''):
 def preprocess(app,analysisId="atat",hostSequenceFile="",reservoirSequenceFile="",removeDuplicates=True,gapThreshold=""):
 	baseFolder = app.config['UPLOADS_DEFAULT_DEST']
 	hostSequenceFile = baseFolder + "sequences/" + hostSequenceFile
-    reservoirSequenceFile = baseFolder + "sequences/" + reservoirSequenceFile
+	reservoirSequenceFile = baseFolder + "sequences/" + reservoirSequenceFile
 
 	# Tag the sequence
 
@@ -58,7 +58,7 @@ def preprocess(app,analysisId="atat",hostSequenceFile="",reservoirSequenceFile="
 			record.id=record.id+"|Host"
 			hostSequence.append(record)
 
-    reservoirSequence=[]
+	reservoirSequence=[]
     with open(reservoirSequenceFile, "r") as handle:
         for record in SeqIO.parse(handle, "fasta") :
             record.id=record.id+"|Reservoir"
