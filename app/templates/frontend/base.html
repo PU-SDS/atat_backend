@@ -1,0 +1,80 @@
+{% extends "bootstrap/base.html" %}
+{% block navbar %}
+<!-- Navigation Menu -->
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link" href="{{ url_for("index") }}">Analyze</a>
+  </li>
+  <li class="nav-item">
+    <a data-toggle="modal" class="nav-link" href="#viewResult">View Result</a>
+  </li>
+</ul>
+<!-- End Navigation Menu -->
+
+<!-- Modal for Job Status -->
+<div id="viewResult" class="modal fade" role="dialog">
+  <!-- Modal main container -->
+  <div class="modal-dialog">
+    <!-- Modal content -->
+    <div class="modal-content">
+      <!-- Modal header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Analysis Result</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <!-- End Modal header -->
+      <form method="post" action="{{ url_for('viewresult') }}">
+      <!-- Modal body -->
+      <div class="modal-body">
+         <div class="form-group">
+           <label for="analysisId">Analysis ID:</label>
+           <input type="text" name="analysisId" class="form-control" id="analysisId">
+         </div>
+      </div>
+      <!-- End Modal body -->
+      <!-- Modal footer -->
+      <div class="modal-footer">
+	       <button type="submit" class="btn btn-default">View</button>
+         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      </div>
+      <!-- End Modal footer -->
+      </form>
+    </div>
+    <!-- End Modal content -->
+  </div>
+  <!-- End Modal main container -->
+</div>
+<!-- End Modal for Job Status -->
+
+<!-- Modal for Job Submission -->
+<div id="jobSubmission" class="modal fade" role="dialog">
+  <!-- Modal main container -->
+  <div class="modal-dialog">
+    <!-- Model content -->
+    <div class="modal-content">
+      <!-- Modal header -->
+      <div class="modal-header">
+        <h4 class="modal-title">ATAT Job Submission</h4>
+	      <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <!-- End Modal header -->
+      <!-- Modal body -->
+      <div class="modal-body">
+        <p>Your job submission is successfull , and the job id is {{ analysisId }}.</p>
+        <p>You will be notified via email when you job is completed.</p>
+      </div>
+      <!-- End Modal body -->
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+      <!-- End Modal footer -->
+    </div>
+    <!-- End Modal content -->
+  </div>
+  <!-- End Modal main container -->
+</div>
+<!-- End Modal for Job Submission -->
+
+
+{% endblock %}

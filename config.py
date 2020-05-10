@@ -21,5 +21,5 @@ CSRF_SESSION_KEY = "LxH1AYbL3aUTTLbmyuxn1A0WiMhJLVhZ"
 # Secret key for signing cookies
 SECRET_KEY = "LxH1AYbL3aUTTLbmyuxn1A0WiMhJLVhZ"
 
-UPLOADS_DEFAULT_DEST = '/home/centos/vada/app/input/'
+UPLOADS_DEFAULT_DEST = '/home/centos/atat-single/app/input/'
 UPLOADED_FILES_ALLOW = ('fasta')

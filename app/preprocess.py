@@ -47,7 +47,7 @@ def fasta2clustal(infile='',outfile=''):
 def preprocess(app,analysisId="atat",hostSequenceFile="",reservoirSequenceFile="",removeDuplicates=True,gapThreshold=""):
 	baseFolder = app.config['UPLOADS_DEFAULT_DEST']
 	hostSequenceFile = baseFolder + "sequences/" + hostSequenceFile
-    reservoirSequenceFile = baseFolder + "sequences/" + reservoirSequenceFile
+	reservoirSequenceFile = baseFolder + "sequences/" + reservoirSequenceFile
 
 	# Tag the sequence
 
@@ -58,11 +58,11 @@ def preprocess(app,analysisId="atat",hostSequenceFile="",reservoirSequenceFile="
 			record.id=record.id+"|Host"
 			hostSequence.append(record)
 
-    reservoirSequence=[]
-    with open(reservoirSequenceFile, "r") as handle:
-        for record in SeqIO.parse(handle, "fasta") :
-            record.id=record.id+"|Reservoir"
-            reservoirSequence.append(record)
+	reservoirSequence=[]
+	with open(reservoirSequenceFile, "r") as handle:
+        	for record in SeqIO.parse(handle, "fasta") :
+            		record.id=record.id+"|Reservoir"
+            		reservoirSequence.append(record)
 
 	# Merge the sequences
 	listOfAllSequences=hostSequence+reservoirSequence
@@ -85,6 +85,6 @@ def preprocess(app,analysisId="atat",hostSequenceFile="",reservoirSequenceFile="
 
 	# Split Sequence
 	sequence_split(baseFolder=app.config['UPLOADS_DEFAULT_DEST'],infile=qcSequenceFile,prefix=analysisId)
-    return app.config['UPLOADS_DEFAULT_DEST']+analysisId+"_Host.fasta",app.config['UPLOADS_DEFAULT_DEST']+analysisId+"_Reservoir.fasta"
+	return app.config['UPLOADS_DEFAULT_DEST']+analysisId+"_Host.fasta",app.config['UPLOADS_DEFAULT_DEST']+analysisId+"_Reservoir.fasta"
     #fasta2clustal(infile=app.config['UPLOADS_DEFAULT_DEST']+analysisId+"_Animal.fasta",outfile=app.config['UPLOADS_DEFAULT_DEST']+analysisId+"_Animal.aln")
 	#fasta2clustal(infile=app.config['UPLOADS_DEFAULT_DEST']+analysisId+"_Input.fasta",outfile=app.config['UPLOADS_DEFAULT_DEST']+analysisId+"_Input.aln")

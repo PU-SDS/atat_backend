@@ -1,0 +1,90 @@
+{% extends "frontend/base.html" %}
+{% block title %}ATA - Antigenic Transmissibility Analysis Tool{% endblock %}
+{% block scripts %}
+{{super()}}
+<script src="{{url_for('static',filename='submit.js')}}"></script>
+{% endblock %}
+{% block content %}
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="page-header">
+				<h1>
+					ATAT :: Antigenic Transmissibility Analysis Tool
+				</h1>
+			</div>
+			<div class="jumbotron">
+				<h2>
+					About
+				</h2>
+				<p>
+					ATAT is a web-based application to study the dynamics of virus reservoir-to-host (R2H) mutation transmissions. The basic requirement of the application is the viral protein sequences of the reservoir and host viruses as an input. The comparative analyses between the co-aligned sequences of the reservoir and host populations is based on a sliding window approach of size nine for statistical significance and data application to the major histocompatibility complex (MHC) and T-cell receptor (TCR) immune response mechanisms. The sequences at each of the aligned overlapping nonamer positions of the respective hosts are classified as four patterns of characteristic diversity motifs, as a basis for quantitative analysis: (i) "index", the most prevalent sequence; (ii) "major" variant, the second most common sequence and the single most prevalent variant of the index, with at least one amino acid mutation; (iii) "minor" variants, multiple different sequences, each with an incidence (percent occurrence) less than that of the major variant; and (iv) "unique" variants, each observed only once. The diversity motifs and their incidences at each of the nonamer positions allow evaluation of the mutation transmission dynamics and selectivity of the sequences in relation to the reservoir or the hosts. This application can be used for a detailed proteome-wide characterization of the composition and incidence of mutations present in the reservoir and host populations for a better understanding of host tropism.
+				</p>
+				<p>
+					<a class="btn btn-primary btn-large" href="#">Learn more</a>
+				</p>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="container">
+<!-- <form id="vadaJobSubmissionForm" method="post" enctype="multipart/form-data" action="{{ url_for('submit') }}"> -->
+<form id="atatJobSubmissionForm">
+  <div id="successAlert" class="alert alert-success" role="alert" style="display:none;"></div>
+  <div id="errorAlert" class="alert alert-danger" role="alert" style="display:none;"></div>
+  <div class="form-group row" id="proteinNameDiv">
+    <label for="proteinName" class="col-6 col-form-label">Protein Name</label>
+    <div class="col-6">
+      <input id="proteinName" name="proteinName" type="text" placeholder="None" class="form-control" aria-describedby="proteinNameHelpBlock">
+      <span id="proteinNameHelpBlock" class="form-text text-muted">Default: None</span>
+    </div>
+  </div>
+  <div class="form-group row" id="reservoirInputSequenceFileDiv">
+    <label for="reservoirInputSequence" class="col-6 col-form-label">Reservoir Protein Sequence File</label>
+    <div class="col-6">
+      <input type="file" id="reservoirInputSequence" name="reservoirInputSequence" class="form-control" aria-describedby="reservoirInputSequenceHelpBlock">
+      <span id="reservoirInputSequenceHelpBlock" class="form-text text-muted">in FASTA format</span>
+    </div>
+  </div>
+  <div class="form-group row" id="hostInputSequenceFileDiv">
+    <label for="hostInputSequence" class="col-6 col-form-label">Host Protein Sequence File</label>
+    <div class="col-6">
+      <input type="file" id="hostInputSequence" name="hostInputSequence" class="form-control" aria-describedby="hostInputSequenceHelpBlock">
+      <span id="hostInputSequenceHelpBlock" class="form-text text-muted">in FASTA format</span>
+    </div>
+  </div>
+  <div class="form-group row" id="gapThresholdDiv">
+    <label for="gapThreshold" class="col-6 col-form-label">Gap Threshold</label>
+    <div class="col-6">
+      <input id="gapThreshold" name="gapThreshold" placeholder="0.95" type="text" class="form-control" aria-describedby="gapThresholdHelpBlock">
+      <span id="gapThresholdHelpBlock" class="form-text text-muted">Default: 0.95</span>
+    </div>
+  </div>
+  <div class="form-group row" id="removeDuplicateDiv">
+    <label class="col-6">Remove Duplicate</label>
+    <div class="col-6">
+      <div class="custom-control custom-radio custom-control-inline">
+        <input name="removeDuplicates" id="duplicate_0" type="radio" class="custom-control-input" value="True" checked>
+        <label for="duplicate_0" class="custom-control-label">Yes</label>
+      </div>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input name="removeDuplicates" id="duplicate_1" type="radio" class="custom-control-input" value="False">
+        <label for="duplicate_1" class="custom-control-label">No</label>
+      </div>
+    </div>
+  </div>
+   <div class="form-group row">
+    <label for="jobName" class="col-6 col-form-label">Email</label>
+    <div class="col-6">
+      <input id="userEmail" name="userEmail" placeholder="your email address" type="text" class="form-control" aria-describedby="userNameHelpBlock">
+      <span id="userEmailHelpBlock" class="form-text text-muted">provide your email address for job status notification</span>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="offset-6 col-6">
+      <button id="btnSubmit" name="btnSubmit" type="submit" class="btn btn-primary">Submit</button>
+    </div>
+  </div>
+</form>
+
+{% endblock %}
