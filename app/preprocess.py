@@ -25,17 +25,17 @@ def sequence_removeDuplicates(sequences="", min_length=0, por_n=100):
         return cleanSequences
 
 def sequence_alignment(file=''):
-        mafft_cline = MafftCommandline('/home/centos/vada-single/bioapps/mafft-linux64/mafft.bat',input=file)
+        mafft_cline = MafftCommandline('/home/centos/atat-single/bioapps/mafft-linux64/mafft.bat',input=file)
         stdout, stderr = mafft_cline()
         align = AlignIO.read(StringIO(stdout), "fasta")
         return align
 
 def sequence_alignmentqc(infile='',outfile='',gap='0.05'):
-        status = os.system('/home/centos/vada-single/bioapps/trimal -keepheader -in '+infile+' -out '+outfile+' -gt '+gap)
+        status = os.system('/home/centos/atat-single/bioapps/trimal -keepheader -in '+infile+' -out '+outfile+' -gt '+gap)
         return status
 
 def sequence_split(infile='',prefix='',host='',baseFolder=''):
-        os.system("csplit -z "+infile+" -f "+baseFolder+prefix+" '/tag=Host/'")
+        os.system("csplit -z "+infile+" -f "+baseFolder+prefix+" '/Reservoir/'")
         os.rename(baseFolder+prefix+"00",baseFolder+prefix+"_Host.fasta")
         os.rename(baseFolder+prefix+"01",baseFolder+prefix+"_Reservoir.fasta")
 
@@ -52,17 +52,18 @@ def preprocess(app,analysisId="atat",hostSequenceFile="",reservoirSequenceFile="
 	# Tag the sequence
 
 	hostSequence=[]
-
 	with open(hostInputSequenceFile, "r") as handle:
 		for record in SeqIO.parse(handle, "fasta") :
 			record.id=record.id+"|tag=Host"
+			record.description=""
 			hostSequence.append(record)
 
 	reservoirSequence=[]
 	with open(reservoirInputSequenceFile, "r") as handle:
-        	for record in SeqIO.parse(handle, "fasta") :
-            		record.id=record.id+"|tag=Reservoir"
-            		reservoirSequence.append(record)
+		for record in SeqIO.parse(handle, "fasta") :
+			record.id=record.id+"|tag=Reservoir"
+			record.description=""
+			reservoirSequence.append(record)
 
 	# Merge the sequences
 	listOfAllSequences=hostSequence+reservoirSequence
@@ -86,5 +87,5 @@ def preprocess(app,analysisId="atat",hostSequenceFile="",reservoirSequenceFile="
 	# Split Sequence
 	sequence_split(baseFolder=app.config['UPLOADS_DEFAULT_DEST'],infile=qcSequenceFile,prefix=analysisId)
 	return app.config['UPLOADS_DEFAULT_DEST']+analysisId+"_Host.fasta",app.config['UPLOADS_DEFAULT_DEST']+analysisId+"_Reservoir.fasta"
-    #fasta2clustal(infile=app.config['UPLOADS_DEFAULT_DEST']+analysisId+"_Animal.fasta",outfile=app.config['UPLOADS_DEFAULT_DEST']+analysisId+"_Animal.aln")
+    	#fasta2clustal(infile=app.config['UPLOADS_DEFAULT_DEST']+analysisId+"_Animal.fasta",outfile=app.config['UPLOADS_DEFAULT_DEST']+analysisId+"_Animal.aln")
 	#fasta2clustal(infile=app.config['UPLOADS_DEFAULT_DEST']+analysisId+"_Input.fasta",outfile=app.config['UPLOADS_DEFAULT_DEST']+analysisId+"_Input.aln")
