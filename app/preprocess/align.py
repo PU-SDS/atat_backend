@@ -5,6 +5,7 @@ from Bio.Align import MultipleSeqAlignment
 from Bio.Align.Applications import MafftCommandline
 from Bio.Application import ApplicationError
 from flask import app
+from app.preprocess import PreProcessor
 
 
 class AlignmentUnknownException(Exception):
@@ -14,24 +15,30 @@ class AlignmentUnknownException(Exception):
 
 
 class Alignment(object):
-
     """
-    Alignment Class
+        Alignment Class
 
-    Contains all logic related to MSA including trimming and alignment itself.
+        Contains all the logic related to MSA including trimming, splitting and alignment itself.
 
-    Functions:
-        align(object, file: str) -> str
-        trim(object, file: str) -> str
+        Functions:
+            align(object, jobpath: str)
+            trim(object, file: str) -> str
 
-    Example:
-        new_alignment = Alignment(file)
-        new_alignment.align()
-        new_alignment.trim()
+        Constants:
+            ALIGNED_MSA_OUTPUT_FILENAME: The filename used for the MAFFT aligned
+            sequence file.
+
+        Example:
+            >>> from app.preprocess import Alignment
+            >>> new_alignment = Alignment(jobpath)
+            >>> new_alignment.align()
+            >>> new_alignment.trim()
     """
 
-    def __init__(self, basefile: str, msa=None):
-        self.basefile = basefile
+    ALIGNED_MSA_OUTPUT_FILENAME = 'aligned.fasta'
+
+    def __init__(self, jobpath: str, msa=None):
+        self.jobpath = jobpath
         self.msa = msa
 
     def align(self) -> str:
@@ -39,11 +46,9 @@ class Alignment(object):
             Multiple Sequence Alignment Method using MAFFT
 
             This method carries out MSA alignment using MAFFT.
-
-            Returns:
-                str: Returns a string containing a MSA
         """
-        mafft_cline = MafftCommandline(app.config['MAFFT'], input=self.basefile)
+        mafft_cline = MafftCommandline(app.config['MAFFT'],
+                                       input=self.jobpath + f'/{PreProcessor.OUTPUT_FILENAME}')
 
         try:
             stdout, stderr = mafft_cline()
@@ -51,7 +56,9 @@ class Alignment(object):
         except ApplicationError as error:
             raise AlignmentUnknownException(f'An unknown error occurred during the sequence '
                                             f'alignment phase using MAFFT: {error}')
-        self.msa = AlignIO.read(StringIO(self.msa), 'fasta')
+
+        alignment = AlignIO.read(StringIO(self.msa), 'fasta')
+        AlignIO.write(alignment, self.jobpath + f'/{self.ALIGNED_MSA_OUTPUT_FILENAME}')
 
     def trim(self, file: str):
         """

@@ -11,7 +11,7 @@ class PreprocessorException(Exception):
 
 class PreProcessor(object):
     """
-        Performs critical pre-processing.
+        Pre-processing Class
 
         Performs all critical pre-processing such as appropriate tagging of sequences,
         merging and removal of duplicates.
@@ -20,12 +20,24 @@ class PreProcessor(object):
             jobpath (str): The folder path to the job.
 
         Functions:
-            preprocess(object) -> list(SeqRecord)
+            preprocess(object)
+
+        Constants:
+            INPUT_HOST_FILENAME: The filename of the host sequence file.
+
+            INPUT_RESERVOIR_FILENAME: The filename of the reservoir sequence file.
+
+            OUTPUT_FILENAME: The filenamed used for the fully pre-processed sequence file.
 
         Example:
+            >>> from app.preprocess import PreProcessor
             >>> preprocessor = PreProcessor('/jobs/id_5165432')
             >>> preprocessor.preprocess()
     """
+
+    INPUT_HOST_FILENAME = 'host.fasta'
+    INPUT_RESERVOIR_FILENAME = 'reservoir.fasta'
+    OUTPUT_FILENAME = 'processed.fasta'
 
     def __init__(self, jobpath: str):
         self.jobpath = jobpath
@@ -36,14 +48,11 @@ class PreProcessor(object):
 
             This method tags the sequences accordingly (HOST, RESERVOIR), merges the sequences
             into a single file and removes any duplicate sequences.
-
-            Returns:
-                list(SeqRecord): A list of type SeqRecord of fully pre-processed and unique sequences.
         """
 
         # Tags the sequences based on origin (HOST, RESERVOIR)
-        reservoir = self.jobpath + '/reservoir.fasta'
-        host = self.jobpath + '/host.fasta'
+        reservoir = self.jobpath + f'/{self.INPUT_RESERVOIR_FILENAME}'
+        host = self.jobpath + f'/{self.INPUT_HOST_FILENAME}'
 
         reservoir_tagged = []
         host_tagged = []
@@ -58,7 +67,8 @@ class PreProcessor(object):
                 reservoir_tagged.append(seq_record)
 
         # Merges the host and reservoir sequences into a single file
-        if isinstance(reservoir_tagged, list(SeqRecord) and isinstance(host_tagged, list(SeqRecord))):
+        if isinstance(reservoir_tagged, list(SeqRecord) and
+                                        isinstance(host_tagged, list(SeqRecord))):
             merged_seqs: list[SeqRecord] = reservoir_tagged + host_tagged
         else:
             raise PreprocessorException('Merging of sequences failed.')
@@ -74,4 +84,4 @@ class PreProcessor(object):
                 unique_seq_records.append(seq_record)
                 hashed_seqs[seq] = seq_record.id
 
-        return unique_seq_records
+        SeqIO.write(unique_seq_records, self.jobpath + self.OUTPUT_FILENAME)
