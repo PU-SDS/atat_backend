@@ -1,9 +1,9 @@
 import itertools
 from os import path
 from typing import Generator, Iterable
-
 from Bio import SeqIO, SeqRecord
 from Bio.Alphabet import generic_protein
+from flask import app
 
 
 class PreprocessorException(Exception):
@@ -26,22 +26,28 @@ class PreProcessor(object):
 
             OUTPUT_FILENAME: The filenamed used for the fully pre-processed sequence file.
 
+            JOB_LOCAL_PATH: The local path to the job. This is built automatically
+            when the class is instantiated using the job id and the common job path
+            defined in the configuration file.
+
         Example:
             >>> from app.preprocess import PreProcessor
-            >>> preprocessor = PreProcessor('/jobs/id_5165432')
+            >>> preprocessor = PreProcessor('id_5165432')
             >>> preprocessor.preprocess()
     """
 
     INPUT_HOST_FILENAME = 'host.fasta'
     INPUT_RESERVOIR_FILENAME = 'reservoir.fasta'
-    OUTPUT_FILENAME = 'processed.fasta'
+    PPROCESSED_OUTPUT_FILENAME = 'processed.fasta'
+    JOB_LOCAL_PATH = ''
 
-    def __init__(self, jobpath: str):
+    def __init__(self, job_id: str):
         """
         Args:
-             jobpath (str): The folder path to the job.
+             job_id (str): The current job ID.
         """
-        self.jobpath = jobpath
+        self.job_id = job_id
+        self.JOB_LOCAL_PATH = path.join(app.config['JOBS_FOLDER'], self.job_id)
 
     def preprocess(self):
         """
@@ -50,32 +56,37 @@ class PreProcessor(object):
         """
 
         # Tags the sequences based on origin (HOST, RESERVOIR)
-        reservoir = path.join(self.jobpath, self.INPUT_RESERVOIR_FILENAME)
-        host = path.join(self.jobpath, self.INPUT_HOST_FILENAME)
+        reservoir = path.join(self.JOB_LOCAL_PATH, self.INPUT_RESERVOIR_FILENAME)
+        host = path.join(self.JOB_LOCAL_PATH, self.INPUT_HOST_FILENAME)
 
-        reservoir_tagged = self._read_seq(host, 'HOST')
-        host_tagged = self._read_seq(reservoir, 'RESERVOIR')
+        host_tagged = self._read_tag_seq(host, 'HOST')
+        reservoir_tagged = self._read_tag_seq(reservoir, 'RESERVOIR')
 
-        # Merges the host and reservoir sequences into a single file
-        if not is_iterable_of_type(itertools.chain(reservoir_tagged, host_tagged), SeqRecord):
+        # Merge the host and reservoir sequences
+        merged_seqs = itertools.chain(reservoir_tagged, host_tagged)
+
+        if not is_iterable_of_type(merged_seqs, SeqRecord):
             raise PreprocessorException('Merging of sequences failed.')
-        unique_seq_records = self._get_unique_sequence(reservoir_tagged + host_tagged)
 
-        SeqIO.write(unique_seq_records, path.join(self.jobpath, self.OUTPUT_FILENAME))
+        # Gets the unique sequences
+        unique_seq_records = self._get_unique_sequences(merged_seqs)
+
+        # Writes merged entries into a file
+        SeqIO.write(unique_seq_records, path.join(self.JOB_LOCAL_PATH, self.PPROCESSED_OUTPUT_FILENAME))
 
     @classmethod
-    def _read_seq(cls, path, tag) -> Iterable[SeqRecord]:
+    def _read_tag_seq(cls, seq_path, tag) -> Iterable[SeqRecord]:
         """
             Reads a file of sequences and tags
         """
 
-        with open(path, 'r') as f:
+        with open(seq_path, 'r') as f:
             for record in SeqIO.parse(f, 'fasta', generic_protein):
                 record.id += f'|{tag}'
                 yield record
 
     @classmethod
-    def _get_unique_sequence(cls, sequences) -> Iterable[SeqRecord]:
+    def _get_unique_sequences(cls, sequences) -> Iterable[SeqRecord]:
         """
             Gets a list of unique sequences.
         """
@@ -90,9 +101,9 @@ class PreProcessor(object):
                 yield seq_record
 
 
-def is_iterable_of_type(iter, klass):
-    # return all(map(lambda x: isinstance(x, klass), iter))
-    for x in iter:
-        if not isinstance(x, klass):
-            return False
-    return True
+def is_iterable_of_type(itera, klass):
+    return all(map(lambda x: isinstance(x, klass), itera))
+    # for x in itera:
+    #     if not isinstance(x, klass):
+    #         return False
+    # return True
