@@ -18,3 +18,6 @@ class TestingConfig(Config):
 class BioApps(Config):
     MAAFT = 'maaft'
     TRIMAL = 'trimal'
+
+class LocalPaths(Config):
+    JOBS_FOLDER = '/home/shant/jobs/'
