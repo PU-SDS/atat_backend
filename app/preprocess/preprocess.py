@@ -1,4 +1,7 @@
-from io import StringIO
+import itertools
+from os import path
+from typing import Generator, Iterable
+
 from Bio import SeqIO, SeqRecord
 from Bio.Alphabet import generic_protein
 
@@ -15,12 +18,6 @@ class PreProcessor(object):
 
         Performs all critical pre-processing such as appropriate tagging of sequences,
         merging and removal of duplicates.
-
-        Parameters:
-            jobpath (str): The folder path to the job.
-
-        Functions:
-            preprocess(object)
 
         Constants:
             INPUT_HOST_FILENAME: The filename of the host sequence file.
@@ -40,48 +37,62 @@ class PreProcessor(object):
     OUTPUT_FILENAME = 'processed.fasta'
 
     def __init__(self, jobpath: str):
+        """
+        Args:
+             jobpath (str): The folder path to the job.
+        """
         self.jobpath = jobpath
 
     def preprocess(self):
         """
-            Preprocessor method.
-
-            This method tags the sequences accordingly (HOST, RESERVOIR), merges the sequences
+            Tags the sequences accordingly (HOST, RESERVOIR), merges the sequences
             into a single file and removes any duplicate sequences.
         """
 
         # Tags the sequences based on origin (HOST, RESERVOIR)
-        reservoir = self.jobpath + f'/{self.INPUT_RESERVOIR_FILENAME}'
-        host = self.jobpath + f'/{self.INPUT_HOST_FILENAME}'
+        reservoir = path.join(self.jobpath, self.INPUT_RESERVOIR_FILENAME)
+        host = path.join(self.jobpath, self.INPUT_HOST_FILENAME)
 
-        reservoir_tagged = []
-        host_tagged = []
-
-        with open(reservoir, 'r') as reservoir_file, open(host, 'r') as host_file:
-            for seq_record in SeqIO.parse(host_file, 'fasta', generic_protein):
-                seq_record.id += '|HOST'
-                host_tagged.append(seq_record)
-
-            for seq_record in SeqIO.parse(reservoir_file, 'fasta', generic_protein):
-                seq_record.id += '|RESERVOIR'
-                reservoir_tagged.append(seq_record)
+        reservoir_tagged = self._read_seq(host, 'HOST')
+        host_tagged = self._read_seq(reservoir, 'RESERVOIR')
 
         # Merges the host and reservoir sequences into a single file
-        if isinstance(reservoir_tagged, list(SeqRecord) and
-                                        isinstance(host_tagged, list(SeqRecord))):
-            merged_seqs: list[SeqRecord] = reservoir_tagged + host_tagged
-        else:
+        if not is_iterable_of_type(itertools.chain(reservoir_tagged, host_tagged), SeqRecord):
             raise PreprocessorException('Merging of sequences failed.')
+        unique_seq_records = self._get_unique_sequence(reservoir_tagged + host_tagged)
 
-        # Removes any duplicate sequences
-        hashed_seqs = {}
-        unique_seq_records = []
+        SeqIO.write(unique_seq_records, path.join(self.jobpath, self.OUTPUT_FILENAME))
 
-        for seq_record in merged_seqs:
+    @classmethod
+    def _read_seq(cls, path, tag) -> Iterable[SeqRecord]:
+        """
+            Reads a file of sequences and tags
+        """
+
+        with open(path, 'r') as f:
+            for record in SeqIO.parse(f, 'fasta', generic_protein):
+                record.id += f'|{tag}'
+                yield record
+
+    @classmethod
+    def _get_unique_sequence(cls, sequences) -> Iterable[SeqRecord]:
+        """
+            Gets a list of unique sequences.
+        """
+
+        hashed_seqs = set()
+
+        for seq_record in sequences:
             seq = seq_record.seq
 
             if seq not in hashed_seqs:
-                unique_seq_records.append(seq_record)
-                hashed_seqs[seq] = seq_record.id
+                hashed_seqs.add(seq)
+                yield seq_record
 
-        SeqIO.write(unique_seq_records, self.jobpath + self.OUTPUT_FILENAME)
+
+def is_iterable_of_type(iter, klass):
+    # return all(map(lambda x: isinstance(x, klass), iter))
+    for x in iter:
+        if not isinstance(x, klass):
+            return False
+    return True
