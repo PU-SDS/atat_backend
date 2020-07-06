@@ -1,15 +1,24 @@
 from flask import Config
 
-class Config(object):
+
+class ProductionConfig(Config):
     DEBUG = False
     TESTING = False
 
-class ProductionConfig(Config):
-    pass
 
 class DevelopmentConfig(Config):
     DEBUG = True
+    TESTING = True
+
 
 class TestingConfig(Config):
     TESTING = True
 
+
+class BioApps(Config):
+    MAAFT = 'maaft'
+    TRIMAL = 'trimal'
+
+
+class LocalPaths(Config):
+    JOBS_FOLDER = '/home/shant/jobs/'
