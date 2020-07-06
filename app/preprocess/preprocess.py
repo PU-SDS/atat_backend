@@ -3,13 +3,14 @@ from os import path
 from typing import Generator, Iterable
 from Bio import SeqIO, SeqRecord
 from Bio.Alphabet import generic_protein
-from flask import app
+
+from run import app
 
 
 class PreprocessorException(Exception):
     def __init__(self, msg):
         self.msg = msg
-        super(PreProcessor, self).__init__(self.msg)
+        super(PreprocessorException, self).__init__(self.msg)
 
 
 class PreProcessor(object):
@@ -46,6 +47,7 @@ class PreProcessor(object):
         Args:
              job_id (str): The current job ID.
         """
+
         self.job_id = job_id
         self.JOB_LOCAL_PATH = path.join(app.config['JOBS_FOLDER'], self.job_id)
 
@@ -71,11 +73,11 @@ class PreProcessor(object):
         # Gets the unique sequences
         unique_seq_records = self._get_unique_sequences(merged_seqs)
 
-        # Writes merged entries into a file
+        # Writes merged unique entries into a file
         SeqIO.write(unique_seq_records, path.join(self.JOB_LOCAL_PATH, self.PPROCESSED_OUTPUT_FILENAME))
 
     @classmethod
-    def _read_tag_seq(cls, seq_path, tag) -> Iterable[SeqRecord]:
+    def _read_tag_seq(cls, seq_path, tag):
         """
             Reads a file of sequences and tags
         """
@@ -86,7 +88,7 @@ class PreProcessor(object):
                 yield record
 
     @classmethod
-    def _get_unique_sequences(cls, sequences) -> Iterable[SeqRecord]:
+    def _get_unique_sequences(cls, sequences):
         """
             Gets a list of unique sequences.
         """
@@ -103,7 +105,3 @@ class PreProcessor(object):
 
 def is_iterable_of_type(itera, klass):
     return all(map(lambda x: isinstance(x, klass), itera))
-    # for x in itera:
-    #     if not isinstance(x, klass):
-    #         return False
-    # return True
