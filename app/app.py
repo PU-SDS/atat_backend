@@ -13,6 +13,7 @@ def create_app(debug=True):
 
     # Load paths of commandline tools
     app.config.from_object('config.BioApps')
+    app.config.from_object('config.LocalPaths')
 
     try:
         os.makedirs(app.instance_path)
@@ -22,6 +23,3 @@ def create_app(debug=True):
     app.register_blueprint(views.blueprint)
 
     return app
-
-
-
