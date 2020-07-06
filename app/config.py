@@ -21,4 +21,5 @@ class BioApps(Config):
 
 
 class LocalPaths(Config):
-    JOBS_FOLDER = '/home/shant/jobs/'
+    JOBS_FOLDER = '/home/shant/jobs'
+    SPLIT_SEQS_SUBFOLDER = 'split_sequences'
