@@ -83,7 +83,6 @@ class PreProcessor(object):
         """
 
         with open(seq_path, 'r') as f:
-
             for record in SeqIO.parse(f, 'fasta', generic_protein):
                 record.id += f'|{tag}'
                 record.description = ''
@@ -103,6 +102,7 @@ class PreProcessor(object):
             if seq not in hashed_seqs:
                 hashed_seqs.add(seq)
                 yield seq_record
+
 
 def is_iterable_of_type(itera, klass):
     return all(map(lambda x: isinstance(x, klass), itera))
