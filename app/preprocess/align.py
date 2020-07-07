@@ -1,4 +1,3 @@
-import os
 import subprocess
 from io import StringIO
 from os import path, rename
@@ -80,7 +79,8 @@ class Alignment(object):
                                         PreProcessor.PPROCESSED_OUTPUT_FILENAME)
 
         if not path.isfile(processed_seqs_file):
-            raise AlignmentUnknownException('The processed sequence file is not present. Run the preprocessor first.')
+            raise AlignmentUnknownException('The processed sequence file is not present. '
+                                            'Run the preprocessor first.')
 
         # Use BioPython cli wrapper for MAFFT
         mafft_cline = MafftCommandline(app.config['MAFFT'],
@@ -92,7 +92,8 @@ class Alignment(object):
 
         # Read the sequences as fasta and write to local path
         alignment = AlignIO.read(StringIO(stdout), 'fasta')
-        AlignIO.write(alignment, path.join(self.JOB_LOCAL_PATH, self.ALIGNED_MSA_OUTPUT_FILENAME), 'fasta')
+        AlignIO.write(alignment, path.join(self.JOB_LOCAL_PATH, self.ALIGNED_MSA_OUTPUT_FILENAME),
+                      'fasta')
 
     def trim(self):
         """
@@ -102,7 +103,8 @@ class Alignment(object):
         aligned_seqs_file = path.join(self.JOB_LOCAL_PATH, self.ALIGNED_MSA_OUTPUT_FILENAME)
 
         if not path.isfile(aligned_seqs_file):
-            raise AlignmentUnknownException('The aligned sequence file is not present. Run align() first.')
+            raise AlignmentUnknownException('The aligned sequence file is not present. '
+                                            'Run align() first.')
 
         # Build the arguments for TRIMAL
         trimal_args = ['-keepheader', '-in', aligned_seqs_file,
