@@ -67,14 +67,14 @@ class PreProcessor(object):
         # Merge the host and reservoir sequences
         merged_seqs = itertools.chain(reservoir_tagged, host_tagged)
 
-        if not is_iterable_of_type(merged_seqs, SeqRecord):
-            raise PreprocessorException('Merging of sequences failed.')
+        # if not is_iterable_of_type(merged_seqs, SeqRecord.SeqRecord):
+        #     raise PreprocessorException('Merging of sequences failed.')
 
         # Gets the unique sequences
         unique_seq_records = self._get_unique_sequences(merged_seqs)
 
         # Writes merged unique entries into a file
-        SeqIO.write(unique_seq_records, path.join(self.JOB_LOCAL_PATH, self.PPROCESSED_OUTPUT_FILENAME))
+        SeqIO.write(unique_seq_records, path.join(self.JOB_LOCAL_PATH, self.PPROCESSED_OUTPUT_FILENAME), 'fasta')
 
     @classmethod
     def _read_tag_seq(cls, seq_path, tag):
@@ -83,8 +83,10 @@ class PreProcessor(object):
         """
 
         with open(seq_path, 'r') as f:
+
             for record in SeqIO.parse(f, 'fasta', generic_protein):
                 record.id += f'|{tag}'
+                record.description = ''
                 yield record
 
     @classmethod
@@ -101,7 +103,6 @@ class PreProcessor(object):
             if seq not in hashed_seqs:
                 hashed_seqs.add(seq)
                 yield seq_record
-
 
 def is_iterable_of_type(itera, klass):
     return all(map(lambda x: isinstance(x, klass), itera))

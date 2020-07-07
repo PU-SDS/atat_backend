@@ -4,7 +4,7 @@ from io import StringIO
 from os import path, rename
 from typing import Tuple
 
-from Bio import AlignIO
+from Bio import AlignIO, SeqIO
 from Bio.Align.Applications import MafftCommandline
 from app.preprocess import PreProcessor
 from flask import current_app as app
@@ -83,7 +83,8 @@ class Alignment(object):
 
         # Read the sequences as fasta and write to local path
         alignment = AlignIO.read(StringIO(stdout), 'fasta')
-        AlignIO.write(alignment, path.join(self.JOB_LOCAL_PATH, self.ALIGNED_MSA_OUTPUT_FILENAME))
+        AlignIO.write(alignment, path.join(self.JOB_LOCAL_PATH, self.ALIGNED_MSA_OUTPUT_FILENAME), 'fasta')
+
 
     def trim(self):
         """
@@ -95,7 +96,7 @@ class Alignment(object):
         # Build the arguments for TRIMAL
         trimal_args = ['-keepheader', '-in', path.join(self.JOB_LOCAL_PATH, self.ALIGNED_MSA_OUTPUT_FILENAME),
                        '-out', path.join(self.JOB_LOCAL_PATH, self.TRIMMED_MSA_OUTPUT_FILENAME), '-gt',
-                       self.trimal_gt]
+                       f'{self.trimal_gt}']
 
         # Use Python subprocess to call TRIMAL
         trimal = self._run_process([app.config['TRIMAL']] + trimal_args)
@@ -145,8 +146,8 @@ class Alignment(object):
         if not path.isfile(host_seq) or not path.isfile(reservoir_seq):
             raise AlignmentUnknownException('The split sequence files from csplit are not present.')
 
-        rename(f'{path}00', f'{path}HOST.fasta')
-        rename(f'{path}01', f'{path}RESERVOIR.fasta')
+        rename(host_seq, f'{split_file_prefix}HOST.fasta')
+        rename(reservoir_seq, f'{split_file_prefix}RESERVOIR.fasta')
 
     @classmethod
     def _run_process(cls, args) -> Tuple[bytes, int]:
@@ -160,5 +161,7 @@ class Alignment(object):
         process = subprocess.Popen(args, stdout=subprocess.PIPE,
                                    stderr=subprocess.PIPE)
         stderr = process.communicate()[1]
-
+        process = subprocess.Popen(['trimal', '-keepheader', '-in', '/home/shant/jobs/JOB_114235231/aligned.fasta',
+                                   '-out', '/home/shant/jobs/JOB_114235231/aligned_trimmed.fasta', '-gt',
+                                   '0.05'], stdout = subprocess.PIPE, stderr = subprocess.PIPE)
         return stderr, process.returncode
