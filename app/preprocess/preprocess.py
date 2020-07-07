@@ -1,10 +1,9 @@
 import itertools
 from os import path
-from typing import Generator, Iterable
-from Bio import SeqIO, SeqRecord
-from Bio.Alphabet import generic_protein
 
-from run import app
+from Bio import SeqIO
+from Bio.Alphabet import generic_protein
+from flask import current_app as app
 
 
 class PreprocessorException(Exception):
@@ -70,9 +69,6 @@ class PreProcessor(object):
         # Merge the host and reservoir sequences
         merged_seqs = itertools.chain(reservoir_tagged, host_tagged)
 
-        # if not is_iterable_of_type(merged_seqs, SeqRecord.SeqRecord):
-        #     raise PreprocessorException('Merging of sequences failed.')
-
         # Gets the unique sequences
         unique_seq_records = self._get_unique_sequences(merged_seqs)
 
@@ -108,7 +104,3 @@ class PreProcessor(object):
             if seq not in hashed_seqs:
                 hashed_seqs.add(seq)
                 yield seq_record
-
-
-def is_iterable_of_type(itera, klass):
-    return all(map(lambda x: isinstance(x, klass), itera))
