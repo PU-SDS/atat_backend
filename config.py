@@ -16,10 +16,10 @@ class TestingConfig(Config):
 
 
 class BioApps(Config):
-    MAAFT = 'maaft'
+    MAFFT = 'mafft'
     TRIMAL = 'trimal'
 
 
 class LocalPaths(Config):
-    JOBS_FOLDER = '/home/shant/jobs'
+    JOBS_FOLDER = 'C:\Jobs\\'
     SPLIT_SEQS_SUBFOLDER = 'split_sequences'

@@ -16,7 +16,7 @@ class TestingConfig(Config):
 
 
 class BioApps(Config):
-    MAAFT = 'maaft'
+    MAFFT = 'mafft'
     TRIMAL = 'trimal'
 
 
