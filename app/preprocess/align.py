@@ -4,7 +4,7 @@ from io import StringIO
 from os import path, rename
 from typing import Tuple
 
-from Bio import AlignIO, SeqIO
+from Bio import AlignIO
 from Bio.Align.Applications import MafftCommandline
 from app.preprocess import PreProcessor
 from flask import current_app as app
@@ -161,7 +161,5 @@ class Alignment(object):
         process = subprocess.Popen(args, stdout=subprocess.PIPE,
                                    stderr=subprocess.PIPE)
         stderr = process.communicate()[1]
-        process = subprocess.Popen(['trimal', '-keepheader', '-in', '/home/shant/jobs/JOB_114235231/aligned.fasta',
-                                   '-out', '/home/shant/jobs/JOB_114235231/aligned_trimmed.fasta', '-gt',
-                                   '0.05'], stdout = subprocess.PIPE, stderr = subprocess.PIPE)
+
         return stderr, process.returncode
