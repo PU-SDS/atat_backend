@@ -20,11 +20,13 @@ class Alignment(object):
     """
         Alignment Class
 
-        Contains all the logic related to MSA including trimming, splitting and alignment itself.
+        Contains all the logic related to MSA including trimming, splitting, fasta2clustal and alignment itself.
 
         Functions:
             align(object)
             trim(object)
+            split(object)
+            toclustal(object)
 
         Constants:
             ALIGNED_MSA_OUTPUT_FILENAME: The filename used for the MAFFT aligned
@@ -121,8 +123,6 @@ class Alignment(object):
 
     def split(self):
         """
-            Alignment file splitting.
-
             Splits the alignment file into HOST and RESERVOIR files.
         """
 
@@ -150,9 +150,7 @@ class Alignment(object):
 
     def toclustal(self):
         """
-            Convert alignment file to Clustal
-
-            Converts FASTA files into Clustal format.
+            Converts the split FASTA files into CLUSTAL format.
         """
 
         host_seqs_file = f'{self.SPLIT_MSA_FILES_PREFIX}HOST.fasta'
@@ -172,7 +170,7 @@ class Alignment(object):
     @classmethod
     def _rename_split_seq_files(cls, split_file_prefix: str):
         """
-            Rename the split file created by  csplit
+            Renames the split files created by csplit
         """
 
         reservoir_seq = f'{split_file_prefix}00'
