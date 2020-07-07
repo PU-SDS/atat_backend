@@ -85,7 +85,6 @@ class Alignment(object):
         alignment = AlignIO.read(StringIO(stdout), 'fasta')
         AlignIO.write(alignment, path.join(self.JOB_LOCAL_PATH, self.ALIGNED_MSA_OUTPUT_FILENAME), 'fasta')
 
-
     def trim(self):
         """
             Alignment trimming using TRIMAL
@@ -140,8 +139,8 @@ class Alignment(object):
             Rename the split file created by  csplit
         """
 
-        host_seq = f'{split_file_prefix}00'
-        reservoir_seq = f'{split_file_prefix}01'
+        reservoir_seq = f'{split_file_prefix}00'
+        host_seq = f'{split_file_prefix}01'
 
         if not path.isfile(host_seq) or not path.isfile(reservoir_seq):
             raise AlignmentUnknownException('The split sequence files from csplit are not present.')
