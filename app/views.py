@@ -5,9 +5,11 @@ blueprint = Blueprint('root', __name__)
 # - Endpoint: root.index
 # - URL: /index2
 
+
 @blueprint.route('/index')
 def index():
     return url_for('root.index')
+
 
 @blueprint.route('/home')
 def home():

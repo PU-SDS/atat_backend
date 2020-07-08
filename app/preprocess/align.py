@@ -5,8 +5,9 @@ from typing import Tuple
 
 from Bio import AlignIO
 from Bio.Align.Applications import MafftCommandline
-from app.preprocess import PreProcessor
 from flask import current_app as app
+
+from app.preprocess import PreProcessor
 
 
 class AlignmentUnknownException(Exception):

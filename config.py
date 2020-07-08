@@ -21,5 +21,5 @@ class BioApps(Config):
 
 
 class LocalPaths(Config):
-    JOBS_FOLDER = 'C:\Jobs\\'
+    JOBS_FOLDER = 'C:\\Jobs\\'
     SPLIT_SEQS_SUBFOLDER = 'split_sequences'
