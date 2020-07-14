@@ -45,7 +45,7 @@ class SlidingWindow(object):
         """
 
         it = iter(seq)
-        result = ''.join(islice(it, n))
+        result = ''.join(islice(it, kmer_len))
         if len(result) == n:
             yield result
         for elem in it:
