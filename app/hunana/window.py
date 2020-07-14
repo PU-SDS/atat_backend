@@ -20,7 +20,7 @@ class SlidingWindow(object):
         """
             Args:
                 seqs: An iterable of type SeqRecord.
-                kmer_len: The length of the sliding window.
+                kmer_len: The length of the sliding window (Default: 9).
         """
 
         self.seqs = seqs
