@@ -1,5 +1,8 @@
+from collections import Counter
 from itertools import islice
-from Bio import SeqIO
+import random
+
+from app.hunana.position import Position
 
 
 class SlidingWindow(object):
@@ -16,6 +19,8 @@ class SlidingWindow(object):
             >>> kmer2 = list(kmers[1]) # Second k-mer of all sequences
     """
 
+    DISALLOWED_CHARS = {'-', 'X', 'B', 'J', 'Z', 'O', 'U'}
+
     def __init__(self, seqs, kmer_len=9):
         """
             Args:
@@ -26,7 +31,7 @@ class SlidingWindow(object):
         self.seqs = seqs
         self.kmer_len = kmer_len
 
-    def kmers(self):
+    def _kmers(self):
         """
             Extracts k-mers from all the sequences provided.
 
@@ -38,16 +43,68 @@ class SlidingWindow(object):
         kmers_seqs = map(lambda s: self._window(s, self.kmer_len), seqs)
         return zip(*kmers_seqs)
 
-    @classmethod
-    def _window(cls, seq, kmer_len):
+    def _window(self, seq, kmer_len):
         """
             The actual logic of sliding window.
+
+            Returns:
+                A Generator object for all kmers within the alignment
         """
 
         it = iter(seq)
         result = ''.join(islice(it, kmer_len))
         if len(result) == kmer_len:
-            yield result
+            if all(ele not in result for ele in self.DISALLOWED_CHARS):
+                yield result
+            else:
+                yield 'illegal-char'
+
         for elem in it:
             result = result[1:] + elem
-            yield result
+            if all(ele not in result for ele in self.DISALLOWED_CHARS):
+                yield result
+            else:
+                yield 'illegal-char'
+
+    def test(self, nonomers):
+        a = list(map(lambda s: Counter(s), nonomers))
+        return enumerate(map(lambda s: Counter(s), nonomers))
+
+    @classmethod
+    def _variant_counter(cls, kmers):
+        """
+            Counts the number of various variants at each kmer position
+
+            Returns:
+                A Generator object for a counter for all variants at each kmer position
+        """
+
+        for nom in kmers:
+            counter = Counter(nom)
+            del counter['illegal-char']
+            yield counter
+
+    @classmethod
+    def _create_position_objects(cls, counters):
+        """
+            Create kmer position objects with entropy, position and variant properties
+
+            Returns:
+                A Generator object for Position objects for each kmer position
+        """
+        print('run once')
+        for position, counter in enumerate(counters):
+            position_object = Position()
+
+            position_object.POSITION = position
+            position_object.VARIANTS = counter
+            position_object.VARIANTS_FLATTENED = counter.elements()
+
+            yield position_object
+
+    def run(self):
+        kmers = self._kmers()
+        variant_counters = self._variant_counter(kmers)
+        kmer_position_objects = self._create_position_objects(variant_counters)
+        return kmer_position_objects
+
