@@ -1,6 +1,6 @@
 import math
 import random
-from collections import Counter
+from app.hunana.counter import VariantCounter
 from typing import Generator
 
 from scipy.stats import stats
@@ -27,13 +27,13 @@ class NormalizedEntropy(object):
         for iteration in range(self.iterations):
             sample_count = random.randint(1, self.max_samples)
             total_iteration_entropy = 0
-            samples = Counter()
+            samples = VariantCounter()
 
             for sample in range(sample_count):
                 random_variant = random.choice(flattened_variants)
-                samples.update({random_variant: 1})
+                samples.observe(random_variant)
 
-            for sample_value in samples.values():
+            for sample_value in samples.results('values'):
                 variant_entropy = self._entropy_calculation(sample_value, sample_count)
                 total_iteration_entropy += variant_entropy
 
