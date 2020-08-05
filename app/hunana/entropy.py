@@ -2,7 +2,6 @@ import math
 import random
 from app.hunana.counter import VariantCounter
 from typing import Generator
-
 from scipy.stats import stats
 
 
@@ -14,8 +13,9 @@ class NormalizedEntropy(object):
 
     def run(self):
         for position in self.positions:
-            normalized_entropy = self._calc_normalized_entropy(position.VARIANTS_FLATTENED)
-            position.ENTROPY = normalized_entropy
+            normalized_entropy = self._calc_normalized_entropy(position.variants_flattened)
+            position.entropy = normalized_entropy
+
             yield position
 
     def _calc_normalized_entropy(self, flattened_variants):
@@ -39,10 +39,10 @@ class NormalizedEntropy(object):
 
             iteration_data.append((total_iteration_entropy * -1, 1.0 / float(sample_count)))
 
-        slope, intercept, r_value, p_value, std_err = stats.linregress(list(map(lambda x: x[1], iteration_data)),
-                                                                       list(map(lambda x: x[0], iteration_data)))
+        slope, intercept, r_value, p_value, std_err = stats.linregress([y for x, y in iteration_data],
+                                                                       [x for x, y in iteration_data])
 
-        return intercept
+        return float(intercept)
 
     @classmethod
     def _entropy_calculation(cls, sample_value, sample_count):
