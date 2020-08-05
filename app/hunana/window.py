@@ -87,24 +87,26 @@ class SlidingWindow(object):
                 A Generator object for Position objects for each kmer position
         """
 
-        for position, counter in enumerate(counters):
-            position_object = Position()
-            position_object.POSITION = position
-            position_object.VARIANTS = self._create_variant_objects(counter)
-            position_object.VARIANTS_FLATTENED = counter.elements()
+        for idx, counter in enumerate(counters):
+            yield Position(
+                position=idx,
+                variants=self._create_variant_objects(counter),
+                variants_flattened=list(counter.elements())
+            )
 
-            yield position_object
-
-    def _create_variant_objects(self, variant_counter):
-        variant_count = sum(variant_counter.values())
-        variant_objects = map(lambda x: Variant(x[0], x[1], self._calc_conservation(x[1], variant_count)),
-                              variant_counter.items())
-        return list(variant_objects)
+    def _create_variant_objects(self, variant_counter: Counter) -> list:
+        num_variants = sum(variant_counter.values())
+        variant_objects = [
+            Variant(seq, count, self._calc_conservation(count, num_variants))
+            for seq, count
+            in variant_counter.items()
+        ]
+        return variant_objects
 
     @classmethod
     def _calc_conservation(cls, variant_hits, total_hits):
         conservation = (float(variant_hits) * 100) / float(total_hits)
-        return conservation
+        return float(conservation)
 
     def run(self):
         kmers = self._kmers()

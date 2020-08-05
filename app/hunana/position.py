@@ -1,25 +1,26 @@
 class Position(object):
-    POSITION = None
-    ENTROPY = None
-    VARIANTS = None
-    VARIANTS_FLATTENED = None
+
+    def __init__(self, position, variants, variants_flattened, entropy=None):
+        self.position = position
+        self.entropy = entropy
+        self.variants = variants
+        self.variants_flattened = variants_flattened
 
     @property
     def get_variant_count(self):
-        return len(self.VARIANTS)
+        return len(self.variants)
 
     @property
     def get_support_count(self):
-        return len(self.VARIANTS_FLATTENED)
+        return len(self.variants_flattened)
+    
+    def __repr__(self):
+        return f"<Position: {self.position} {{{len(self.variants)} | {self.entropy:.2f}}}>"
+
 
 class Variant(object):
-    SEQUENCE = None
-    COUNT = None
-    CONSERVATION = None
 
     def __init__(self, sequence, count, conservation):
         self.SEQUENCE = sequence
         self.COUNT = count
         self.CONSERVATION = conservation
-
-
