@@ -90,14 +90,14 @@ class SlidingWindow(object):
         for idx, counter in enumerate(counters):
             yield Position(
                 position=idx,
-                variants=self._create_variant_objects(counter),
+                sequences=self._create_variant_objects(idx, counter),
                 variants_flattened=list(counter.elements())
             )
 
-    def _create_variant_objects(self, variant_counter: Counter) -> list:
+    def _create_variant_objects(self, idx, variant_counter: Counter) -> list:
         num_variants = sum(variant_counter.values())
         variant_objects = [
-            Variant(seq, count, self._calc_conservation(count, num_variants))
+            Variant(idx, seq, count, self._calc_conservation(count, num_variants))
             for seq, count
             in variant_counter.items()
         ]
