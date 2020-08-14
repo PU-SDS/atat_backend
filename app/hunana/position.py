@@ -1,4 +1,5 @@
 import itertools
+from collections import Counter, defaultdict
 from operator import itemgetter
 
 
@@ -7,6 +8,14 @@ class MotifClasses(object):
     Ma = 'Major'
     Mi = 'Minor'
     U = 'Unique'
+
+
+class VariantDict(defaultdict):
+    def get_counter(self):
+        position = Counter()
+        for x in self:
+            position[x] = len(self[x])
+        return position
 
 
 class PList(list):
@@ -22,13 +31,14 @@ class PList(list):
 
 
 class Position(object):
-    def __init__(self, position, sequences, variants_flattened, entropy=None):
+    def __init__(self, position, sequences, variants_flattened, variant_dict, entropy=None):
         self.position = position
         self.entropy = entropy
         self.variants_flattened = variants_flattened
         self.supports = len(self.variants_flattened)
         self.sequences = sequences
         self.variants = len(self.sequences)
+        self.variant_dict = variant_dict
 
     def __setattr__(self, key, value):
         if key == 'sequences':
