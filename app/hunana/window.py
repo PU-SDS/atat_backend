@@ -1,7 +1,7 @@
 from collections import Counter
 from itertools import islice
 
-from app.hunana.position import Position, Variant, VariantDict
+from app import Position, Variant, VariantDict
 
 
 class SlidingWindow(object):
@@ -29,17 +29,21 @@ class SlidingWindow(object):
 
         self.seqs = list(seqs)
         self.kmer_len = kmer_len
-        self.idx = [x.description for x in self.seqs]
 
-    def _create_variant_dict(self, iterable):
+        Position.SEQ_DESCRIPTIONS = [x.description for x in self.seqs]
+
+    def _create_variant_dict(self, kmers):
         positions = []
 
-        for c in iterable:
+        for kmer in kmers:
             unique = VariantDict(list)
-            for a, b in enumerate(c):
+            # Here there's no need to enumerate, you can just append any value because you are essentialy
+            # only using len to get the number of elements. There has to be a more elegant way to achive the same effect
+            for a, b in enumerate(kmer):
                 unique[b].append(a)
             unique.pop('illegal-char', None)
-            positions.append(unique)
+            if len(unique) > 0:
+                positions.append(unique)
         return positions
 
     def _kmers(self):
