@@ -9,9 +9,7 @@ from operator import itemgetter
 """
 
 class MotifClasses(object):
-    '''
-        Defines the short and long name of Motifs.
-    '''
+    """ Defines the short and long name of Motifs. """
 
     I = 'Index'
     Ma = 'Major'
@@ -53,8 +51,9 @@ class VariantDict(defaultdict):
 
     def get_counter(self) -> Counter:
         """
-            Get a counter object for the current position
-            :return: Returns a counter object
+            Get a counter object for the current position's variants
+
+            :return: Returns a counter object for variants at current position
         """
 
         position = Counter()
@@ -101,9 +100,10 @@ class Position(object):
         self.entropy = entropy
         self.variants_flattened = variants_flattened
         self.supports = len(self.variants_flattened)
-        self.sequences = sequences
+        self.sequences = self._motif_classify(sequences)
         self.variants = len(self.sequences)
-        self.variant_dict = variant_dict
+
+        self._set_desc_data(variant_dict)
 
     def __getstate__(self):
         # Removes the unnecessary data from being exported to JSON
@@ -115,41 +115,56 @@ class Position(object):
     def __setstate__(self, state):
         self.__dict__.update(state)
 
-    def __setattr__(self, key, value):
-        # Classify the variants into motif categories as they are inserted
-        if key == 'sequences':
-            value = sorted(value, key=itemgetter('count'), reverse=True)
+    def _set_desc_data(self, variant_dict):
+        """
+            Sets the description data for each variant within the Position object
 
-            for idx, variant in enumerate(value):
-                if idx == 0:
-                    value[idx].motif_short = 'I'
-                    value[idx].motif_long = MotifClasses.I
-                elif idx == 1:
-                    value[idx].motif_short = 'Ma'
-                    value[idx].motif_long = MotifClasses.Ma
-                elif value[idx].count > 1:
-                    value[idx].motif_short = 'Mi'
-                    value[idx].motif_long = MotifClasses.Mi
-                else:
-                    value[idx].motif_short = 'U'
-                    value[idx].motif_long = MotifClasses.U
+            :param variant_dict: A defaultdict of list containing idx of sequences
+            :type variant_dict: defaultdict
+        """
 
-        # Get the description field data for the origins of each variant
-        if key == 'variant_dict':
-            for dict_variant in value:
-                for variant in self.sequences:
-                    if dict_variant == variant.sequence:
-                        idx = value[dict_variant]
-                        variant.id = self._get_id(idx)
-                        variant.strain = self._get_strain(idx)
-                        variant.country = self._get_country(idx)
-                        variant.host = self._get_host(idx)
+        for dict_variant, variant in itertools.product(variant_dict, self.sequences):
+            if dict_variant != variant.sequence:
+                continue
+            idx = variant_dict[dict_variant]
+            variant.id = self._get_id(idx)
+            variant.strain = self._get_strain(idx)
+            variant.country = self._get_country(idx)
+            variant.host = self._get_host(idx)
 
-        super(Position, self).__setattr__(key, value)
+    @classmethod
+    def _motif_classify(cls, variants) -> list:
+        """
+        Given a list of Variant objects sort by the count of each, and  classify each variant into motif classes
+
+        :param variants: A list of Variant objects
+        :type variants: list
+
+        :return: A list containing Variant objects sorted by count and each variant classified into motif classes
+        """
+
+        variants = sorted(variants, key=lambda x: x.count, reverse=True)
+
+        for idx, variant in enumerate(variants):
+            if idx == 0:
+                variants[idx].motif_short = 'I'
+                variants[idx].motif_long = MotifClasses.I
+            elif idx == 1:
+                variants[idx].motif_short = 'Ma'
+                variants[idx].motif_long = MotifClasses.Ma
+            elif variants[idx].count > 1:
+                variants[idx].motif_short = 'Mi'
+                variants[idx].motif_long = MotifClasses.Mi
+            else:
+                variants[idx].motif_short = 'U'
+                variants[idx].motif_long = MotifClasses.U
+
+        return variants
 
     def _get_id(self, indexs) -> list:
         """
             Given a list of sequence indexes return a list of sequence ids
+
             :param indexs: A list of sequence indexs
             :type indexs: list
 
@@ -161,6 +176,7 @@ class Position(object):
     def _get_strain(self, indexs) -> list:
         """
             Given a list of sequence indexes return a list of sequence strains
+
             :param indexs: A list of sequence indexs
             :type indexs: list
 
@@ -172,6 +188,7 @@ class Position(object):
     def _get_country(self, indexs) -> list:
         """
             Given a list of sequence indexes return a list of sequence countries
+
             :param indexs: A list of sequence indexs
             :type indexs: list
 
@@ -183,6 +200,7 @@ class Position(object):
     def _get_host(self, indexs) -> list:
         """
             Given a list of sequence indexes return a list of sequence hosts
+
             :param indexs: A list of sequence indexs
             :type indexs: list
 
@@ -193,8 +211,8 @@ class Position(object):
 
 
 class Variant(object):
-    def __init__(self, position, sequence, count, conservation, motif_short=None,
-                 motif_long=None, idx=None, strain=None, country=None, host=None):
+    def __init__(self, position, sequence, count, conservation, motif_short=None, motif_long=None, idx=None,
+                 strain=None, country=None, host=None):
         """
             Data Structure for kmer variants
 
@@ -233,7 +251,3 @@ class Variant(object):
         self.strain = strain
         self.country = country
         self.host = host
-
-    def __getitem__(self, item):
-        # Make the Variant object subscriptable
-        return getattr(self, item)
