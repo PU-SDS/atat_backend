@@ -16,6 +16,7 @@ class NormalizedEntropy(object):
             normalized_entropy = self._calc_normalized_entropy(position.variants_flattened)
             position.entropy = normalized_entropy
 
+            # We basically get a dictionary for the class because this makes it easier for adding to Mongo later
             yield position
 
     def _calc_normalized_entropy(self, flattened_variants):

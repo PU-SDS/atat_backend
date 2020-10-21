@@ -18,23 +18,19 @@ class MotifClasses(object):
 
 
 class ATATData(object):
-    def __init__(self, id, position, sequence, reservoir, host):
+    def __init__(self, reservoir, host):
         """
             ATAT Result Data Structure
 
             Describes the data structure for storing ATAT results. It stores the host and reservoir variants at each
             position.
 
-            :param id: The job id
             :param position: The zero based position number within the sequences
             :param sequence:
             :param reservoir: The
             :param host:
         """
 
-        self.position = position
-        self.id = id
-        self.sequence = sequence
         self.reservoir = reservoir
         self.host = host
 
@@ -74,7 +70,7 @@ class PList(list):
         return total
 
 
-class Position(object):
+class Position(dict):
     SEQ_DESCRIPTIONS = None
 
     def __init__(self, position, sequences, variants_flattened, variant_dict, entropy=None):
@@ -105,16 +101,6 @@ class Position(object):
 
         self._set_desc_data(variant_dict)
 
-    def __getstate__(self):
-        # Removes the unnecessary data from being exported to JSON
-        Position = self.__dict__.copy()
-        del Position['variant_dict']
-        del Position['variants_flattened']
-        return Position
-
-    def __setstate__(self, state):
-        self.__dict__.update(state)
-
     def _set_desc_data(self, variant_dict):
         """
             Sets the description data for each variant within the Position object
@@ -131,6 +117,13 @@ class Position(object):
             variant.strain = self._get_strain(idx)
             variant.country = self._get_country(idx)
             variant.host = self._get_host(idx)
+
+    def __setattr__(self, key, value):
+        # This really makes me sad, find a way around this mess TODO: fix this please, also in Variant
+        dict.__setitem__(self, key, value)
+
+    def __getattr__(self, item):
+        return dict.__getitem__(self, item)
 
     @classmethod
     def _motif_classify(cls, variants) -> list:
@@ -183,7 +176,7 @@ class Position(object):
             :return: A list containing sequence ids
         """
 
-        return [self.SEQ_DESCRIPTIONS[x].split('|')[4] for x in indexs]
+        return [self.SEQ_DESCRIPTIONS[x].split('|')[1] for x in indexs]
 
     def _get_country(self, indexs) -> list:
         """
@@ -195,7 +188,7 @@ class Position(object):
             :return: A list containing sequence ids
         """
 
-        return [self.SEQ_DESCRIPTIONS[x].split('|')[1] for x in indexs]
+        return [self.SEQ_DESCRIPTIONS[x].split('|')[2] for x in indexs]
 
     def _get_host(self, indexs) -> list:
         """
@@ -207,10 +200,10 @@ class Position(object):
             :return: A list containing sequence ids
         """
 
-        return [self.SEQ_DESCRIPTIONS[x].split('|')[2] for x in indexs]
+        return [self.SEQ_DESCRIPTIONS[x].split('|')[3] for x in indexs]
 
 
-class Variant(object):
+class Variant(dict):
     def __init__(self, position, sequence, count, conservation, motif_short=None, motif_long=None, idx=None,
                  strain=None, country=None, host=None):
         """
@@ -251,3 +244,10 @@ class Variant(object):
         self.strain = strain
         self.country = country
         self.host = host
+
+    def __setattr__(self, key, value):
+        # This really makes me sad, find a way around this mess TODO: fix this please, also in Variant
+        dict.__setitem__(self, key, value)
+
+    def __getattr__(self, item):
+        return dict.__getitem__(self, item)

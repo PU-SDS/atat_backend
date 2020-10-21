@@ -17,7 +17,7 @@ def sequence_removeDuplicates(sequences="", min_length=0, por_n=100):
                 sequence = str(seq_record.seq).upper()
                 # Check if the current sequence is according to the user parameters
                 if (len(sequence) >= min_length and (float(sequence.count("N"))/float(len(sequence)))*100 <= por_n):
-                # If the sequence passed in the test "is it clean?" and it isn't in the
+                # If the sequence passed in the testasdf "is it clean?" and it isn't in the
                 # hash table, the sequence and its id are going to be in the hash
                         if sequence not in hashSequences:
                                 cleanSequences.append(seq_record)
