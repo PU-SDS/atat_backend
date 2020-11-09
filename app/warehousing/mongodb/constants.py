@@ -11,3 +11,11 @@ class MongoConstants(object):
     MONGO_PORT = app.config['MONGO_PORT']
 
     MONGO_POSITIONS_DB = app.config['MONGO_POSITIONS_DB']
+    MONGO_JOB_STATUS_DB = app.config['MONGO_JOB_STATUS_DB']
+
+
+class JobStatuses(object):
+    JOB_PROCESSING = 'Processing'
+    JOB_COMPLETED = 'Completed'
+    JOB_FAILED = 'Failed'
+    JOB_NONEXIST = 'Non-Existant'

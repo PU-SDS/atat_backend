@@ -41,6 +41,29 @@ class SaveUploads(object):
         # Return the job id
         return job_id
 
+    def save2(self) -> str:
+        """
+            Creates the required folder for the job and returns the job id
+
+            Returns: Job id
+        """
+
+        # Generate a unique job id
+        job_id = GenerateJobId().generate()
+
+
+        # Create our job path, folder and results sub folder
+        job_folder = join(app.config['JOBS_FOLDER'], job_id)
+        makedirs(join(job_folder, app.config['RESULTS_SUB_FOLDER']))
+
+        with open(join(job_folder, Constants.HOST_SEQUENCE_FILENAME), 'wb') as host_file, \
+                open(join(job_folder, Constants.RESERVOIR_SEQUENCE_FILENAME), 'wb') as reservoir_file:
+            host_file.write(self.host_file)
+            reservoir_file.write(self.reservoir_file)
+
+        # Return the job id
+        return job_id
+
     @classmethod
     def _is_filetype_valid(cls, filename):
         try:

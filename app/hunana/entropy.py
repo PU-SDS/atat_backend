@@ -6,7 +6,7 @@ from scipy.stats import stats
 
 
 class NormalizedEntropy(object):
-    def __init__(self, max_samples, iterations, positions: Generator):
+    def __init__(self, max_samples, iterations, positions: list):
         self.max_samples = max_samples
         self.iterations = iterations
         self.positions = positions

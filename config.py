@@ -39,10 +39,12 @@ class Containers(Config):
 
 class MongoDBs(Config):
     MONGO_POSITIONS_DB = 'positions'
+    MONGO_JOB_STATUS_DB = 'job_status'
     MONGO_VARIANTS_DB = 'variants'
     MONGO_AUTH_DB = 'positions'
     MONGO_HOST = 'localhost'
     MONGO_PORT = 27017
+
 
 class CeleryConfig(Config):
     CELERY_BROKER_URL = 'pyamqp://guest@localhost//'

@@ -1,143 +1,143 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <!--Required meta tags-->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<html lang="en"><head>
+    <!--Required meta tags-->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        <!--Bootstrap Stylesheeet-->
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <!--Bootstrap Stylesheeet-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 
-        <!--BOotstrap Javascript-->
-        <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <!--BOotstrap Javascript-->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
-        <!--Custom scripts-->
-        <script src="./assets/js/form.js"></script>
+    <!--Custom scripts-->
+    <script src="./assets/js/form.js"></script>
 
-        <title>ATAT: Antigen Transmisibility Analysis Tool</title>
-    </head>
+    <title>ATAT: Antigen Transmisibility Analysis Tool</title>
+</head>
 
-    <body>
-        <nav class="navbar navbar-light bg-light">
-            <div class="col-sm-4 p-0 pb-1 d-flex justify-content-center">
-                <a class="navbar-brand" href="#">
-                    <img src="./assets/images/logo.png" width="40" height="30" class="d-inline-block align-top">
-                    Perdana University
-                </a>
-            </div>
-            <div class="col-sm-4 p-0 pb-1 d-flex justify-content-center">
-                <a class="navbar-brand d-inline-block align-top text-wrap text-justify text-center" href="/">
-                    ATAT: Antigenic Transmissibility Analysis Tool
-                </a>
-            </div>
-            <div class="col-sm-4 p-0 pb-1 d-flex justify-content-center">
-                <div class="btn-group" role="group" aria-label="Header Buttons">
-                    <button class="btn btn-info navbar-toggle collapsed" data-toggle="collapse" data-target="#check-results" aria-controls="check-results" aria-expanded="false" aria-label="Check Results">
-                        Check Results
-                    </button>
-                    <button class="btn btn-outline-secondary navbar-toggle collapsed" data-toggle="collapse" data-target="#introduction" aria-controls="introduction" aria-expanded="false" aria-label="Introduction">
-                        Introduction
-                    </button>
-                </div>
-            </div>
-            <!--Begin search job collapsable section -->
-            <div class="pos-f-t col-sm-12">
-                <div class="collapse navbar-collapse" id="check-results">
-                    <div class="col-sm-12 d-flex justify-content-center bg-light p-4">
-                        <form class="form-inline">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="job-id-desc">
-                                        Job ID:
-                                    </span>
-                                </div>
-                                <input type="text" class="form-control" placeholder="Ex: fyysdc" aria-label="Job ID" aria-describedby="job-id-desc">
-                                <div class="input-group-append">
-                                    <button type="button" class="btn btn-link btn-danger">
-                                        <span class="fas fa-search text-white"></span>
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <!--End search job collapsable section-->
-            <!--Start introduction collapsable section-->
-            <div class="pos-f-t col-sm-12">
-                <div class="collapse navbar-collapse" id="introduction">
-                    <div class="col-sm-12 d-flex justify-content-center bg-light p-4">
-                        <div class="card">
-                            <div class="card-header">
-                                Introduction
-                            </div>
-                            <div class="card-body">
-                                <blockquote class="blockquote mb-0">
-                                    <p>
-                                        ATAT is a web-based application to study the dynamics of virus reservoir-to-host (R2H) mutation transmissions. The basic requirement of the application is the viral protein sequences of the reservoir and host viruses as an input.
-                                    </p>
-                                    <p>
-                                        The comparative analyses between the co-aligned sequences of the reservoir and host populations is based on a sliding window approach of size nine for statistical significance and data application to the major histocompatibility complex (MHC) and T-cell receptor (TCR) immune response mechanisms.
-                                    </p>
-                                    <p>
-                                        The sequences at each of the aligned overlapping nonamer positions of the respective hosts are classified as four patterns of characteristic diversity motifs, as a basis for quantitative analysis: (i) "index", the most prevalent sequence; (ii) "major" variant, the second most common sequence and the single most prevalent variant of the index, with at least one amino acid mutation; (iii) "minor" variants, multiple different sequences, each with an incidence (percent occurrence) less than that of the major variant; and (iv) "unique" variants, each observed only once.
-                                    </p>
-                                    <p>
-                                        The diversity motifs and their incidences at each of the nonamer positions allow evaluation of the mutation transmission dynamics and selectivity of the sequences in relation to the reservoir or the hosts. This application can be used for a detailed proteome-wide characterization of the composition and incidence of mutations present in the reservoir and host populations for a better understanding of host tropism.
-                                    </p>
-                                    <footer class="blockquote-footer">
-                                        Dynamics of Influenza A (H5N1) virus protein sequence diversity
-                                        <cite title="citation">
-                                            - Asif M. Khan et al
-                                        </cite>
-                                    </footer>
-                                </blockquote>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!--End introduction collapsable section-->
-        </nav>
-        <div class="container pt-1" style="max-width: 80%;">
-            <form id="submit-job" action="http://localhost:8080/submit_job">
-                <div class="row border rounded">
-                    <div class="col-12">
-                        <div class="form-group row align-items-center">
-                            <label for="name" class="col-4 mb-0">Name:</label>
-                            <div class="col-8">
-                                <input type="text" class="form-control border-top-0 border-left-0 border-right-0 border-bottom-1 shadow-none rounded-0" id="name" placeholder="Ex: Spike Protein (CoV2)">
-                            </div>
-                        </div>
-                        <div class="form-group row align-items-center">
-                            <label for="host-seq" class="col-4 mb-0">Host Sequences:</label>
-                            <div class="col-8">
-                                <input type="file" id="host-seq" name="host-seq" class="form-control-file">
-                            </div>
-                        </div>
-                        <div class="form-group row align-items-center">
-                            <label for="reservoir-seq" class="col-4 mb-0">Reservoir Sequences:</label>
-                            <div class="col-8">
-                                <input type="file" id="reservoir-seq" name="reservoir-seq" class="form-control-file">                                
-                            </div>
-                        </div>
-                        <div class="form-group row align-items-center">
-                            <label for="email" class="col-4 mb-0">Email:</label>
-                            <div class="col-8">
-                                <input type="email" id="email" name="email" class="form-control border-top-0 border-left-0 border-right-0 border-bottom-1 shadow-none rounded-0" placeholder="Ex: example@example.com">
-                            </div>
-                        </div>
-                        <div class="form-group row align-items-center">
-                            <div class="col-12 d-flex justify-content-center">
-                                <input type="submit" id="submit-job-btn" class="btn btn-info">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
+<body>
+    <nav class="navbar navbar-light bg-light">
+        <div class="col-sm-4 p-0 pb-1 d-flex justify-content-center">
+            <a class="navbar-brand" href="#">
+                <img src="./assets/images/logo.png" width="40" height="30" class="d-inline-block align-top">
+                Perdana University
+            </a>
         </div>
-    </body>
-</html>
+        <div class="col-sm-4 p-0 pb-1 d-flex justify-content-center">
+            <a class="navbar-brand d-inline-block align-top text-wrap text-justify text-center" href="/">
+                ATAT: Antigenic Transmissibility Analysis Tool
+            </a>
+        </div>
+        <div class="col-sm-4 p-0 pb-1 d-flex justify-content-center">
+            <div class="btn-group" role="group" aria-label="Header Buttons">
+                <button class="btn btn-info navbar-toggle collapsed" data-toggle="collapse" data-target="#check-results" aria-controls="check-results" aria-expanded="false" aria-label="Check Results">
+                    Check Results
+                </button>
+                <button class="btn btn-outline-secondary navbar-toggle collapsed" data-toggle="collapse" data-target="#introduction" aria-controls="introduction" aria-expanded="false" aria-label="Introduction">
+                    Introduction
+                </button>
+            </div>
+        </div>
+        <!--Begin search job collapsable section -->
+        <div class="pos-f-t col-sm-12">
+            <div class="collapse navbar-collapse" id="check-results">
+                <div class="col-sm-12 d-flex justify-content-center bg-light p-4">
+                    <form class="form-inline">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="job-id-desc">
+                                    Job ID:
+                                </span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Ex: fyysdc" aria-label="Job ID" aria-describedby="job-id-desc">
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-link btn-danger">
+                                    <span class="fas fa-search text-white"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!--End search job collapsable section-->
+        <!--Start introduction collapsable section-->
+        <div class="pos-f-t col-sm-12">
+            <div class="collapse navbar-collapse" id="introduction">
+                <div class="col-sm-12 d-flex justify-content-center bg-light p-4">
+                    <div class="card">
+                        <div class="card-header">
+                            Introduction
+                        </div>
+                        <div class="card-body">
+                            <blockquote class="blockquote mb-0">
+                                <p>
+                                    ATAT is a web-based application to study the dynamics of virus reservoir-to-host (R2H) mutation transmissions. The basic requirement of the application is the viral protein sequences of the reservoir and host viruses as an input.
+                                </p>
+                                <p>
+                                    The comparative analyses between the co-aligned sequences of the reservoir and host populations is based on a sliding window approach of size nine for statistical significance and data application to the major histocompatibility complex (MHC) and T-cell receptor (TCR) immune response mechanisms.
+                                </p>
+                                <p>
+                                    The sequences at each of the aligned overlapping nonamer positions of the respective hosts are classified as four patterns of characteristic diversity motifs, as a basis for quantitative analysis: (i) "index", the most prevalent sequence; (ii) "major" variant, the second most common sequence and the single most prevalent variant of the index, with at least one amino acid mutation; (iii) "minor" variants, multiple different sequences, each with an incidence (percent occurrence) less than that of the major variant; and (iv) "unique" variants, each observed only once.
+                                </p>
+                                <p>
+                                    The diversity motifs and their incidences at each of the nonamer positions allow evaluation of the mutation transmission dynamics and selectivity of the sequences in relation to the reservoir or the hosts. This application can be used for a detailed proteome-wide characterization of the composition and incidence of mutations present in the reservoir and host populations for a better understanding of host tropism.
+                                </p>
+                                <footer class="blockquote-footer">
+                                    Dynamics of Influenza A (H5N1) virus protein sequence diversity
+                                    <cite title="citation">
+                                        - Asif M. Khan et al
+                                    </cite>
+                                </footer>
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--End introduction collapsable section-->
+    </nav>
+    <div class="bg-white jumbotron d-flex align-items-center bg-none">
+<div class="container pt-1" style="max-width: 80%;">
+        <form id="submit-job" action="http://localhost:8080/submit_job" class="d-flex justify-content-center align-items-center">
+            <div class="row border rounded w-100">
+                <div class="col-12">
+                    <div class="form-group row align-items-center">
+                        <label for="name" class="col-4 mb-0">Name:</label>
+                        <div class="col-8">
+                            <input type="text" class="form-control border-top-0 border-left-0 border-right-0 border-bottom-1 shadow-none rounded-0" id="name" placeholder="Ex: Spike Protein (CoV2)">
+                        </div>
+                    </div>
+                    <div class="form-group row align-items-center">
+                        <label for="host-seq" class="col-4 mb-0">Host Sequences:</label>
+                        <div class="col-8">
+                            <input type="file" id="host-seq" name="host-seq" class="form-control-file">
+                        </div>
+                    </div>
+                    <div class="form-group row align-items-center">
+                        <label for="reservoir-seq" class="col-4 mb-0">Reservoir Sequences:</label>
+                        <div class="col-8">
+                            <input type="file" id="reservoir-seq" name="reservoir-seq" class="form-control-file">                                
+                        </div>
+                    </div>
+                    <div class="form-group row align-items-center">
+                        <label for="email" class="col-4 mb-0">Email:</label>
+                        <div class="col-8">
+                            <input type="email" id="email" name="email" class="form-control border-top-0 border-left-0 border-right-0 border-bottom-1 shadow-none rounded-0" placeholder="Ex: example@example.com">
+                        </div>
+                    </div>
+                    <div class="form-group row align-items-center">
+                        <div class="col-12 d-flex justify-content-center">
+                            <input type="submit" id="submit-job-btn" class="btn btn-info">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body></html>
