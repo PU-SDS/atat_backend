@@ -1,7 +1,7 @@
 import dash_html_components as html
 import dash_core_components as dcc
 
-from dashboard.tabs import Statistics, Variants, VariantOrigins, VariantsSources, Position
+from dashboard.tabs import Statistics, Variants, VariantOrigins, VariantsSources, VariantsCountry, Position
 
 
 class ResultsPage(object):
@@ -19,7 +19,8 @@ class ResultsPage(object):
                     # Host container
                     Statistics(context='host').set(),
                     Variants(context='host').set(),
-                    VariantOrigins(context='host').set()
+                    VariantOrigins(context='host').set(),
+                    VariantsCountry(context='host').set()
                 ]),
                 html.Div(className='col-sm-6', children=[
                     # Reservoir container

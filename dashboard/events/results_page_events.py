@@ -36,16 +36,18 @@ class ResultsPageEvents(object):
                    reservoir.get('entropy'), reservoir.get('variants'), reservoir.get('supports')
 
         @self.dash_app.callback(
-            Output('host-variant-details', 'data'),
+            [
+                Output('host-variant-details', 'data'),
+                Output('host-variants-countries', 'figure')
+             ],
             [
                 Input('host-variants', 'selected_rows'),
                 Input('host-variants', 'derived_virtual_data')
-            ],
-            State('reservoir-variants', 'data')
+            ]
         )
-        def host_variant_update_event(host_selected_row: list, host_row_data: list, reservoir_row_data: list):
-            a = reservoir_row_data
-            return host_variant_update_eventhandler(host_selected_row, host_row_data, reservoir_row_data)
+        def host_variant_update_event(host_selected_row: list, host_row_data: list):
+
+            return host_variant_update_eventhandler(host_selected_row, host_row_data)
 
         @self.dash_app.callback(
             [

@@ -8,11 +8,11 @@ def variant_update_eventhandler(host_selected_row: list, host_row_data: list):
 
         selected_row = host_selected_row[0]
         row_data = host_row_data[selected_row]
-        arranged_variant_data = zip(row_data.get('id'), row_data.get('strain'), row_data.get('host'))
+        arranged_variant_data = zip(row_data.get('id'), row_data.get('strain'), row_data.get('host'), row_data.get('country'))
 
         variant_data = [
-            {'id': id_, 'strain': strain, 'host': host}
-            for id_, strain, host in arranged_variant_data]
+            {'id': id_, 'strain': strain, 'host': host, 'country': country}
+            for id_, strain, host, country in arranged_variant_data]
 
         return variant_data
 
