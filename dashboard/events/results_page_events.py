@@ -2,9 +2,11 @@ from typing import Tuple
 
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
+import dash
 
 from dashboard.eventhandlers import position_update_statistics_eventhandler, position_update_variants_eventhandler, \
-    host_variant_update_eventhandler, reservoir_variant_update_eventhandler
+    host_variant_update_eventhandler, reservoir_variant_update_eventhandler, motif_search_eventhandler, \
+    download_results_json_eventhandler, download_results_csv_eventhandler
 
 
 class ResultsPageEvents(object):
@@ -39,7 +41,7 @@ class ResultsPageEvents(object):
             [
                 Output('host-variant-details', 'data'),
                 Output('host-variants-countries', 'figure')
-             ],
+            ],
             [
                 Input('host-variants', 'selected_rows'),
                 Input('host-variants', 'derived_virtual_data')
@@ -53,7 +55,7 @@ class ResultsPageEvents(object):
             [
                 Output('reservoir-variant-details', 'data'),
                 Output('reservoir-sources-distribution', 'figure')
-             ],
+            ],
             [
                 Input('reservoir-variants', 'selected_rows'),
                 Input('reservoir-variants', 'derived_virtual_data')
@@ -61,3 +63,39 @@ class ResultsPageEvents(object):
         )
         def reservoir_variant_update_event(reservoir_selected_row: list, reservoir_row_data: list):
             return reservoir_variant_update_eventhandler(reservoir_selected_row, reservoir_row_data)
+
+        @self.dash_app.callback(
+            Output('motif-analysis-table', 'data'),
+            [
+                Input('search-motif', 'n_clicks'),
+                Input('results-page-location', 'pathname')
+            ],
+            [
+                State('source-motif-dropdown', 'value'),
+                State('reservoir-motif-dropdown', 'value')
+            ]
+        )
+        def motif_search(clicks: int, job_id: str, source_motif: str, reservoir_motif: str):
+            if job_id is None or job_id == '/' or clicks is None:
+                raise PreventUpdate
+
+            return motif_search_eventhandler(job_id, source_motif, reservoir_motif)
+
+        @self.dash_app.callback(
+            Output('download-results-driver', 'data'),
+            [
+                Input('results-page-location', 'pathname'),
+                Input('download-json', 'n_clicks'),
+                Input('download-csv', 'n_clicks')
+            ], prevent_initial_call=True
+        )
+        def download_results(job_id: str, click_json: int, click_csv: int) -> dict:
+            if click_json is None and click_csv is None:
+                raise PreventUpdate
+
+            clicked: dict = dash.callback_context.triggered[0]
+
+            if 'download-json' in clicked.get('prop_id'):
+                return download_results_json_eventhandler(job_id)
+            else:
+                return download_results_csv_eventhandler(job_id)

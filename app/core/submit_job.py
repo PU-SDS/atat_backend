@@ -6,8 +6,8 @@ from Bio.Alphabet import IUPAC
 from app.hunana import SlidingWindow
 from app.hunana.entropy import NormalizedEntropy
 from app.core import Constants
-from app.warehousing import MongoDBWrite
-from app.warehousing import JobStatuses
+from app.warehousing.mongodb.write import MongoDBWrite
+from app.warehousing.mongodb.constants import JobStatuses
 from app.metadata  import UpdateMetadata
 from app.notifications import EmailNotification
 

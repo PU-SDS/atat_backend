@@ -37,7 +37,7 @@ with dash_app.server.app_context():
 
 dash_app.layout = html.Div(children=[
     Header().set(),
-    html.Div(id='container', className='container pt-1 container-center', style={'max-width': '90%'}, children=[
+    html.Div(id='container', className='container pt-1', style={'max-width': '100%'}, children=[
         SubmitJobPage('d-none').set(), ResultsPage('d-none').set(), ResultsPreCheck('d-none').set()
     ]),
     dcc.Location(

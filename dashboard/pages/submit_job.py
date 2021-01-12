@@ -9,9 +9,9 @@ class SubmitJobPage(object):
         self.submit_job_display = submit_job_display
 
     def set(self):
-        submit_job_page = html.Div(id='submit-job-container', className=f'col-sm-12 d-none', children=[
+        submit_job_page = html.Div(id='submit-job-container', className=f'col-sm-12 d-none pt-6', children=[
             html.Div(className='d-flex justify-content-center align-items-center', children=[
-                html.Div(className='row border rounded w-100', children=[
+                html.Div(className='row border rounded w-50', children=[
                     html.Div(className='col-12 mt-2 mb-2', children=[
                         SequenceUploader(context='host').set(),
                         SequenceUploader(context='reservoir').set(),

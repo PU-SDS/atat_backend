@@ -1,7 +1,8 @@
 import dash_html_components as html
 import dash_core_components as dcc
+from dash_extensions import Download
 
-from dashboard.tabs import Statistics, Variants, VariantOrigins, VariantsSources, VariantsCountry, Position
+from dashboard.tabs import Statistics, Variants, VariantOrigins, VariantsSources, VariantsCountry, Position, MotifAnalysis, Controls
 
 
 class ResultsPage(object):
@@ -11,7 +12,8 @@ class ResultsPage(object):
     def set(self):
         results_page = html.Div(id='results-page-container', className=f'col-sm-12 d-none', children=[
             html.Div(className='row', children=[
-                Position().set()
+                Position().set(),
+                Controls().set()
             ]),
             html.Div(className='row', children=[
                 # Container row for host and reservoir columns
@@ -30,7 +32,11 @@ class ResultsPage(object):
                     VariantsSources(context='reservoir').set()
                 ])
             ]),
-            dcc.Location(id='results-page-location')
+            html.Div(className='row', children=[
+                MotifAnalysis().set()
+            ]),
+            dcc.Location(id='results-page-location'),
+            Download(id='download-results-driver')
         ])
 
         return results_page

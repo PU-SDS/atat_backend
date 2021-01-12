@@ -1,10 +1,10 @@
-from typing import Tuple
+from typing import Tuple, List
 
 import pandas as pd
 
 from pymongo import MongoClient
-from app.warehousing.mongodb import MongoConstants
-from app.warehousing import JobStatuses
+from bson.json_util import dumps
+from app.warehousing.mongodb.constants import MongoConstants, JobStatuses
 
 # Imported for type annotation
 from pandas import DataFrame
@@ -105,3 +105,44 @@ class MongoDBRead(object):
             return JobStatuses.JOB_NONEXIST
 
         return status[0].get('status')
+
+    def get_motifs(self, source_motif: str, reservoir_motif: str) -> Tuple[List, List]:
+        positions_db = self.mongo_client[MongoConstants.MONGO_POSITIONS_DB]
+
+        host_collection = positions_db[f'{self.job_id}.source']
+        reservoir_collection = positions_db[f'{self.job_id}.reservoir']
+
+        # Get motifs from source matching the provided source motif
+        source_motifs = host_collection.aggregate(
+            self._get_motifs_pipeline(source_motif)
+        )
+
+        # Get motifs from reservoir matching the provided reservoir motif
+        reservoir_motifs = reservoir_collection.aggregate(
+            self._get_motifs_pipeline(reservoir_motif)
+        )
+
+        return list(source_motifs), list(reservoir_motifs)
+
+    def get_json(self) -> Tuple:
+        positions_db = self.mongo_client[MongoConstants.MONGO_POSITIONS_DB]
+
+        host_collection = positions_db[f'{self.job_id}.source']
+        reservoir_collection = positions_db[f'{self.job_id}.reservoir']
+
+        host_results = host_collection.find({}, {'_id': 0, 'variants_flattened': 0})
+        reservoir_results = reservoir_collection.find({}, {'_id': 0, 'variants_flattened': 0})
+
+        return host_results, reservoir_results
+
+    @classmethod
+    def _get_motifs_pipeline(cls, motif_short: str) -> list:
+        # A centralized place to derive the pipeline for motif searching
+        pipeline = [
+                {'$unwind': '$sequences'},
+                {'$match': {'sequences.motif_short': motif_short}},
+                {'$group': {'_id': '$sequences.position', 'variants': {'$push': '$$ROOT'}}},
+                {'$project': {'variants.sequences': 1}}
+            ]
+
+        return pipeline

@@ -1,4 +1,4 @@
-from app.warehousing import JobStatuses
+from app.warehousing.mongodb.constants import JobStatuses
 
 
 class PrecheckStatusStyles(object):

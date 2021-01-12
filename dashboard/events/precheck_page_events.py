@@ -2,7 +2,8 @@ from typing import Tuple
 
 from dash.dependencies import Input, Output
 from dash.exceptions import PreventUpdate
-from app.warehousing import MongoDBRead, JobStatuses
+from app.warehousing.mongodb.constants import JobStatuses
+from app.warehousing.mongodb.read import MongoDBRead
 
 from dashboard.eventhandlers import position_dropdown_update
 from dashboard.events.constants import PrecheckStatusStyles
