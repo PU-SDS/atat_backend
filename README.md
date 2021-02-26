@@ -21,3 +21,7 @@ acid mutation
 ## Demostration
 
 ![Demo Image](./assets/demo.png)
+
+## Workflow
+
+![Demo Image](./assets/workflow.png)
