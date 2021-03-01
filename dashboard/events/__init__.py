@@ -1,4 +1,0 @@
-from dashboard.events.results_page_events import ResultsPageEvents
-from dashboard.events.submit_job_page_events import SubmitJobPageEvents
-from dashboard.events.precheck_page_events import PrecheckPageEvents
-from dashboard.events.constants import PrecheckStatusStyles
