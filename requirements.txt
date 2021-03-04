@@ -1,0 +1,5 @@
+HUNANA==1.0.3a0
+pymongo==3.11.3
+celery==5.0.5
+mongoengine==0.22.1
+mongoengine-goodjson==1.1.8

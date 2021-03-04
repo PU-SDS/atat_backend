@@ -1,0 +1,4 @@
+use atat;
+db.createCollection('delete_me');
+use rabbit_backend;
+db.createCollection('delete_me');
