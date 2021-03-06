@@ -37,8 +37,8 @@ class Result(Document):
         def get_grouped_position(self, idx: str, position: int):
             result = self.get(id=idx)
 
-            source_position = result.source.get(position=position).to_json()
-            reservoir_position = result.reservoir.get(position=position).to_json()
+            source_position = result.source.get(position=position).to_mongo().to_dict()
+            reservoir_position = result.reservoir.get(position=position).to_mongo().to_dict()
 
             return {"source": source_position, "reservoir": reservoir_position}
 

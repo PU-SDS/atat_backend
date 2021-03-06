@@ -1,13 +1,14 @@
-from flask import Flask, request, make_response
-from flask_restful import Resource, Api, abort, marshal_with, fields
+from flask import Flask
+from flask_restful import Resource, Api, abort
 from mongoengine import DoesNotExist
 
 from atat_single.models import Job, Result
-from atat_single.api.json_serializer import JSONSerializer
+from atat_single.api.json_serializer import JSONSerializer, JSONEncoder
 
 from atat_single.api.job_queries import JobQueries
 
 app = Flask(__name__)
+app.json_encoder = JSONEncoder
 api = Api(app)
 
 JSONSerializer(api).serializer()
@@ -15,7 +16,7 @@ JSONSerializer(api).serializer()
 
 class GetJob(Resource):
     def get(self, jobid: str):
-        return JobQueries.get_job(jobid).to_json(), 200
+        return JobQueries.get_job(jobid).to_json(indent=2), 200
 
 
 class GetGroupedPosition(Resource):
@@ -30,17 +31,23 @@ class GetGroupedPosition(Resource):
 
 class GetSourcePosition(Resource):
     def get(self, jobid: str, position: int):
-        return JobQueries.get_result(jobid).source.get(position=position).to_json(), 200
+        try:
+            return JobQueries.get_result(jobid).source.get(position=position).to_json(indent=2), 200
+        except DoesNotExist:
+            abort(404, message=f'Job id {jobid} does not have position {position}.')
 
 
 class GetReservoirPosition(Resource):
     def get(self, jobid: str, position: int):
-        return JobQueries.get_result(jobid).reservoir.get(position=position).to_json(), 200
+        try:
+            return JobQueries.get_result(jobid).source.get(position=position).to_json(indent=2), 200
+        except DoesNotExist:
+            abort(404, message=f'Job id {jobid} does not have position {position}.')
 
 
 class GetResult(Resource):
     def get(self, jobid: str):
-        return JobQueries.get_result(jobid).to_json(), 200
+        return JobQueries.get_result(jobid).to_json(indent=2), 200
 
 
 api.add_resource(GetJob, '/info/<string:jobid>')

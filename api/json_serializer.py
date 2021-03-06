@@ -1,4 +1,6 @@
 from flask import make_response
+import json
+from bson import ObjectId
 
 
 class JSONSerializer(object):
@@ -19,3 +21,10 @@ class JSONSerializer(object):
             return resp
 
         return _
+
+
+class JSONEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, ObjectId):
+            return str(o)
+        return json.JSONEncoder.default(self, o)
