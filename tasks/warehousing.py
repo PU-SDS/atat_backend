@@ -34,6 +34,7 @@ class Warehousing(Task):
         # First we get the job that we just saved using the job id. Then we update the log
         job = Job.objects.get(_id=jobid)
         job.log.append(Logging.make_log_entry(LogContexts.INFO, f'Hunana completed for job {jobid}.'))
+        job.status = 'RUNNING'
         job.save()
 
         # Then we create an instance of the Results model that we will later link to the job
@@ -62,6 +63,7 @@ class Warehousing(Task):
         # We have everything we need. Link the results to the job and save. Then save the job itself
         job.results = result.save()
         job.log.append(Logging.make_log_entry(LogContexts.INFO, f'Job {jobid} successfully completed.'))
+        job.status = 'FINISHED'
         job.save()
 
     @classmethod

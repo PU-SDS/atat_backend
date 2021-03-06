@@ -20,14 +20,14 @@ from .logging import Logging
 
 @app.task(name="ATAT")
 def atat(source_seqs: str, reservoir_seqs: str, jobid: str, **kwargs):
-    Job(_id=jobid, log=[Logging.make_log_entry(
-        context=LogContexts.INFO,
-        msg=f'Starting job {jobid}.'
-    )]).save()
+    Job(
+        _id=jobid,
+        log=[Logging.make_log_entry(context=LogContexts.INFO, msg=f'Starting job {jobid}.')],
+        status='STARTED').save()
 
     chord([
         hunana.s(Tags.SOURCE, source_seqs, **kwargs),
         hunana.s(Tags.RESERVOIR, reservoir_seqs, **kwargs)
-    ])(Warehousing().s(jobid))
+    ])(Warehousing().s(jobid)).forget()
 
 
