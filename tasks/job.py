@@ -1,17 +1,33 @@
-from celery.result import AsyncResult
+# Here lies 3rd party module imports
+from celery import chord
 
-from .hunana_reservoir import hunana_reservoir
-from .hunana_source import hunana_source
+# Here lies the Celery app import
+from ..celery_app import app
 
-from atat_single.celery_app import app
+# Here lies the model imports
+from ..models import Job
+
+# Here lies the task imports
+from .hunana import hunana
+from .warehousing import Warehousing
+
+# Here lies the constant imports
+from .constants import LogContexts, Tags
+
+# Here lies other imports
+from .logging import Logging
 
 
-@app.task()
-def run_job(source_seqs: str, reservoir_seqs: str, jobid: str, **kwargs):
-    source_async = hunana_source.delay(source_seqs, **kwargs)  # type: AsyncResult
-    reservoir_async = hunana_reservoir.delay(reservoir_seqs, **kwargs)  # type: AsyncResult
+@app.task(name="ATAT")
+def atat(source_seqs: str, reservoir_seqs: str, jobid: str, **kwargs):
+    Job(_id=jobid, log=[Logging.make_log_entry(
+        context=LogContexts.INFO,
+        msg=f'Starting job {jobid}.'
+    )]).save()
 
-    source_results = source_async.get()
-    reservoir_results = reservoir_async.get()
+    chord([
+        hunana.s(Tags.SOURCE, source_seqs, **kwargs),
+        hunana.s(Tags.RESERVOIR, reservoir_seqs, **kwargs)
+    ])(Warehousing().s(jobid))
 
-    print(reservoir_results)
+
