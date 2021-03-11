@@ -1,6 +1,7 @@
 from flask import make_response
 import json
 from bson import ObjectId
+from mongoengine.base import EmbeddedDocumentList
 
 
 class JSONSerializer(object):
@@ -16,6 +17,9 @@ class JSONSerializer(object):
     def serializer(self):
         @self.api.representation('application/json')
         def _(data, code, headers=None):
+            if isinstance(data, EmbeddedDocumentList):
+                data = self._embedded_document_to_dict(data)
+
             resp = make_response(data, code)
             resp.headers['Access-Control-Allow-Origin'] = '*'
             resp.headers.extend(headers or {})
@@ -23,9 +27,23 @@ class JSONSerializer(object):
 
         return _
 
+    @classmethod
+    def _embedded_document_to_dict(cls, document: EmbeddedDocumentList):
+        """
+            This just converts the EmbeddedDocuments inside a  EmbeddedDocumentList into a dictionary.
+        """
+
+        items = dict()
+
+        for count, item in enumerate(document):
+            items[count] = item.to_mongo().to_dict()
+
+        return items
+
 
 class JSONEncoder(json.JSONEncoder):
     def default(self, o):
         if isinstance(o, ObjectId):
             return str(o)
+
         return json.JSONEncoder.default(self, o)

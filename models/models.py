@@ -42,14 +42,6 @@ class Switch(EmbeddedDocument):
             'UNIQUE': 'Unique'
         }
 
-        def get_motif_by_key(self, key: str) -> str:
-            """
-                We store the motif name in the database as keys, this function can be used to convert that into it's
-                value.
-            """
-
-            return self.MOTIFS.get(key)
-
     position = IntField(required=True)
     sequence = StringField(required=True)
     fromx = StringField(required=True, choices=Motifs.MOTIFS.keys())
@@ -74,7 +66,7 @@ class Result(Document):
 
             return {"source": source_position, "reservoir": reservoir_position}
 
-    meta = {'queryset_class':  ResultQuerySet}
+    meta = {'queryset_class': ResultQuerySet}
 
 
 class Job(Document):
