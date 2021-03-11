@@ -50,11 +50,17 @@ class GetResult(Resource):
         return JobQueries.get_result(jobid).to_json(indent=2), 200
 
 
+class GetPositionCount(Resource):
+    def get(self, jobid: str):
+        return str(JobQueries.get_result(jobid).source.count()), 200
+
+
 api.add_resource(GetJob, '/info/<string:jobid>')
 api.add_resource(GetResult, '/results/<string:jobid>')
 api.add_resource(GetGroupedPosition, '/results/<string:jobid>/position/grouped/<int:position>')
 api.add_resource(GetSourcePosition, '/results/<string:jobid>/position/source/<int:position>')
 api.add_resource(GetReservoirPosition, '/results/<string:jobid>/position/reservoir/<int:position>')
+api.add_resource(GetPositionCount, '/results/<string:jobid>/position/count')
 
 if __name__ == '__main__':
     app.run(debug=True)

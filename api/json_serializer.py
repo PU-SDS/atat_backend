@@ -17,6 +17,7 @@ class JSONSerializer(object):
         @self.api.representation('application/json')
         def _(data, code, headers=None):
             resp = make_response(data, code)
+            resp.headers['Access-Control-Allow-Origin'] = '*'
             resp.headers.extend(headers or {})
             return resp
 

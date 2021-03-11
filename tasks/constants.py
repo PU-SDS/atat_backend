@@ -5,12 +5,3 @@ class LogContexts(object):
 
     ERROR = 'ERROR'
     INFO = 'INFO'
-
-
-class Tags(object):
-    """
-        The Tags to be used to tag Hunana results.
-    """
-
-    SOURCE = 'source'
-    RESERVOIR = 'reservoir'

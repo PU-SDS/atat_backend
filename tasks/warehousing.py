@@ -3,11 +3,8 @@ from celery import Task
 
 from atat_single.celery_app import app
 
-# Here lies the constants import
-from .constants import Tags
-
 # Here lies the model imports
-from ..models import HunanaPosition, Job, Result
+from ..models import HunanaPosition, Job, Result, Switch
 
 # Here lies other imports
 from .logging import Logging
@@ -15,21 +12,29 @@ from .logging import Logging
 # Here lies constants imports
 from .constants import LogContexts
 
+# Only for typing
+from .atat import ATAT
+from typing import List, Tuple, Union
+
 
 class Warehousing(Task):
     name = "Warehousing"
+    queue = "Warehousing"
 
-    def run(self, hunana_results: list, jobid: str):
+    def run(self, results: list, jobid: str):
         """
             Stores the Hunana results for Source and Reservoir under the appropriate job id.
 
-            :param hunana_results: A list containing two dicts pertaining to the tagged Hunana results for Source a
+            :param hunana_results: A list containing two dicts pertaining to the Hunana results for Source a
             Reservoir sequences.
             :param jobid: The current job id.
 
             :type hunana_results: list
             :type jobid: str
         """
+
+        hunana_results, atat_results = results[0] #type: Union[list, List[ATAT.switch]]
+        source_hunana_results, rervoir_hunana_results = hunana_results #type: dict
 
         # First we get the job that we just saved using the job id. Then we update the log
         job = Job.objects.get(_id=jobid)
@@ -40,25 +45,25 @@ class Warehousing(Task):
         # Then we create an instance of the Results model that we will later link to the job
         result = Result()
 
-        # The first argument to this function will always be a list containing the GROUPED Hunana results for both
-        # Source and Reservoir. We loop through thatl ist, check the tag and create a list of HunanaPosition instances
-        # which we will later link with the Results instance we just created above.
-        for hunana_result in hunana_results:  # type: dict
-            if hunana_result.get('tag') == Tags.SOURCE:
-                result.source = self._get_hunana_positions(hunana_result.get('results'))
-                job.log.append(
-                    Logging.make_log_entry(LogContexts.INFO, f'Source sequence data stored successfully for job '
-                                                             f'{jobid}'))
-                job.save()
-            elif hunana_result.get('tag') == Tags.RESERVOIR:
-                result.reservoir = self._get_hunana_positions(hunana_result.get('results'))
-                job.log.append(
-                    Logging.make_log_entry(LogContexts.INFO, f'Reservoir sequence data stored successfully for '
-                                                             f'job '
-                                                             f'{jobid}'))
-                job.save()
-            else:
-                return
+        result.source = self._get_hunana_positions(source_hunana_results)
+        result.reservoir = self._get_hunana_positions(rervoir_hunana_results)
+
+        job.log.append(
+            Logging.make_log_entry(LogContexts.INFO, f'Reservoir sequence data stored successfully for '
+                                                     f'job '
+                                                     f'{jobid}'))
+        job.save()
+
+        # Now we need to save the ATAT (motif switching) data
+        print(atat_results)
+        switches = [Switch(
+            position=switch.get('position'),
+            sequence=switch.get('sequence'),
+            fromx=switch.get('fromx'),
+            to=switch.get('to')
+        ) for switch in atat_results]
+
+        result.switches = switches
 
         # We have everything we need. Link the results to the job and save. Then save the job itself
         job.results = result.save()
@@ -74,7 +79,8 @@ class Warehousing(Task):
                 entropy=position.get('entropy'),
                 supports=position.get('supports'),
                 variants=position.get('sequences'),
-                kmer_types=position.get('kmer_types')
+                kmer_types=position.get('kmer_types'),
+
             )
             for position in position]
 

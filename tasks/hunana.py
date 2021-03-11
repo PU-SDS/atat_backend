@@ -9,15 +9,11 @@ from hunana import Hunana
 
 
 @app.task(name="Hunana")
-def hunana(tag: str, seqs: str, **kwargs) -> dict:
+def hunana(seqs: str, **kwargs) -> list:
     """
-        Runs Hunana.
-        Any kwargs will be directly passed to Hunana.
+        Runs Hunana. Any kwargs will be directly passed to Hunana.
 
-        :param tag: The tag for the Hunana job (source/reservoir)
         :param seqs: The sequence to run through Hunana
-
-        :type tag: str
         :type seqs: str
 
         :returns: A dictionary containing a tag and Hunana results.
@@ -25,4 +21,4 @@ def hunana(tag: str, seqs: str, **kwargs) -> dict:
 
     results = Hunana(StringIO(seqs), **kwargs).run()
 
-    return {'tag': tag, 'results': results}
+    return results

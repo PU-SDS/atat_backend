@@ -3,7 +3,8 @@ from celery import Celery
 task_routes = {
     'ATAT': {'queue': 'ATAT'},
     'Hunana': {'queue': 'Hunana'},
-    'Warehousing': {'queue': 'Warehousing'}
+    'Warehousing': {'queue': 'Warehousing'},
+    'Job': {'queue': 'Job'}
 }
 
 app = Celery(
@@ -13,7 +14,7 @@ app = Celery(
 
 app.autodiscover_tasks(['atat_single.tasks'])
 app.conf.task_routes = task_routes
-app.conf.task_default_queue = 'Warehousing'
+# app.conf.task_default_queue = 'Warehousing'
 
 if __name__ == "__main__":
     app.start()

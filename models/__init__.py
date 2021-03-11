@@ -1,1 +1,1 @@
-from .models import Job, Result, HunanaPosition
+from .models import Job, Result, HunanaPosition, Switch

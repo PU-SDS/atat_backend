@@ -25,6 +25,37 @@ class HunanaPosition(EmbeddedDocument):
     kmer_types = ListField(required=True)
 
 
+class Switch(EmbeddedDocument):
+    """
+        This is the model for a motif switch.
+    """
+
+    class Motifs(object):
+        """
+            Defines various motif names.
+        """
+
+        MOTIFS = {
+            'INDEX': 'Index',
+            'MAJOR': 'Major',
+            'MINOR': 'Minor',
+            'UNIQUE': 'Unique'
+        }
+
+        def get_motif_by_key(self, key: str) -> str:
+            """
+                We store the motif name in the database as keys, this function can be used to convert that into it's
+                value.
+            """
+
+            return self.MOTIFS.get(key)
+
+    position = IntField(required=True)
+    sequence = StringField(required=True)
+    fromx = StringField(required=True, choices=Motifs.MOTIFS.keys())
+    to = StringField(required=True, choices=Motifs.MOTIFS.keys())
+
+
 class Result(Document):
     """
         This is the model for a ATAT job result.
@@ -32,6 +63,7 @@ class Result(Document):
 
     source = EmbeddedDocumentListField(HunanaPosition)
     reservoir = EmbeddedDocumentListField(HunanaPosition)
+    switches = EmbeddedDocumentListField(Switch)
 
     class ResultQuerySet(QuerySet):
         def get_grouped_position(self, idx: str, position: int):
