@@ -1,5 +1,7 @@
-from flask import make_response
 import json
+from collections import defaultdict
+
+from flask import make_response
 from bson import ObjectId
 from mongoengine.base import EmbeddedDocumentList
 
@@ -30,13 +32,13 @@ class JSONSerializer(object):
     @classmethod
     def _embedded_document_to_dict(cls, document: EmbeddedDocumentList):
         """
-            This just converts the EmbeddedDocuments inside a  EmbeddedDocumentList into a dictionary.
+            This just converts the EmbeddedDocuments inside a EmbeddedDocumentList into a dictionary.
         """
 
-        items = dict()
+        items = defaultdict(list)
 
         for count, item in enumerate(document):
-            items[count] = item.to_mongo().to_dict()
+            items[document.name].append(item.to_mongo().to_dict())
 
         return items
 

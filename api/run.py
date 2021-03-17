@@ -1,7 +1,10 @@
+from collections import defaultdict
+
 from flask import Flask
 from flask_restful import Resource, Api, abort
 from mongoengine import DoesNotExist
 
+from atat_single.api.data_manipulate import DataManipulate
 from atat_single.models import Job, Result
 from atat_single.api.json_serializer import JSONSerializer, JSONEncoder
 
@@ -68,14 +71,38 @@ class GetPositionMotifSwitches(Resource):
             abort(404, message=f'Job id {jobid} does not have any motif switches at position {position}.')
 
 
+class GetSourcePositionVariants(Resource):
+    def get(self, jobid: str, position: int):
+        try:
+            variants_list = JobQueries.get_result(jobid).source.get(position=position).variants
+            variants_dict = DataManipulate.baselist_to_dict(variants_list, 'variants')
+
+            return variants_dict, 200
+        except DoesNotExist:
+            abort(404, message=f'Job id {jobid} does not have position {position}.')
+
+
+class GetReservoirPositionVariants(Resource):
+    def get(self, jobid: str, position: int):
+        try:
+            variants_list = JobQueries.get_result(jobid).source.get(position=position).variants
+            variants_dict = DataManipulate.baselist_to_dict(variants_list, 'variants')
+
+            return variants_dict, 200
+        except DoesNotExist:
+            abort(404, message=f'Job id {jobid} does not have position {position}.')
+
+
 api.add_resource(GetJob, '/info/<string:jobid>')
 api.add_resource(GetResult, '/results/<string:jobid>')
-api.add_resource(GetGroupedPosition, '/results/<string:jobid>/position/grouped/<int:position>')
-api.add_resource(GetSourcePosition, '/results/<string:jobid>/position/source/<int:position>')
-api.add_resource(GetReservoirPosition, '/results/<string:jobid>/position/reservoir/<int:position>')
-api.add_resource(GetPositionCount, '/results/<string:jobid>/position/count')
+api.add_resource(GetGroupedPosition, '/results/<string:jobid>/positions/<int:position>/grouped')
+api.add_resource(GetSourcePosition, '/results/<string:jobid>/positions/<int:position>/source')
+api.add_resource(GetReservoirPosition, '/results/<string:jobid>/positions/<int:position>/reservoir')
+api.add_resource(GetPositionCount, '/results/<string:jobid>/positions/count')
 api.add_resource(GetAllMotifSwitches, '/results/<string:jobid>/switches')
-api.add_resource(GetPositionMotifSwitches, '/results/<string:jobid>/position/switches/<int:position>')
+api.add_resource(GetPositionMotifSwitches, '/results/<string:jobid>/positions/<int:position>/switches')
+api.add_resource(GetSourcePositionVariants, '/results/<string:jobid>/positions/<int:position>/source/variants')
+api.add_resource(GetReservoirPositionVariants, '/results/<string:jobid>/positions/<int:position>/reservoir/variants')
 
 if __name__ == '__main__':
     app.run(debug=True)
