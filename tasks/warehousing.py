@@ -33,8 +33,8 @@ class Warehousing(Task):
             :type jobid: str
         """
 
-        hunana_results, atat_results = results[0] #type: Union[list, List[ATAT.switch]]
-        source_hunana_results, rervoir_hunana_results = hunana_results #type: dict
+        hunana_results, atat_results = results[0]  # type: Union[list, List[ATAT.switch]]
+        source_hunana_results, rervoir_hunana_results = hunana_results  # type: dict
 
         # First we get the job that we just saved using the job id. Then we update the log
         job = Job.objects.get(_id=jobid)
@@ -57,11 +57,11 @@ class Warehousing(Task):
         # Now we need to save the ATAT (motif switching) data
         print(atat_results)
         switches = [Switch(
-            position=switch.get('position'),
-            sequence=switch.get('sequence'),
-            fromx=switch.get('fromx'),
-            to=switch.get('to')
-        ) for switch in atat_results]
+            position=motif_switch.get('position'),
+            sequence=motif_switch.get('sequence'),
+            fromx=motif_switch.get('from'),
+            to=motif_switch.get('to')
+        ) for motif_switch in atat_results]
 
         result.switches = switches
 
@@ -78,9 +78,7 @@ class Warehousing(Task):
                 position=position.get('position'),
                 entropy=position.get('entropy'),
                 supports=position.get('supports'),
-                variants=position.get('sequences'),
-                kmer_types=position.get('kmer_types'),
-
+                variants=position.get('variants')
             )
             for position in position]
 

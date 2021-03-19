@@ -9,7 +9,7 @@ task_routes = {
 
 app = Celery(
     broker='amqp://defaultrabbit:defaultrabbitpass@localhost:5672',
-    backend='mongodb://rabbitmongousr:rabbitmongopwd@localhost:27017/rabbit_backend?authSource=rabbit_backend'
+    backend='mongodb://rabbitmongousr:rabbitmongopwd@127.0.0.1:27017/rabbit_backend?authSource=rabbit_backend'
 )
 
 app.autodiscover_tasks(['atat_single.tasks'])

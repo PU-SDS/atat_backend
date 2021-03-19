@@ -22,7 +22,6 @@ class HunanaPosition(EmbeddedDocument):
     entropy = FloatField(required=True)
     supports = IntField(required=True)
     variants = ListField(required=True)
-    kmer_types = ListField(required=True)
 
 
 class Switch(EmbeddedDocument):

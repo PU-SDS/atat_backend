@@ -43,28 +43,18 @@ class ATAT(Task):
         switches = list()
 
         for source_position, reservoir_position in positions:  # type: dict
-            for source_variant, reservoir_variant in product(source_position.get('sequences'),
-                                                             reservoir_position.get('sequences')):  # type: dict
+            for source_variant, reservoir_variant in product(source_position.get('variants'),
+                                                             reservoir_position.get('variants')):  # type: dict
                 if source_variant.get('sequence') == reservoir_variant.get('sequence'):
                     if source_variant.get('motif_short') != reservoir_variant.get('motif_short'):
                         switches.append(
-                            dict(self.switch(
-                                position=source_variant.get('position'),
-                                sequence=source_variant.get('sequence'),
-                                fromx=source_variant.get('motif_long').upper(),
-                                to=reservoir_variant.get('motif_long').upper()
-                            ))
+                            {
+                                'position': source_variant.get('position'),
+                                'sequence': source_variant.get('sequence'),
+                                'from': source_variant.get('motif_long').upper(),
+                                'to': reservoir_variant.get('motif_long').upper()
+                            }
                         )
-
-        # This is a test switch
-        switches.append(
-            self.switch(
-                position=1,
-                sequence='KAANCHTED',
-                fromx='Index'.upper(),
-                to='Major'.upper()
-            )._asdict()
-        )
 
         return switches
 

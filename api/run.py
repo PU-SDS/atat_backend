@@ -43,7 +43,7 @@ class GetSourcePosition(Resource):
 class GetReservoirPosition(Resource):
     def get(self, jobid: str, position: int):
         try:
-            return JobQueries.get_result(jobid).source.get(position=position).to_json(indent=2), 200
+            return JobQueries.get_result(jobid).reservoir.get(position=position).to_json(indent=2), 200
         except DoesNotExist:
             abort(404, message=f'Job id {jobid} does not have position {position}.')
 
@@ -85,7 +85,7 @@ class GetSourcePositionVariants(Resource):
 class GetReservoirPositionVariants(Resource):
     def get(self, jobid: str, position: int):
         try:
-            variants_list = JobQueries.get_result(jobid).source.get(position=position).variants
+            variants_list = JobQueries.get_result(jobid).reservoir.get(position=position).variants
             variants_dict = DataManipulate.baselist_to_dict(variants_list, 'variants')
 
             return variants_dict, 200
