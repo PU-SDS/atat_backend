@@ -1,4 +1,5 @@
 from celery import Celery
+from .settings import RabbitMQ, MongoDB
 
 task_routes = {
     'ATAT': {'queue': 'ATAT'},
@@ -7,14 +8,15 @@ task_routes = {
     'Job': {'queue': 'Job'}
 }
 
+
 app = Celery(
-    broker='amqp://defaultrabbit:defaultrabbitpass@localhost:5672',
-    backend='mongodb://rabbitmongousr:rabbitmongopwd@127.0.0.1:27017/rabbit_backend?authSource=rabbit_backend'
+    broker=f'amqp://{RabbitMQ.USERNAME}:{RabbitMQ.PASSWORD}@{RabbitMQ.HOST}:{RabbitMQ.PORT}',
+    backend=f'mongodb://{RabbitMQ.BACKEND_USERNAME}:{RabbitMQ.BACKEND_PASSWORD}@{MongoDB.HOST}:{MongoDB.PORT}/'
+            f'{RabbitMQ.BACKEND_SOURCE}?authSource={RabbitMQ.BACKEND_SOURCE}'
 )
 
 app.autodiscover_tasks(['atat_single.tasks'])
 app.conf.task_routes = task_routes
-# app.conf.task_default_queue = 'Warehousing'
 
 if __name__ == "__main__":
     app.start()

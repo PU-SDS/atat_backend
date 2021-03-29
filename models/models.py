@@ -1,15 +1,14 @@
-from os import environ
 from mongoengine import connect, StringField, IntField, ListField, EmbeddedDocumentListField, FloatField, QuerySet
 from mongoengine_goodjson import Document, EmbeddedDocument, FollowReferenceField
 
-DATABASE_NAME = environ.get('MONGO_INITDB_DATABASE')
-USERNAME = environ.get('MONGO_ATAT_USERNAME')
-PASSWORD = environ.get('MONGO_ATAT_PASSWORD')
+from ..settings import MongoDB
 
-connect(DATABASE_NAME,
-        authentication_source=DATABASE_NAME,
-        username=USERNAME,
-        password=PASSWORD
+connect(MongoDB.PROJECT_DATABASE,
+        authentication_source=MongoDB.PROJECT_DATABASE,
+        username=MongoDB.USERNAME,
+        password=MongoDB.PASSWORD,
+        host=MongoDB.HOST,
+        port=MongoDB.PORT
         )
 
 
