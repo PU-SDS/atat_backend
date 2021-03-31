@@ -1,13 +1,13 @@
-language: python
 os: linux
 dist: bionic
 jobs:
     include:
-        -   stage: Install Dependencies
+        -   stage: Update Package Manager
             script: |
-                echo 'Installding skubectl.'
                 echo 'Updating package manager.'
                 sudo apt-get update
+        -   stage: Install Kubernetes
+            script: |
                 echo 'Installing dependencies.'
                 sudo apt-get install -y apt-transport-https
                 echo 'Downloading Google Cloud public signing key.'
@@ -18,3 +18,4 @@ jobs:
                 sudo apt-get update
                 echo 'Installing Kubernetes.'
                 sudo apt-get install -y kubectl
+                kubectl version
