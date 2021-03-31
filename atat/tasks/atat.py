@@ -1,5 +1,5 @@
 # Here lies the Celery app import
-from atat_single.celery_app import app
+from ..celery_app import app
 
 # Here we import the Celery Task class
 from celery import Task

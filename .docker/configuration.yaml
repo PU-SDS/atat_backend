@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongodb-envars
+  namespace: atat
+data:
+  MONGO_HOST: $MONGO_HOST
+  MONGO_PORT: $MONGO_PORT
+  MONGO_INITDB_ROOT_USERNAME: $MONGO_INITDB_ROOT_USERNAME
+  MONGO_INITDB_ROOT_PASSWORD: $MONGO_INITDB_ROOT_PASSWORD
+  MONGO_ATAT_USERNAME: $MONGO_ATAT_USERNAME
+  MONGO_ATAT_PASSWORD: $MONGO_ATAT_PASSWORD
+  MONGO_ATAT_DATABASE: $MONGO_ATAT_DATABASE
+  MONGO_RABBITMQ_USERNAME: $MONGO_RABBITMQ_USERNAME
+  MONGO_RABBITMQ_PASSWORD: $MONGO_RABBITMQ_PASSWORD
+  MONGO_RABBITMQ_DATABASE: $MONGO_RABBITMQ_DATABASE
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rabbitmq-envars
+data:
+  RABBITMQ_HOST: $RABBITMQ_HOST
+  RABBITMQ_PORT: $RABBITMQ_PORT
+  RABBITMQ_DEFAULT_USER: $RABBITMQ_DEFAULT_USER
+  RABBITMQ_DEFAULT_PASS: $RABBITMQ_DEFAULT_PASS
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongo-initdb-config
+data:
+  atat.sh: |
+    #!/bin/bash
+    mongo <<EOF
+    use $MONGO_ATAT_DATABASE;
+    db.createUser({
+      user: '$MONGO_ATAT_USERNAME',
+      pwd: '$MONGO_ATAT_PASSWORD',
+      roles: [{
+        role: 'readWrite',
+        db: '$MONGO_ATAT_DATABASE'
+      }]
+    });
+    db.createCollection('delete_me');
+    EOF
+  rabbitmq.sh: |
+    #!/bin/bash
+    mongo <<EOF
+    use $MONGO_RABBITMQ_DATABASE;
+    db.createUser({
+      user: '$MONGO_RABBITMQ_USERNAME',
+      pwd: '$MONGO_RABBITMQ_PASSWORD',
+      roles: [{
+        role: 'readWrite',
+        db: '$MONGO_RABBITMQ_DATABASE'
+      }]
+    });
+    db.createCollection('delete_me');
+    EOF

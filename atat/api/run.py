@@ -1,14 +1,12 @@
-from collections import defaultdict
-
 from flask import Flask
 from flask_restful import Resource, Api, abort
 from mongoengine import DoesNotExist
 
-from atat_single.api.data_manipulate import DataManipulate
-from atat_single.models import Job, Result
-from atat_single.api.json_serializer import JSONSerializer, JSONEncoder
+from ..api.data_manipulate import DataManipulate
+from ..models import Result
+from ..api.json_serializer import JSONSerializer, JSONEncoder
 
-from atat_single.api.job_queries import JobQueries
+from ..api.job_queries import JobQueries
 
 app = Flask(__name__)
 app.json_encoder = JSONEncoder

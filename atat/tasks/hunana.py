@@ -2,7 +2,7 @@
 from io import StringIO
 
 # Here lies the Celery app import
-from atat_single.celery_app import app
+from ..celery_app import app
 
 # Here lies 3rd party module imports
 from hunana import Hunana

@@ -1,7 +1,7 @@
 # Here lies the Celery app import
 from celery import Task
 
-from atat_single.celery_app import app
+from ..celery_app import app
 
 # Here lies the model imports
 from ..models import HunanaPosition, Job, Result, Switch

@@ -1,7 +1,7 @@
 from flask_restful import abort
 from mongoengine import DoesNotExist
 
-from atat_single.models import Job, Result
+from ..models import Job, Result
 
 
 class JobQueries(object):
