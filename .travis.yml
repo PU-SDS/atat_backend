@@ -29,7 +29,7 @@ dist: bionic
 jobs:
     include:
         -   stage: Install Dependencies
-            script: |
+            script: >
                 echo 'Installding skubectl.' &&
                 echo 'Updating package manager.' &&
                 sudo apt-get update &&
