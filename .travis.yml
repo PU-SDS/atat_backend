@@ -30,7 +30,7 @@ jobs:
     include:
         -   stage: Install Dependencies
             script: |
-                echo 'Installing kubectl.'
+                echo 'Installing skubectl.'
                 echo 'Updating package manager.'
                 sudo apt-get update
                 echo 'Installing dependencies.'
