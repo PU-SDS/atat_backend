@@ -1,0 +1,7 @@
+language: python
+os: linux
+dist: bionic
+jobs:
+    include:
+        -   stage: Install Dependencies
+            script: echo 'test'
