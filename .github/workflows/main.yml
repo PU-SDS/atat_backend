@@ -38,6 +38,8 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
       - name: Create Namespace
-        run:  kubectl apply -f ./.docker/namespace.yaml
+        run:  kubectl create namespace atat
       - name: Create MongoDB Admin Secret
         run: kubectl create secret generic mongodb-admin --from-literal='password=${{ secrets.MONGODB_ADMIN_PASSWORD }}'
+      - name: Deploy MongoDB Replica Set
+        run: kubectl apply -f ./docker/.mongodb/deployment.yaml
