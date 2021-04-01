@@ -43,3 +43,5 @@ jobs:
         uses: actions/checkout@v2
       - name: Deploy MongoDB Replica Set
         run: kubectl apply -f ./.docker/.mongodb/deployment.yaml --namespace=atat
+      - name: Deploy RabbitMQ Replica Set
+        run: kubectl apply -f ./.docker/.rabbitmq/deployment.yaml --namespace=atat
