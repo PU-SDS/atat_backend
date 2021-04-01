@@ -34,6 +34,8 @@ jobs:
       - name: Set-up DigitalOcean
         run:  doctl auth init -t ${{ secrets.DO_API_TOKEN }}
       - name: Configure Kubernetes
-        run:  |
-          doctl kubernetes cluster kubeconfig save ${{ secrets.KUBERNETES_CLUSTER_NAME }}
-          kubectl get nodes
+        run:  doctl kubernetes cluster kubeconfig save ${{ secrets.KUBERNETES_CLUSTER_NAME }}
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Create Namespace
+        run:  kubectl apply -f ./.docker/namespace.yaml
