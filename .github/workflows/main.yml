@@ -44,6 +44,7 @@ jobs:
       - name: Install MongoDB Operator
         run:  |
           git clone https://github.com/mongodb/mongodb-kubernetes-operator.git
+          cd mongodb*
           kubectl apply -f config/crd/bases/mongodbcommunity.mongodb.com_mongodbcommunity.yaml
           kubectl get crd/mongodbcommunity.mongodbcommunity.mongodb.com
           kubectl apply -k config/rbac/ --namespace=atat
