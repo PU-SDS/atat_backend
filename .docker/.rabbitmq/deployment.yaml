@@ -3,14 +3,14 @@ kind: RabbitmqCluster
 metadata:
   name: rabbitmq-atat
 spec:
-  replicas: 3
+  replicas: 2
   resources:
     requests:
-      cpu: 4
-      memory: 10Gi
+      cpu: 1
+      memory: 1Gi
     limits:
-      cpu: 4
-      memory: 10Gi
+      cpu: 1
+      memory: 1Gi
   rabbitmq:
     additionalConfig: |
       cluster_partition_handling = pause_minority
