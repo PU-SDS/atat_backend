@@ -38,10 +38,20 @@ jobs:
       - name: Create Namespace
         run:  kubectl create namespace atat --dry-run=client -o yaml | kubectl apply --namespace=atat -f -
       - name: Create MongoDB Admin Secret
-        run: kubectl create secret generic mongodb-admin --from-literal='password=${{ secrets.MONGODB_ADMIN_PASSWORD }}' --save-config --dry-run=client -o yaml | kubectl apply --namespace=atat -f -
+        run:  kubectl create secret generic mongodb-admin --from-literal='password=${{ secrets.MONGODB_ADMIN_PASSWORD }}' --save-config --dry-run=client -o yaml | kubectl apply --namespace=atat -f -
       - name: Checkout Repository
         uses: actions/checkout@v2
+      - name: Install MongoDB Operator
+        run:  |
+          git clone https://github.com/mongodb/mongodb-kubernetes-operator.git
+          kubectl apply -f config/crd/bases/mongodbcommunity.mongodb.com_mongodbcommunity.yaml
+          kubectl get crd/mongodbcommunity.mongodbcommunity.mongodb.com
+          kubectl apply -k config/rbac/ --namespace=atat
+          kubectl create -f config/manager/manager.yaml --namespace=atat
+          kubectl get pods --namespace=atat
       - name: Deploy MongoDB Replica Set
-        run: kubectl apply -f ./.docker/.mongodb/deployment.yaml --namespace=atat
+        run:  kubectl apply -f ./.docker/.mongodb/deployment.yaml --namespace=atat
+      - name: Install RabbitMQ Operator
+        run:  kubectl apply -f "https://github.com/rabbitmq/cluster-operator/releases/latest/download/cluster-operator.yml" --namespace=atat
       - name: Deploy RabbitMQ Replica Set
         run: kubectl apply -f ./.docker/.rabbitmq/deployment.yaml --namespace=atat
