@@ -33,4 +33,4 @@ jobs:
           sudo mv ./doctl /usr/local/bin
       - name: Set-up DigitalOcean
         run:  |
-          doctl auth init --context atat -t ${{ secrets.DO_API_TOKEN }}
+          doctl auth init -t ${{ secrets.DO_API_TOKEN }}
