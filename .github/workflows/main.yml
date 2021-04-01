@@ -35,11 +35,10 @@ jobs:
         run:  doctl auth init -t ${{ secrets.DO_API_TOKEN }}
       - name: Configure Kubernetes
         run:  doctl kubernetes cluster kubeconfig save ${{ secrets.KUBERNETES_CLUSTER_NAME }}
-      - name: Checkout Repository
-        uses: actions/checkout@v2
       - name: Create Namespace
         run:  kubectl create namespace atat --dry-run=client -o yaml | kubectl apply -f -
       - name: Create MongoDB Admin Secret
-        run: kubectl create secret generic mongodb-admin --from-literal='password=${{ secrets.MONGODB_ADMIN_PASSWORD }}' --dry-run=client -o yaml | kubectl apply -f -
+        run: kubectl create secret generic mongodb-admin --from-literal='password=${{ secrets.MONGODB_ADMIN_PASSWORD }}' --save-config --dry-run=client -o yaml | kubectl apply -f -
       - name: Deploy MongoDB Replica Set
+        uses: actions/checkout@v2
         run: kubectl apply -f ./docker/.mongodb/deployment.yaml
