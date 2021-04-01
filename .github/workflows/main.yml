@@ -13,7 +13,7 @@ jobs:
       - name: Update Package Manager
         run:  sudo apt-get update
       - name: Install Kubernetes
-        run: |
+        run:  |
                 echo 'Installing dependencies.'
                 sudo apt-get install -y apt-transport-https
                 echo 'Downloading Google Cloud public signing key.'
@@ -25,3 +25,12 @@ jobs:
                 echo 'Installing Kubernetes.'
                 sudo apt-get install -y kubectl
                 kubectl version
+      - name: Install DigitalOcean
+        run:  |
+          echo 'Installing DigitalOcean'
+          wget https://github.com/digitalocean/doctl/releases/download/v1.58.0/doctl-1.58.0-linux-amd64.tar.gz
+          tar xf ~/doctl-1.58.0-linux-amd64.tar.gz
+          sudo mv ~/doctl /usr/local/bin
+      - name: Set-up DigitalOcean
+        run:  |
+          doctl auth init --context atat -t ${{ secrets.DO_API_TOKEN }}
