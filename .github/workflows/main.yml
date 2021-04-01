@@ -48,7 +48,7 @@ jobs:
           kubectl apply -f config/crd/bases/mongodbcommunity.mongodb.com_mongodbcommunity.yaml
           kubectl get crd/mongodbcommunity.mongodbcommunity.mongodb.com
           kubectl apply -k config/rbac/ --namespace=atat
-          kubectl create -f config/manager/manager.yaml --namespace=atat
+          kubectl create -f config/manager/manager.yaml --namespace=atat --dry-run=client -o yaml | kubectl apply --namespace=atat -f -
           kubectl get pods --namespace=atat
       - name: Deploy MongoDB Replica Set
         run:  kubectl apply -f ./.docker/.mongodb/deployment.yaml --namespace=atat
