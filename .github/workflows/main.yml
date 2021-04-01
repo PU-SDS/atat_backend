@@ -29,8 +29,8 @@ jobs:
         run:  |
           echo 'Installing DigitalOcean'
           wget https://github.com/digitalocean/doctl/releases/download/v1.58.0/doctl-1.58.0-linux-amd64.tar.gz
-          tar xf ~/doctl-1.58.0-linux-amd64.tar.gz
-          sudo mv ~/doctl /usr/local/bin
+          tar xf ./doctl-1.58.0-linux-amd64.tar.gz
+          sudo mv ./doctl /usr/local/bin
       - name: Set-up DigitalOcean
         run:  |
           doctl auth init --context atat -t ${{ secrets.DO_API_TOKEN }}
