@@ -38,7 +38,7 @@ jobs:
       - name: Create Namespace
         run:  kubectl create namespace atat --dry-run=client -o yaml | kubectl apply --namespace=atat -f -
       - name: Create MongoDB Admin Secret
-        run: kubectl create secret generic mongodb-admin --from-literal='password=${{ secrets.MONGODB_ADMIN_PASSWORD }}' --save-config --dry-run=client -o yaml | kubectl apply --namespace=atat-f -
+        run: kubectl create secret generic mongodb-admin --from-literal='password=${{ secrets.MONGODB_ADMIN_PASSWORD }}' --save-config --dry-run=client -o yaml | kubectl apply --namespace=atat -f -
       - name: Checkout Repository
         uses: actions/checkout@v2
       - name: Deploy MongoDB Replica Set
