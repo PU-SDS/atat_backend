@@ -36,10 +36,10 @@ jobs:
       - name: Configure Kubernetes
         run:  doctl kubernetes cluster kubeconfig save ${{ secrets.KUBERNETES_CLUSTER_NAME }}
       - name: Create Namespace
-        run:  kubectl create namespace atat --dry-run=client -o yaml | kubectl apply -f -
+        run:  kubectl create namespace atat --dry-run=client -o yaml | kubectl apply --namespace=atat -f -
       - name: Create MongoDB Admin Secret
-        run: kubectl create secret generic mongodb-admin --from-literal='password=${{ secrets.MONGODB_ADMIN_PASSWORD }}' --save-config --dry-run=client -o yaml | kubectl apply -f -
+        run: kubectl create secret generic mongodb-admin --from-literal='password=${{ secrets.MONGODB_ADMIN_PASSWORD }}' --save-config --dry-run=client -o yaml | kubectl apply --namespace=atat-f -
       - name: Checkout Repository
         uses: actions/checkout@v2
       - name: Deploy MongoDB Replica Set
-        run: kubectl apply -f ./.docker/.mongodb/deployment.yaml
+        run: kubectl apply -f ./.docker/.mongodb/deployment.yaml --namespace=atat
