@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy to Kubernetes
 
 on:
   push:
@@ -55,4 +55,6 @@ jobs:
       - name: Install RabbitMQ Operator
         run:  kubectl apply -f "https://github.com/rabbitmq/cluster-operator/releases/latest/download/cluster-operator.yml" --namespace=rabbitmq-system
       - name: Deploy RabbitMQ Replica Set
-        run: kubectl apply -f ./.docker/.rabbitmq/deployment.yaml --namespace=atat
+        run:  kubectl apply -f ./.docker/.rabbitmq/deployment.yaml --namespace=atat
+      - name: Deploy ATAT Replica Set
+        run:  kubectl apply -f ./.docker/.atat/deployment.yaml --namespace=atat

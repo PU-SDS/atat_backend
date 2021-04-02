@@ -1,0 +1,29 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: atat-backend-deployment
+spec:
+  selector:
+    matchLabels:
+      app: atat-backend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: atat-backend
+    spec:
+      initContainers:
+      - name: initialize
+        image: ubuntu
+        imagePullPolicy: Always
+        command: ["/bin/sh"]
+        args: ["-c", "echo RUNNING"]
+      containers:
+      - name: atat-backend
+        image: registry.digitalocean.com/viva-perdana/atat-base:latest
+        imagePullPolicy: Always
+        command: [ "/bin/sh" ]
+        args: [ "-c", "echo RUNNING" ]
+        ports:
+        - name: http
+          containerPort: 80
