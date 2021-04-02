@@ -1,4 +1,4 @@
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: atat-backend-deployment
@@ -6,7 +6,7 @@ spec:
   selector:
     matchLabels:
       app: atat-backend
-  replicas: 1
+  replicas: 2
   template:
     metadata:
       labels:
