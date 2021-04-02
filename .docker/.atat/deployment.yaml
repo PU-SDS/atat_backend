@@ -1,7 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongo-script
+data:
+  mongo.sh: |
+    #!/bin/bash
+    mongo --username admin --password +4DVJv?^aKMR42WU --authenticationDatabase admin --host mongodb-svc.atat --port 27017 <<EOF
+    use atat;
+    db.createUser({
+      user: 'atat-user',
+      pwd: 'fdghdfghfddghff',
+      roles: [{
+        role: 'readWrite',
+        db: 'atat'
+      }]
+    });
+    db.createCollection('delete_me');
+    EOF
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: atat-backend-deployment
+  namespace: atat
 spec:
   selector:
     matchLabels:
@@ -12,15 +33,26 @@ spec:
       labels:
         app: atat-backend
     spec:
+      volumes:
+        - name: mongo-script
+          configMap:
+            name: mongo-script
+            defaultMode: 0777
+      initContainers:
+        - name: initialize
+          volumeMounts:
+            - mountPath: /mongo-script
+              name: mongo-script
+          image: registry.digitalocean.com/viva-perdana/mongo-cli:latest
+          imagePullPolicy: Always
+          command: ['/mongo-script/mongo.sh']
       containers:
-      - name: atat-backend
-        restartPolicy: never
-        image: registry.digitalocean.com/viva-perdana/atat-base:latest
-        imagePullPolicy: Always
-        command: ["/bin/bash"]
-        args:
-          - -c
-          - >-
-            ssh-keyscan github.com > ~/.ssh/known_hosts &&
-            git clone git@github.com:ShanWeera/atat-backend.git &&
-            ls
+        - name: atat-backend
+          image: registry.digitalocean.com/viva-perdana/atat-base:latest
+          imagePullPolicy: Always
+          command: ["/bin/bash", "-c"]
+          args:
+            - >
+              ssh-keyscan github.com > ~/.ssh/known_hosts;
+              git clone git@github.com:ShanWeera/atat-backend.git;
+              nslookup monfdo;

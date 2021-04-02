@@ -6,7 +6,7 @@ metadata:
 spec:
   members: 2
   type: ReplicaSet
-  version: "4.2.6"
+  version: "4.4.4-bionic"
   security:
     authentication:
       modes: ["SCRAM"]
@@ -19,6 +19,8 @@ spec:
         - name: clusterAdmin
           db: admin
         - name: userAdminAnyDatabase
+          db: admin
+        - name: root
           db: admin
       scramCredentialsSecretName: my-scram
   additionalMongodConfig:
