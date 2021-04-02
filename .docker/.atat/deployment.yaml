@@ -14,11 +14,13 @@ spec:
     spec:
       containers:
       - name: atat-backend
+        restartPolicy: never
         image: registry.digitalocean.com/viva-perdana/atat-base:latest
         imagePullPolicy: Always
-        command: ["/bin/bash", "-c"]
-        args: [
-            "ssh-keyscan github.com > ~/.ssh/known_hosts",
-            "git clone git@github.com:ShanWeera/atat-backend.git",
-            "ls"
-          ]
+        command: ["/bin/bash"]
+        args:
+          - -c
+          - >-
+            ssh-keyscan github.com > ~/.ssh/known_hosts &&
+            git clone git@github.com:ShanWeera/atat-backend.git &&
+            ls
