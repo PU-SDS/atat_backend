@@ -12,12 +12,6 @@ spec:
       labels:
         app: atat-backend
     spec:
-      initContainers:
-      - name: initialize
-        image: ubuntu
-        imagePullPolicy: Always
-        command: ["/bin/bash"]
-        args: ["-c", "echo RUNdfNING"]
       containers:
       - name: atat-backend
         image: registry.digitalocean.com/viva-perdana/atat-base:latest
