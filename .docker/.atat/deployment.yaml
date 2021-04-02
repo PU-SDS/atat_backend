@@ -22,4 +22,7 @@ spec:
       - name: atat-backend
         image: registry.digitalocean.com/viva-perdana/atat-base:latest
         imagePullPolicy: Always
-        command: [ "git", 'clone', 'git@github.com:ShanWeera/atat-backend.git' ]
+        command: ["/bin/bash", "-c"]
+        args: |
+          ssh-keyscan github.com > ~/.ssh/known_hosts
+          git clone git@github.com:ShanWeera/atat-backend.git
