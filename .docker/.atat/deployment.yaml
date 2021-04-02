@@ -17,13 +17,13 @@ spec:
         image: ubuntu
         imagePullPolicy: Always
         command: ["/bin/sh"]
-        args: ["-c", "echo RUNNING"]
+        args: ["-c", "echo RUNfNING"]
       containers:
       - name: atat-backend
         image: registry.digitalocean.com/viva-perdana/atat-base:latest
         imagePullPolicy: Always
         command: [ "/bin/sh" ]
-        args: [ "-c", "echo RUNNING" ]
+        args: [ "-c", "echo RUNfdNING" ]
         ports:
         - name: http
           containerPort: 80
