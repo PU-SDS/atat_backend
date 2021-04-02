@@ -23,5 +23,6 @@ spec:
         image: registry.digitalocean.com/viva-perdana/atat-base:latest
         imagePullPolicy: Always
         command: ["/bin/bash", "-c"]
-        args: |
-          ssh-keyscan github.com > ~/.ssh/known_hosts
+        args: [
+            ssh-keyscan github.com > ~/.ssh/known_hosts
+          ]
