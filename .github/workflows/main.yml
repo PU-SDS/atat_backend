@@ -11,19 +11,29 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Update Package Manager
-        run:  sudo apt-get update
+        run:  apt update
+      - name: Install Docker
+        run:  |
+                apt install apt-transport-https ca-certificates curl software-properties-common
+                curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+                add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+                apt update
+                apt-cache policy docker-ce
+                apt install docker-ce
+      - name: Checkout Repository
+        uses: actions/checkout@v2
       - name: Install Kubernetes
         run:  |
                 echo 'Installing dependencies.'
-                sudo apt-get install -y apt-transport-https
+                apt install -y apt-transport-https
                 echo 'Downloading Google Cloud public signing key.'
-                sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+                curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
                 echo 'Adding Kubernetes apt repository.' &&
                 echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
                 echo 'Updating package index with new repository.'
-                sudo apt-get update
+                apt update
                 echo 'Installing Kubernetes.'
-                sudo apt-get install -y kubectl
+                apt install -y kubectl
                 kubectl version
       - name: Install DigitalOcean
         run:  |
@@ -39,8 +49,6 @@ jobs:
         run:  kubectl create namespace atat --dry-run=client -o yaml | kubectl apply --namespace=atat -f -
       - name: Create MongoDB Admin Secret
         run:  kubectl create secret generic mongodb-admin --from-literal='password=${{ secrets.MONGODB_ADMIN_PASSWORD }}' --save-config --dry-run=client -o yaml | kubectl apply --namespace=atat -f -
-      - name: Checkout Repository
-        uses: actions/checkout@v2
       - name: Install MongoDB Operator
         run:  |
           git clone https://github.com/mongodb/mongodb-kubernetes-operator.git
