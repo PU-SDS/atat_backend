@@ -22,6 +22,8 @@ jobs:
                 sudo apt install docker-ce
       - name: Checkout Repository
         uses: actions/checkout@v2
+      - name: Build ATAT Base Image
+        run:  docker build -t atat-base .
       - name: Install Kubernetes
         run:  |
                 echo 'Installing dependencies.'
