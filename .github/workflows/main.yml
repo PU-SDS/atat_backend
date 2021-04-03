@@ -11,29 +11,29 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Update Package Manager
-        run:  apt update
+        run:  sudo apt update
       - name: Install Docker
         run:  |
-                apt install apt-transport-https ca-certificates curl software-properties-common
+                sudo apt install apt-transport-https ca-certificates curl software-properties-common
                 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
                 add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
-                apt update
+                sudo apt update
                 apt-cache policy docker-ce
-                apt install docker-ce
+                sudo apt install docker-ce
       - name: Checkout Repository
         uses: actions/checkout@v2
       - name: Install Kubernetes
         run:  |
                 echo 'Installing dependencies.'
-                apt install -y apt-transport-https
+                sudo apt install -y apt-transport-https
                 echo 'Downloading Google Cloud public signing key.'
                 curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
                 echo 'Adding Kubernetes apt repository.' &&
                 echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
                 echo 'Updating package index with new repository.'
-                apt update
+                sudo apt update
                 echo 'Installing Kubernetes.'
-                apt install -y kubectl
+                sudo apt install -y kubectl
                 kubectl version
       - name: Install DigitalOcean
         run:  |
