@@ -23,5 +23,8 @@ spec:
         - name: root
           db: admin
       scramCredentialsSecretName: my-scram
+  env:
+    - name: MANAGED_SECURITY_CONTEXT
+      value: 'true'
   additionalMongodConfig:
     storage.wiredTiger.engineConfig.journalCompressor: zlib
