@@ -6,7 +6,7 @@ metadata:
 data:
   atat.sh:  |
     #!/bin/bash
-    mongo --username admin --password $MONGODB_ADMIN_PASSWORD --authenticationDatabase admin --host mongodb-svc.atat --port 27017 <<EOF
+    mongo "mongodb://mongodb-0.mongodb-svc.atat:27017,mongodb-1.mongodb-svc.atat:27017,mongodb-2.mongodb-svc.atat:27017/?replicaSet=mongodb"
     use atat;
     db.createUser({
       user: 'atat',
@@ -20,7 +20,7 @@ data:
     EOF
   rabbitmq.sh:  |
     #!/bin/bash
-    mongo --username admin --password $MONGODB_ADMIN_PASSWORD --authenticationDatabase admin --host mongodb-svc.atat --port 27017 <<EOF
+    mongo "mongodb://mongodb-0.mongodb-svc.atat:27017,mongodb-1.mongodb-svc.atat:27017,mongodb-2.mongodb-svc.atat:27017/?replicaSet=mongodb"
     use rabbitmq;
     db.createUser({
       user: 'rabbitmq',
