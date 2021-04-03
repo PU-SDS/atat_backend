@@ -101,5 +101,3 @@ api.add_resource(GetAllMotifSwitches, '/results/<string:jobid>/switches')
 api.add_resource(GetPositionMotifSwitches, '/results/<string:jobid>/positions/<int:position>/switches')
 api.add_resource(GetSourcePositionVariants, '/results/<string:jobid>/positions/<int:position>/source/variants')
 api.add_resource(GetReservoirPositionVariants, '/results/<string:jobid>/positions/<int:position>/reservoir/variants')
-
-app.run(port=80)
