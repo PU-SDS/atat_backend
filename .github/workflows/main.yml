@@ -36,7 +36,6 @@ jobs:
         run:  doctl registry login
       - name: Push Image to Container Registry
         run:  |
-                ls -lh
                 docker tag atat-base registry.digitalocean.com/viva-perdana/atat-base:latest
                 docker push registry.digitalocean.com/viva-perdana/atat-base:latest
       - name: Install Kubernetes
@@ -58,6 +57,10 @@ jobs:
         run:  kubectl create namespace atat --dry-run=client -o yaml | kubectl apply --namespace=atat -f -
       - name: Create MongoDB Admin Secret
         run:  kubectl create secret generic mongodb-admin --from-literal='password=${{ secrets.MONGODB_ADMIN_PASSWORD }}' --save-config --dry-run=client -o yaml | kubectl apply --namespace=atat -f -
+      - name: Create MongoDB ATAT Secret
+        run: kubectl create secret generic mongodb-atat --from-literal='password=${{ secrets.MONGODB_ATAT_PASSWORD }}' --save-config --dry-run=client -o yaml | kubectl apply --namespace=atat -f -
+      - name: Create MongoDB RabbitMQ Results Backend Secret
+        run: kubectl create secret generic mongodb-rabbitmq --from-literal='password=${{ secrets.MONGODB_RABBITMQ_PASSWORD }}' --save-config --dry-run=client -o yaml | kubectl apply --namespace=atat -f -
       - name: Install MongoDB Operator
         run:  |
           git clone https://github.com/mongodb/mongodb-kubernetes-operator.git
