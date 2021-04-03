@@ -11,7 +11,7 @@ COPY . /home/atat
 RUN apt update
 
 # Install Python 3.8
-RUN apt install software-properties-common &&
-    add-apt-repository ppa:deadsnakes/ppa &&
-    apt update &&
+RUN apt install software-properties-common &&\
+    add-apt-repository ppa:deadsnakes/ppa &&\
+    apt update &&\
     apt install python3.8
