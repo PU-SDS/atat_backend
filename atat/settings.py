@@ -17,6 +17,9 @@ class RabbitMQ(object):
         HOST = 'rabbitmq-atat.atat'
         PORT = 5672
 
+        USERNAME = environ.get('RABBITMQ_USERNAME')
+        PASSWORD = environ.get('RABBITMQ_PASSWORD')
+
         BACKEND_ = environ.get('RABBITMQ_BACKEND_SOURCE')
         BACKEND_USERNAME = environ.get('RABBITMQ_BACKEND_USERNAME')
         BACKEND_PASSWORD = environ.get('RABBITMQ_BACKEND_PASSWORD')

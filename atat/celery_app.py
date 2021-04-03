@@ -10,7 +10,7 @@ task_routes = {
 
 
 app = Celery(
-    broker=f'amqp://{RabbitMQ.Prod.HOST}:{RabbitMQ.Prod.PORT}',
+    broker=f'amqp://guest:guest@{RabbitMQ.Prod.HOST}:{RabbitMQ.Prod.PORT}'
 )
 
 app.autodiscover_tasks(['atat.tasks'])
