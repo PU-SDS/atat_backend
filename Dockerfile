@@ -21,3 +21,6 @@ RUN apt update
 
 # Install Python 3.8
 RUN apt install -y python3.8
+
+# Install PIP3
+RUN apt install -y python3-pip
