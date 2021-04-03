@@ -41,7 +41,7 @@ spec:
                   name: mongodb-rabbitmq
                   key: password
           imagePullPolicy: Always
-          args:
+          command:
             - /mongo-init-scripts/atat.sh;
             - /mongo-init-scripts/rabbitmq.sh;
       containers:
