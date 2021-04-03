@@ -41,9 +41,9 @@ spec:
                   name: mongodb-rabbitmq
                   key: password
           imagePullPolicy: Always
-          command:
-            - /mongo-init-scripts/atat.sh
-            - /mongo-init-scripts/rabbitmq.sh
+          args:
+            - /mongo-init-scripts/atat.sh;
+            - /mongo-init-scripts/rabbitmq.sh;
       containers:
         - name: atat-backend
           image: registry.digitalocean.com/viva-perdana/atat-base:latest
