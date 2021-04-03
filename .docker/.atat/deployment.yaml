@@ -55,5 +55,4 @@ spec:
             - >-
               cd /home/atat/ &&
               pip3 install -r requirements.txt &&
-              cd atat &&
-              python3 ./api/run.py
+              python3 ./atat/api/run.py
