@@ -2,11 +2,11 @@ from flask import Flask
 from flask_restful import Resource, Api, abort
 from mongoengine import DoesNotExist
 
-from atat.api.data_manipulate import DataManipulate
-from atat.models import Result
-from atat.api.json_serializer import JSONSerializer, JSONEncoder
+from .data_manipulate import DataManipulate
+from ..models import Result
+from .json_serializer import JSONSerializer, JSONEncoder
 
-from atat.api.job_queries import JobQueries
+from .job_queries import JobQueries
 
 app = Flask(__name__)
 app.json_encoder = JSONEncoder

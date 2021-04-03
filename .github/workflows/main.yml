@@ -78,5 +78,7 @@ jobs:
         run:  kubectl apply -f ./.docker/.rabbitmq/deployment.yaml --namespace=atat
       - name: Add ATAT InitScripts ConfigMap
         run:  kubectl apply -f ./.docker/.atat/initscripts.yaml --namespace=atat
+      - name: Deploy ATAT Service
+        run:  kubectl apply -f ./.docker/.atat/service.yaml --namespace=atat
       - name: Deploy ATAT Replica Set
         run:  kubectl apply -f ./.docker/.atat/deployment.yaml --namespace=atat

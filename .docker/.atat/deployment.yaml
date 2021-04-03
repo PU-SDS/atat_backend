@@ -7,7 +7,7 @@ spec:
   selector:
     matchLabels:
       app: atat-backend
-  replicas: 1
+  replicas: 3
   template:
     metadata:
       labels:
@@ -55,4 +55,4 @@ spec:
             - >-
               cd /home/atat/ &&
               pip3 install -r requirements.txt &&
-              gunicorn --bind 0.0.0.0:80 runapi:app
+              gunicorn --bind 0.0.0.0:80 wsgi:app
