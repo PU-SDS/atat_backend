@@ -2,11 +2,11 @@ from flask import Flask
 from flask_restful import Resource, Api, abort
 from mongoengine import DoesNotExist
 
-from ..api.data_manipulate import DataManipulate
-from ..models import Result
-from ..api.json_serializer import JSONSerializer, JSONEncoder
+from atat.api.data_manipulate import DataManipulate
+from atat.models import Result
+from atat.api.json_serializer import JSONSerializer, JSONEncoder
 
-from ..api.job_queries import JobQueries
+from atat.api.job_queries import JobQueries
 
 app = Flask(__name__)
 app.json_encoder = JSONEncoder
@@ -102,5 +102,4 @@ api.add_resource(GetPositionMotifSwitches, '/results/<string:jobid>/positions/<i
 api.add_resource(GetSourcePositionVariants, '/results/<string:jobid>/positions/<int:position>/source/variants')
 api.add_resource(GetReservoirPositionVariants, '/results/<string:jobid>/positions/<int:position>/reservoir/variants')
 
-if __name__ == '__main__':
-    app.run(debug=True)
+app.run(debug=True)
