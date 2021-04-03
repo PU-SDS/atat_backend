@@ -2,15 +2,24 @@ from os import environ
 
 
 class RabbitMQ(object):
-    HOST = environ.get('RABBITMQ_HOST')
-    PORT = environ.get('RABBITMQ_PORT')
+    class Dev(object):
+        HOST = environ.get('RABBITMQ_HOST')
+        PORT = environ.get('RABBITMQ_PORT')
 
-    USERNAME = environ.get('RABBITMQ_USERNAME')
-    PASSWORD = environ.get('RABBITMQ_PASSWORD')
+        USERNAME = environ.get('RABBITMQ_USERNAME')
+        PASSWORD = environ.get('RABBITMQ_PASSWORD')
 
-    BACKEND_SOURCE = environ.get('RABBITMQ_BACKEND_SOURCE')
-    BACKEND_USERNAME = environ.get('RABBITMQ_BACKEND_USERNAME')
-    BACKEND_PASSWORD = environ.get('RABBITMQ_BACKEND_PASSWORD')
+        BACKEND_SOURCE = environ.get('RABBITMQ_BACKEND_SOURCE')
+        BACKEND_USERNAME = environ.get('RABBITMQ_BACKEND_USERNAME')
+        BACKEND_PASSWORD = environ.get('RABBITMQ_BACKEND_PASSWORD')
+
+    class Prod(object):
+        HOST = 'rabbitmq-atat.atat'
+        PORT = 5672
+
+        BACKEND_ = environ.get('RABBITMQ_BACKEND_SOURCE')
+        BACKEND_USERNAME = environ.get('RABBITMQ_BACKEND_USERNAME')
+        BACKEND_PASSWORD = environ.get('RABBITMQ_BACKEND_PASSWORD')
 
 
 class MongoDB(object):

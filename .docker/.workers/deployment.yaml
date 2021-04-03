@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: atat-workers-deployment
+  namespace: atat
+spec:
+  selector:
+    matchLabels:
+      app: atat-workers
+  replicas: 0
+  template:
+    metadata:
+      labels:
+        app: atat-workers
+    spec:
+      containers:
+        - name: atat-workers
+          image: registry.digitalocean.com/viva-perdana/atat-base:latest
+          imagePullPolicy: Always
+          command: ["/bin/bash", "-c"]
+          args:
+            - >-
+              cd /home/atat/ &&
+              pip3 install celery &&
+              celery -A atat.celery_app worker --loglevel=debug
