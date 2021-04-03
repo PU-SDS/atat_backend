@@ -53,5 +53,7 @@ spec:
           command: ["/bin/bash", "-c"]
           args:
             - >-
-              pip3 install -r /home/atat/requirements.txt &&
-              python3 /home/atat/atat/api/run.py
+              cd /home/atat/ &&
+              pip3 install -r requirements.txt &&
+              cd atat &&
+              python3 ./api/run.py
