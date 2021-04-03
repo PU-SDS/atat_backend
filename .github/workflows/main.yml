@@ -36,6 +36,7 @@ jobs:
         run:  doctl registry login
       - name: Push Image to Container Registry
         run:  |
+                ls -lh
                 docker tag atat-base registry.digitalocean.com/viva-perdana/atat-base:latest
                 docker push registry.digitalocean.com/viva-perdana/atat-base:latest
       - name: Install Kubernetes
