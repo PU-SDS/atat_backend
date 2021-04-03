@@ -51,6 +51,4 @@ spec:
           command: ["/bin/bash", "-c"]
           args:
             - >
-              ssh-keyscan github.com > ~/.ssh/known_hosts;
-              git clone git@github.com:ShanWeera/atat-backend.git;
-              nslookup monfdo;
+              echo lalalala
