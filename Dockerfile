@@ -10,8 +10,14 @@ COPY . /home/atat
 # Update the package manager
 RUN apt update
 
+# Install Python 3.8 dependancies
+RUN apt install -y software-properties-common
+
+# Add latest repository
+RUN add-apt-repository ppa:deadsnakes/ppa
+
+# Update package manager
+RUN apt update
+
 # Install Python 3.8
-RUN apt install software-properties-common &&\
-    add-apt-repository ppa:deadsnakes/ppa &&\
-    apt update &&\
-    apt install python3.8
+RUN apt install -y python3.8
