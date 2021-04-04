@@ -5,7 +5,13 @@ from ..settings import MongoDB
 
 #connect(host=MongoDB.get_connection_string('prod'))
 connect(
-    host=f'mongodb+srv://{MongoDB.Prod.USERNAME}:{MongoDB.Prod.PASSWORD}@{MongoDB.Prod.HOST}/atat?tls=false&ssl=false&replicaset=mongodb&authSource=atat',
+    db=MongoDB.Prod.PROJECT_DATABASE,
+    host='mongodb-svc.atat',
+    port=27017,
+    replicaset='mongodb',
+    authentication_source=MongoDB.Prod.PROJECT_DATABASE,
+    username=MongoDB.Prod.USERNAME,
+    password=MongoDB.Prod.PASSWORD,
 )
 
 
