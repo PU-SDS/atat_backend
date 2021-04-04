@@ -4,9 +4,12 @@ metadata:
   name: atat-backend-service
   namespace: atat
 spec:
+  type: NodePort
   selector:
     app: atat-backend
   ports:
-    - protocol: TCP
+    - name: http
+      protocol: TCP
       port: 80
       targetPort: 80
+      nodePort: 3051

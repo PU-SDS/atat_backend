@@ -58,9 +58,9 @@ jobs:
       - name: Create MongoDB Admin Secret
         run:  kubectl create secret generic mongodb-admin --from-literal='password=${{ secrets.MONGODB_ADMIN_PASSWORD }}' --save-config --dry-run=client -o yaml | kubectl apply --namespace=atat -f -
       - name: Create MongoDB ATAT Secret
-        run: kubectl create secret generic mongodb-atat --from-literal='password=${{ secrets.MONGODB_ATAT_PASSWORD }}' --save-config --dry-run=client -o yaml | kubectl apply --namespace=atat -f -
+        run:  kubectl create secret generic mongodb-atat --from-literal='password=${{ secrets.MONGODB_ATAT_PASSWORD }}' --save-config --dry-run=client -o yaml | kubectl apply --namespace=atat -f -
       - name: Create MongoDB RabbitMQ Results Backend Secret
-        run: kubectl create secret generic mongodb-rabbitmq --from-literal='password=${{ secrets.MONGODB_RABBITMQ_PASSWORD }}' --save-config --dry-run=client -o yaml | kubectl apply --namespace=atat -f -
+        run:  kubectl create secret generic mongodb-rabbitmq --from-literal='password=${{ secrets.MONGODB_RABBITMQ_PASSWORD }}' --save-config --dry-run=client -o yaml | kubectl apply --namespace=atat -f -
       - name: Install MongoDB Operator
         run:  |
           git clone https://github.com/mongodb/mongodb-kubernetes-operator.git
@@ -82,3 +82,5 @@ jobs:
         run:  kubectl apply -f ./.docker/.atat/service.yaml --namespace=atat
       - name: Deploy ATAT Replica Set
         run:  kubectl apply -f ./.docker/.atat/deployment.yaml --namespace=atat
+      - name: Deploy Celery Workers
+        run:  kubectl apply -f ./.docker/.workers/deployment.yaml --namespace=atat

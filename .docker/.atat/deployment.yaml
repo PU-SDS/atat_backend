@@ -7,7 +7,7 @@ spec:
   selector:
     matchLabels:
       app: atat-backend
-  replicas: 0
+  replicas: 3
   template:
     metadata:
       labels:
@@ -19,7 +19,7 @@ spec:
             name: mongo-init-scripts
             defaultMode: 0777
       initContainers:
-        - name: initialize
+        - name: initialize-mongo
           volumeMounts:
             - mountPath: /mongo-init-scripts
               name: mongo-init-scripts
