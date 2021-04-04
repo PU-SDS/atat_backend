@@ -73,7 +73,7 @@ class RabbitMQ(object):
         con_strings = []
 
         for replica in range(mongo_replicas - 1):
-            con_string = f'{username}:{password}@{podname_prefix}{replica}.{host}:{port}/{database}/?authSource={database}'
+            con_string = f'{username}:{password}@{podname_prefix}{replica}.{host}:{port}/{database}'
             con_strings.append(con_string)
 
-        return f'mongodb://{",".join(con_strings)}/?replicaSet=mongodb&ssl=false&tls=false'
+        return f'mongodb://{",".join(con_strings)}/?replicaSet=mongodb&ssl=false&tls=false?authSource={database}'
