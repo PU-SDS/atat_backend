@@ -3,7 +3,7 @@ from os import environ
 
 class MongoDB(object):
     class Dev(object):
-        HOST = 'mongodb-svc.atat'
+        HOST = 'mongodb-svc.atat.svc.cluster.local'
         PORT = 27017
 
         USERNAME = 'atat'
@@ -12,7 +12,7 @@ class MongoDB(object):
         PROJECT_DATABASE = 'atat'
 
     class Prod(object):
-        HOST = 'mongodb-svc.atat'
+        HOST = 'mongodb-svc.atat.svc.cluster.local'
         PORT = 27017
 
         USERNAME = 'atat'
