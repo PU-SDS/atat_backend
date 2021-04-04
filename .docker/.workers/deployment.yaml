@@ -23,4 +23,7 @@ spec:
           command: ["/bin/bash", "-c"]
           args:
             - >-
-              printenv
+              cd /home/atat/ &&
+              pip3 install -r requirements.txt &&
+              pip3 install celery &&
+              celery -A atat.celery_app worker --loglevel=debug

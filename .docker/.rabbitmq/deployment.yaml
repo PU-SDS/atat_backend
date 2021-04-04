@@ -3,7 +3,7 @@ kind: RabbitmqCluster
 metadata:
   name: rabbitmq-atat
 spec:
-  replicas: 2
+  replicas: 3
   rabbitmq:
     additionalConfig: |
       cluster_partition_handling = pause_minority
