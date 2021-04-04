@@ -33,5 +33,4 @@ data:
       }]
     });
     db.createCollection('delete_me');
-    db.changeUserPassword('rabbitmq', '$MONGODB_RABBITMQ_PASSWORD');
     EOF
