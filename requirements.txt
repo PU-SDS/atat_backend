@@ -1,4 +1,4 @@
-HUNANA==1.0.3a0
+HUNANA==1.0.4b0
 pymongo[srv]==3.11.3
 celery==5.0.5
 mongoengine==0.22.1
