@@ -16,6 +16,17 @@ spec:
       containers:
         - name: atat-workers-default
           image: registry.digitalocean.com/viva-perdana/atat-base:latest
+          env:
+            - name: MONGODB_ATAT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-atat
+                  key: password
+            - name: MONGODB_RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-rabbitmq
+                  key: password
           envFrom:
             - secretRef:
                 name: rabbitmq-atat-default-user
@@ -29,6 +40,17 @@ spec:
               celery -A atat.celery_app worker --loglevel=debug
         - name: atat-workers-atat
           image: registry.digitalocean.com/viva-perdana/atat-base:latest
+          env:
+            - name: MONGODB_ATAT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-atat
+                  key: password
+            - name: MONGODB_RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-rabbitmq
+                  key: password
           envFrom:
             - secretRef:
                 name: rabbitmq-atat-default-user
@@ -42,6 +64,17 @@ spec:
               celery -A atat.celery_app worker -Q ATAT -n ATAT --loglevel=debug
         - name: atat-workers-hunana
           image: registry.digitalocean.com/viva-perdana/atat-base:latest
+          env:
+            - name: MONGODB_ATAT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-atat
+                  key: password
+            - name: MONGODB_RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-rabbitmq
+                  key: password
           envFrom:
             - secretRef:
                 name: rabbitmq-atat-default-user
@@ -55,6 +88,17 @@ spec:
               celery -A atat.celery_app worker -Q Hunana -n Hunana --loglevel=debug
         - name: atat-workers-job
           image: registry.digitalocean.com/viva-perdana/atat-base:latest
+          env:
+            - name: MONGODB_ATAT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-atat
+                  key: password
+            - name: MONGODB_RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-rabbitmq
+                  key: password
           envFrom:
             - secretRef:
                 name: rabbitmq-atat-default-user
@@ -68,6 +112,17 @@ spec:
               celery -A atat.celery_app worker -Q Job -n Job --loglevel=debug
         - name: atat-workers-warehousing
           image: registry.digitalocean.com/viva-perdana/atat-base:latest
+          env:
+            - name: MONGODB_ATAT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-atat
+                  key: password
+            - name: MONGODB_RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-rabbitmq
+                  key: password
           envFrom:
             - secretRef:
                 name: rabbitmq-atat-default-user
