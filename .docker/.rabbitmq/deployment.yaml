@@ -2,6 +2,7 @@ apiVersion: rabbitmq.com/v1beta1
 kind: RabbitmqCluster
 metadata:
   name: rabbitmq-atat
+  namespace: atat
 spec:
   replicas: 3
   rabbitmq:

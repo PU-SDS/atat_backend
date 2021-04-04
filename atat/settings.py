@@ -15,7 +15,7 @@ class RabbitMQ(object):
 
     class Prod(object):
         HOST = environ.get('RABBITMQ_ATAT_SERVICE_HOST')
-        PORT = 5672
+        PORT = environ.get('RABBITMQ_ATAT_SERVICE_PORT')
 
         USERNAME = environ.get('username')
         PASSWORD = environ.get('password')
