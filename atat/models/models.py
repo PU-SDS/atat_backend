@@ -4,7 +4,8 @@ from mongoengine_goodjson import Document, EmbeddedDocument, FollowReferenceFiel
 from ..settings import MongoDB
 
 print(MongoDB.get_connection_string('prod'))
-connect(host=MongoDB.get_connection_string('prod'))
+#connect(host=MongoDB.get_connection_string('prod'))
+connect(host='mongodb-svc.atat', port=27017, replicaset='mongodb')
 
 
 class HunanaPosition(EmbeddedDocument):
