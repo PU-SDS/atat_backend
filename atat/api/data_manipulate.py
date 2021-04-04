@@ -1,3 +1,5 @@
+import random
+import string
 from collections import defaultdict
 
 from mongoengine.base import BaseList
@@ -25,3 +27,9 @@ class DataManipulate(object):
             variant_dict[context].append(variant)
 
         return variant_dict
+
+    @staticmethod
+    def get_random_jobid(lenx=5):
+        random_letters = [random.choice(string.ascii_lowercase) for _ in range(lenx)]
+
+        return ''.join(random_letters)

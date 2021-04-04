@@ -1,16 +1,25 @@
 from flask import Flask
-from flask_restful import Resource, Api, abort
+from flask_restful import Resource, Api, abort, reqparse
 from mongoengine import DoesNotExist
 
-from .data_manipulate import DataManipulate
-from ..models import Result
 from .json_serializer import JSONSerializer, JSONEncoder
-
+from ..models import Result
+from .data_manipulate import DataManipulate
 from .job_queries import JobQueries
+from ..tasks.run_job import run_job
 
 app = Flask(__name__)
 app.json_encoder = JSONEncoder
 api = Api(app)
+
+argparser = reqparse.RequestParser()
+argparser.add_argument('email', type=str, required=True, help='Please provide your email address so we can let you '
+                                                              'know once we are done.')
+argparser.add_argument('kmer_length', type=int, required=True, help='Please provide a k-mer length.')
+argparser.add_argument('source', type=str, required=True, help='Please provide a source dataset in FASTA format '
+                                                               '(co-aligned with the reservoir dataset).')
+argparser.add_argument('reservoir', type=str, required=True, help='Please provide a reservoir dataset in FASTA format '
+                                                                  '(co-aligned with the source dataset).')
 
 JSONSerializer(api).serializer()
 
@@ -91,6 +100,21 @@ class GetReservoirPositionVariants(Resource):
             abort(404, message=f'Job id {jobid} does not have position {position}.')
 
 
+class SubmitJob(Resource):
+    def post(self):
+        args = argparser.parse_args()
+        jobid = DataManipulate.get_random_jobid()
+
+        run_job.delay(
+            source_seqs=args.get('source'),
+            reservoir_seqs=args.get('reservoir'),
+            jobid=jobid,
+            kmer_len=args.get('kmer_length')
+        )
+
+        return jobid, 200
+
+
 api.add_resource(GetJob, '/info/<string:jobid>')
 api.add_resource(GetResult, '/results/<string:jobid>')
 api.add_resource(GetGroupedPosition, '/results/<string:jobid>/positions/<int:position>/grouped')
@@ -101,3 +125,4 @@ api.add_resource(GetAllMotifSwitches, '/results/<string:jobid>/switches')
 api.add_resource(GetPositionMotifSwitches, '/results/<string:jobid>/positions/<int:position>/switches')
 api.add_resource(GetSourcePositionVariants, '/results/<string:jobid>/positions/<int:position>/source/variants')
 api.add_resource(GetReservoirPositionVariants, '/results/<string:jobid>/positions/<int:position>/reservoir/variants')
+api.add_resource(SubmitJob, '/submit')
