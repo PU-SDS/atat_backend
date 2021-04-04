@@ -3,13 +3,7 @@ from mongoengine_goodjson import Document, EmbeddedDocument, FollowReferenceFiel
 
 from ..settings import MongoDB
 
-connect(MongoDB.PROJECT_DATABASE,
-        authentication_source=MongoDB.PROJECT_DATABASE,
-        username=MongoDB.USERNAME,
-        password=MongoDB.PASSWORD,
-        host=MongoDB.HOST,
-        port=MongoDB.PORT
-        )
+connect(MongoDB.get_connection_string('prod'))
 
 
 class HunanaPosition(EmbeddedDocument):
