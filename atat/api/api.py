@@ -109,7 +109,9 @@ class SubmitJob(Resource):
             source_seqs=args.get('source'),
             reservoir_seqs=args.get('reservoir'),
             jobid=jobid,
-            kmer_len=args.get('kmer_length')
+            kmer_len=args.get('kmer_length'),
+            header_decode=True,
+            header_format='(accession)|(strain)|(host)|(country)'
         )
 
         return jobid, 200
