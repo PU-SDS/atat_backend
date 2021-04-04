@@ -49,6 +49,20 @@ spec:
       containers:
         - name: atat-backend
           image: registry.digitalocean.com/viva-perdana/atat-base:latest
+          envFrom:
+            - secretRef:
+                name: rabbitmq-atat-default-user
+          env:
+            - name: MONGODB_ATAT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-atat
+                  key: password
+            - name: MONGODB_RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-rabbitmq
+                  key: password
           imagePullPolicy: Always
           command: ["/bin/bash", "-c"]
           args:
