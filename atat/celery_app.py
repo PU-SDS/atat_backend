@@ -11,7 +11,8 @@ task_routes = {
 app = Celery(
     broker=f'amqp://{RabbitMQ.Prod.USERNAME}:{RabbitMQ.Prod.PASSWORD}@{RabbitMQ.Prod.HOST}:{RabbitMQ.Prod.PORT}',
     backend=f'mongodb://{RabbitMQ.Prod.BACKEND_USERNAME}:{RabbitMQ.Prod.BACKEND_PASSWORD}@{MongoDB.Prod.HOST}:'
-            f'{MongoDB.Prod.PORT}/{RabbitMQ.Prod.BACKEND_DATABASE}?replicaSet=mongodb'
+            f'{MongoDB.Prod.PORT}/{RabbitMQ.Prod.BACKEND_DATABASE}?replicaSet=mongodb?authSource='
+            f'{RabbitMQ.Prod.BACKEND_DATABASE}'
 )
 
 app.autodiscover_tasks(['atat.tasks'])
