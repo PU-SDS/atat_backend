@@ -5,7 +5,14 @@ from ..settings import MongoDB
 
 print(MongoDB.get_connection_string('prod'))
 #connect(host=MongoDB.get_connection_string('prod'))
-connect(host='mongodb-svc.atat', port=27017, replicaset='mongodb')
+connect(
+    host='mongodb-svc.atat',
+    port=27017,
+    replicaset='mongodb',
+    authentication_source='atat',
+    username=MongoDB.Prod.USERNAME,
+    password=MongoDB.Prod.PASSWORD,
+)
 
 
 class HunanaPosition(EmbeddedDocument):
