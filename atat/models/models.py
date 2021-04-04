@@ -3,10 +3,9 @@ from mongoengine_goodjson import Document, EmbeddedDocument, FollowReferenceFiel
 
 from ..settings import MongoDB
 
-#connect(host=MongoDB.get_connection_string('prod'))
 connect(
     db=MongoDB.Prod.PROJECT_DATABASE,
-    host='mongodb-svc.atat',
+    host=MongoDB.Prod.HOST,
     port=27017,
     replicaset='mongodb',
     authentication_source=MongoDB.Prod.PROJECT_DATABASE,
