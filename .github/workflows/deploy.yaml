@@ -41,8 +41,8 @@ jobs:
         run:  |
           curl https://baltocdn.com/helm/signing.asc | sudo apt-key add -
           echo "deb https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
-          apt update
-          apt install -y helm
+          sudo apt update
+          sudo apt install -y helm
       - name: Create RabbitMQ Broker Password Secret
         run:  kubectl create secret generic rabbitmq-broker-password --from-literal='rabbitmq-password=${{ secrets.RABBITMQ_BROKER_PASSWORD }}' --save-config --dry-run=client -o yaml | kubectl apply -f -
       - name: Deploy RabbitMQ Replica Set
