@@ -1,0 +1,49 @@
+name: Deploy to Kubernetes
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Update Package Manager
+        run:  sudo apt update
+      - name: Install DigitalOcean
+        run: |
+          echo 'Installing DigitalOcean'
+          wget https://github.com/digitalocean/doctl/releases/download/v1.58.0/doctl-1.58.0-linux-amd64.tar.gz
+          tar xf ./doctl-1.58.0-linux-amd64.tar.gz
+          sudo mv ./doctl /usr/local/bin
+      - name: Set-up DigitalOcean
+        run:  doctl auth init -t ${{ secrets.DO_API_TOKEN }}
+      - name: Install Kubernetes
+        run: |
+          echo 'Installing dependencies.'
+          sudo apt install -y apt-transport-https
+          echo 'Downloading Google Cloud public signing key.'
+          curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+          echo 'Adding Kubernetes apt repository.' &&
+          echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+          echo 'Updating package index with new repository.'
+          sudo apt update
+          echo 'Installing Kubernetes.'
+          sudo apt install -y kubectl
+          kubectl version
+      - name: Configure Kubernetes
+        run:  doctl kubernetes cluster kubeconfig save ${{ secrets.KUBERNETES_CLUSTER_NAME }}
+      - name: Install Helm
+        run:  |
+          curl https://baltocdn.com/helm/signing.asc | sudo apt-key add -
+          echo "deb https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+          apt update
+          apt install -y helm
+      - name: Create RabbitMQ Broker Password Secret
+        run:  kubectl create secret generic rabbitmq-broker-password --from-literal='rabbitmq-password=${{ secrets.RABBITMQ_BROKER_PASSWORD }}' --save-config --dry-run=client -o yaml | kubectl apply -f -
+      - name: Deploy RabbitMQ Replica Set
+        run:  helm install -f ./.kubernetes/rabbitmq.yaml rabbitmq bitnami/rabbitmq
