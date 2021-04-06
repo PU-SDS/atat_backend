@@ -1254,7 +1254,7 @@ hidden:
   ## Number of MongoDB(R) Hidden replicas to deploy.
   ## Ignored when mongodb.architecture=standalone
   ##
-  replicaCount: 1
+  replicaCount: 3
 
   ## StrategyType for MongoDB(R) Hidden statefulset
   ## It can be set to RollingUpdate or Recreate by default.
