@@ -63,7 +63,7 @@ jobs:
           PERDANA_KUBERNETES: ${{secrets.PERDANA_KUBERNETES}}
         run:  |
           mkdir ~/.kube
-          'echo "$PERDANA_KUBERNETES" > ~/.kube/config'
+          echo "$PERDANA_KUBERNETES" > ~/.kube/config
       - name: Install Helm
         run:  |
           curl https://baltocdn.com/helm/signing.asc | sudo apt-key add -
