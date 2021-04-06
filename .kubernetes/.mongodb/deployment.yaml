@@ -71,7 +71,7 @@ auth:
   ## MongoDB(R) root password
   ## ref: https://github.com/bitnami/bitnami-docker-mongodb/blob/master/README.md#setting-the-root-password-on-first-run
   ##
-  rootPassword: ""
+  rootPassword: {{ .Values.admin }}
   ## MongoDB(R) custom user and database
   ## ref: https://github.com/bitnami/bitnami-docker-mongodb/blob/master/README.md#creating-a-user-and-database-on-first-run
   ##

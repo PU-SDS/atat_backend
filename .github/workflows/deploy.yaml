@@ -50,6 +50,6 @@ jobs:
       - name: Create MongoDB Password Secrets
         run:  helm upgrade mongodb-pwd-secret --install ./.kubernetes/.mongodb/mongodb-secrets-helm --set atat=${{ secrets.MONGODB_ATAT_PASSWORD }} --set rabbitmq=${{ secrets.MONGODB_RABBITMQ_PASSWORD }} --set admin=${{ secrets.MONGODB_ADMIN_PASSWORD }}
       - name: Deploy RabbitMQ Replica Set
-        run:  helm install -f ./.kubernetes/rabbitmq.yaml rabbitmq bitnami/rabbitmq
+        run:  helm upgrade rabbitmq --install -f ./.kubernetes/rabbitmq.yaml rabbitmq bitnami/rabbitmq
       - name: Deploy MongoDB Replica Set
-        run:  helm install -f ./.kubernetes/.mongodb/deployment.yaml mongodb bitnami/mongodb
+        run:  helm upgrade mongodb --install -f ./.kubernetes/.mongodb/deployment.yaml bitnami/mongodb --set admin=${{ secrets.MONGODB_ADMIN_PASSWORD }}
