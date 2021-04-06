@@ -7,7 +7,7 @@ connect(
     db=MongoDB.Prod.PROJECT_DATABASE,
     host=MongoDB.Prod.HOST,
     port=27017,
-    replicaset='mongodb',
+    replicaset='rs0',
     authentication_source=MongoDB.Prod.PROJECT_DATABASE,
     username=MongoDB.Prod.USERNAME,
     password=MongoDB.Prod.PASSWORD,
