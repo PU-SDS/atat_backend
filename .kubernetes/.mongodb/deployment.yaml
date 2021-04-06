@@ -55,7 +55,7 @@ clusterDomain: cluster.local
 
 ## MongoDB(R) architecture. Allowed values: standalone or replicaset
 ##
-architecture: standalone
+architecture: replicaset
 
 ## Use StatefulSet instead of Deployment when deploying standalone
 ##
