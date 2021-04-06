@@ -22,6 +22,22 @@ jobs:
           sudo mv ./doctl /usr/local/bin
       - name: Set-up DigitalOcean
         run:  doctl auth init -t ${{ secrets.DO_API_TOKEN }}
+      - name: Install Docker
+        run:  |
+                sudo apt install apt-transport-https ca-certificates curl software-properties-common
+                curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+                sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+                sudo apt update
+                sudo apt-cache policy docker-ce
+                sudo apt install docker-ce
+      - name: Build ATAT Base Image
+        run:  docker build -t atat-base .
+      - name: Login to DigitalOcean Container Registry
+        run:  doctl registry login
+      - name: Push Image to Container Registry
+        run:  |
+                docker tag atat-base registry.digitalocean.com/viva-perdana/atat-base:latest
+                docker push registry.digitalocean.com/viva-perdana/atat-base:latest
       - name: Install Kubernetes
         run: |
           echo 'Installing dependencies.'
@@ -50,6 +66,12 @@ jobs:
       - name: Create MongoDB Password Secrets
         run:  helm upgrade mongodb-pwd-secret --install ./.kubernetes/.mongodb/mongodb-secrets-helm --set atat=${{ secrets.MONGODB_ATAT_PASSWORD }} --set rabbitmq=${{ secrets.MONGODB_RABBITMQ_PASSWORD }} --set admin=${{ secrets.MONGODB_ADMIN_PASSWORD }}
       - name: Deploy RabbitMQ Replica Set
-        run:  helm upgrade rabbitmq bitnami/rabbitmq --install -f ./.kubernetes/rabbitmq.yaml
+        run:  helm upgrade rabbitmq bitnami/rabbitmq --install -f ./.kubernetes/.rabbitmq/deployment.yaml
       - name: Deploy MongoDB Replica Set
         run:  helm upgrade mongodb bitnami/mongodb --install -f ./.kubernetes/.mongodb/deployment.yaml --set auth.rootPassword=${{ secrets.MONGODB_ADMIN_PASSWORD }}
+      - name: Deploy ATAT Service
+        run:  kubectl apply -f ./.kubernetes/.atat/service.yaml
+      - name: Deploy ATAT Replica Set
+        run:  kubectl apply -f ./.kubernetes/.atat/deployment.yaml
+      - name: Deploy Celery Workers
+        run:  kubectl apply -f ./.kubernetes/.workers/deployment.yaml

@@ -12,7 +12,7 @@ class MongoDB(object):
         PROJECT_DATABASE = 'atat'
 
     class Prod(object):
-        HOST = 'mongodb-svc.atat'
+        HOST = 'mongodb-headless.default.svc.cluster.local'
         PORT = 27017
 
         USERNAME = 'atat'
@@ -51,11 +51,11 @@ class RabbitMQ(object):
         BACKEND_PASSWORD = environ.get('MONGODB_RABBITMQ_PASSWORD')
 
     class Prod(object):
-        HOST = environ.get('RABBITMQ_ATAT_SERVICE_HOST')
-        PORT = environ.get('RABBITMQ_ATAT_SERVICE_PORT')
+        HOST = 'rabbitmq.default.svc'
+        PORT = 5672
 
-        USERNAME = environ.get('username')
-        PASSWORD = environ.get('password')
+        USERNAME = 'rabbitmq'
+        PASSWORD = environ.get('RABBITMQ_BROKER_PASSWORD')
 
         BACKEND_DATABASE = 'rabbitmq'
         BACKEND_USERNAME = 'rabbitmq'
