@@ -63,6 +63,7 @@ jobs:
           PERDANA_KUBERNETES: ${{secrets.PERDANA_KUBERNETES}}
         run:  |
           mkdir ~/.kube
+          touch ~/.kube/config
           echo "$PERDANA_KUBERNETES" > ~/.kube/config
       - name: Install Helm
         run:  |
@@ -75,7 +76,7 @@ jobs:
       - name: Create RabbitMQ Broker Password Secret
         run:  kubectl create secret generic rabbitmq-broker --from-literal='rabbitmq-password=${{ secrets.RABBITMQ_BROKER_PASSWORD }}' --from-literal='rabbitmq-erlang-cookie=${{ secrets.RABBITMQ_ERLANG_COOKIE }}' --save-config --dry-run=client -o yaml | kubectl apply -f -
       - name: Create MongoDB Password Secrets
-        run:  helm upgrade mongodb-pwd-secret --install ./.kubernetes/.mongodb/mongodb-secrets-helm --set atat=${{ secrets.MONGODB_ATAT_PASSWORD }} --set rabbitmq=${{ secrets.MONGODB_RABBITMQ_PASSWORD }} --set admin=${{ secrets.MONGODB_ADMIN_PASSWORD }}
+        run:  helm upgrade mongodb-pwd-secret --install ./backend/.kubernetes/.mongodb/mongodb-secrets-helm --set atat=${{ secrets.MONGODB_ATAT_PASSWORD }} --set rabbitmq=${{ secrets.MONGODB_RABBITMQ_PASSWORD }} --set admin=${{ secrets.MONGODB_ADMIN_PASSWORD }}
       - name: Deploy RabbitMQ Replica Set
         run:  helm upgrade rabbitmq bitnami/rabbitmq --install -f ./backend/.kubernetes/.rabbitmq/deployment.yaml
       - name: Deploy MongoDB Replica Set
