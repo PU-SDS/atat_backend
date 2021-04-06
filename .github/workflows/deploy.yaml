@@ -51,9 +51,5 @@ jobs:
         run:  helm upgrade mongodb-pwd-secret --install ./.kubernetes/.mongodb/mongodb-secrets-helm --set atat=${{ secrets.MONGODB_ATAT_PASSWORD }} --set rabbitmq=${{ secrets.MONGODB_RABBITMQ_PASSWORD }} --set admin=${{ secrets.MONGODB_ADMIN_PASSWORD }}
       - name: Deploy RabbitMQ Replica Set
         run:  helm upgrade rabbitmq bitnami/rabbitmq --install -f ./.kubernetes/rabbitmq.yaml
-      - name: Set Root Password for MongoDB
-        run:  |
-          sudo apt install gettext-base
-          envsubst "$MONGODB_ADMIN_PASSWORD" < ./.kubernetes/.mongodb/deployment.yaml > ./.kubernetes/.mongodb/deployment.yaml
       - name: Deploy MongoDB Replica Set
-        run:  helm upgrade mongodb bitnami/mongodb --install -f ./.kubernetes/.mongodb/deployment.yaml --set admin=${{ secrets.MONGODB_ADMIN_PASSWORD }}
+        run:  helm upgrade mongodb bitnami/mongodb --install -f ./.kubernetes/.mongodb/deployment.yaml --set auth.rootPassword=${{ secrets.MONGODB_ADMIN_PASSWORD }}

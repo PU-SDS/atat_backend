@@ -6,4 +6,3 @@ type: Opaque
 data:
   MONGODB_ATAT_PASSWORD: {{ .Values.atat | b64enc }}
   MONGODB_RABBITMQ_PASSWORD: {{ .Values.rabbitmq | b64enc }}
-  MONGODB_ADMIN_PASSWORD: {{ .Values.admin | b64enc }}
