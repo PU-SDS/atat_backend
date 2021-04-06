@@ -59,8 +59,7 @@ jobs:
           sudo apt install -y kubectl
           kubectl version
       - name: Configure Kubernetes
-        run:  |
-          echo ${{ secrets.PERDANA_KUBERNETES }} > ~/.kube/config
+        run:  'echo ${{ secrets.PERDANA_KUBERNETES }} > ~/.kube/config'
       - name: Install Helm
         run:  |
           curl https://baltocdn.com/helm/signing.asc | sudo apt-key add -
