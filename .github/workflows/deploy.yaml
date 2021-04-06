@@ -52,4 +52,4 @@ jobs:
       - name: Deploy RabbitMQ Replica Set
         run:  helm upgrade rabbitmq bitnami/rabbitmq --install -f ./.kubernetes/rabbitmq.yaml
       - name: Deploy MongoDB Replica Set
-        run:  helm upgrade mongodb bitnami/mongodb --install -f ./.kubernetes/.mongodb/deployment.yaml --set admin=${{ secrets.MONGODB_ADMIN_PASSWORD }}
+        run:  helm upgrade mongodb bitnami/mongodb --install -f ./.kubernetes/.mongodb/deployment.yaml --set admin=${{ secrets.MONGODB_ADMIN_PASSWORD }} --debug --dry-run
