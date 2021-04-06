@@ -66,13 +66,13 @@ auth:
   ## ref: https://github.com/bitnami/bitnami-docker-rabbitmq#environment-variables
   ##
   # password:
-  existingPasswordSecret: rabbitmq-broker-password
+  existingPasswordSecret: rabbitmq-broker
 
   ## Erlang cookie to determine whether different nodes are allowed to communicate with each other
   ## ref: https://github.com/bitnami/bitnami-docker-rabbitmq#environment-variables
   ##
   # erlangCookie:
-  # existingErlangSecret: name-of-existing-secret
+  existingErlangSecret: rabbitmq-broker
 
   ## Enable encryption to rabbitmq
   ## ref: https://www.rabbitmq.com/ssl.html

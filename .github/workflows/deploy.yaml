@@ -46,10 +46,12 @@ jobs:
       - name: Add Bitnami Repository to Helm
         run:  helm repo add bitnami https://charts.bitnami.com/bitnami
       - name: Create RabbitMQ Broker Password Secret
-        run:  kubectl create secret generic rabbitmq-broker-password --from-literal='rabbitmq-password=${{ secrets.RABBITMQ_BROKER_PASSWORD }}' --save-config --dry-run=client -o yaml | kubectl apply -f -
+        run:  kubectl create secret generic rabbitmq-broker --from-literal='rabbitmq-password=${{ secrets.RABBITMQ_BROKER_PASSWORD }}' --from-literal='rabbitmq-erlang-cookie=${{ secrets.RABBITMQ_ERLANG_COOKIE }}' --save-config --dry-run=client -o yaml | kubectl apply -f -
       - name: Create MongoDB Password Secrets
         run:  helm upgrade mongodb-pwd-secret --install ./.kubernetes/.mongodb/mongodb-secrets-helm --set atat=${{ secrets.MONGODB_ATAT_PASSWORD }} --set rabbitmq=${{ secrets.MONGODB_RABBITMQ_PASSWORD }} --set admin=${{ secrets.MONGODB_ADMIN_PASSWORD }}
       - name: Deploy RabbitMQ Replica Set
-        run:  helm upgrade rabbitmq bitnami/rabbitmq --install -f ./.kubernetes/rabbitmq.yaml
+        run:  |
+          export RABBITMQ_ERLANG_COOKIE=$(kubectl get secret --namespace "default" rabbitmq-broker*** jsonpath="{.data.rabbitmq-erlang-cookie}" | base64 --decode)
+          helm upgrade rabbitmq bitnami/rabbitmq --install -f ./.kubernetes/rabbitmq.yaml
       - name: Deploy MongoDB Replica Set
         run:  helm upgrade mongodb bitnami/mongodb --install -f ./.kubernetes/.mongodb/deployment.yaml --set admin=${{ secrets.MONGODB_ADMIN_PASSWORD }}
