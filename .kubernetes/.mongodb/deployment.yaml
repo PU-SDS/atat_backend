@@ -207,7 +207,7 @@ configuration: ""
 initdbScripts:
   atat.sh:  |
     #!/bin/bash
-    mongo <<EOF
+    mongo --username root --password $MONGODB_ADMIN_PASSWORD <<EOF
     use atat;
     db.createUser({
       user: 'atat',
@@ -221,7 +221,7 @@ initdbScripts:
     EOF
   rabbitmq.sh:  |
     #!/bin/bash
-    mongo <<EOF
+    mongo --username root --password $MONGODB_ADMIN_PASSWORD <<EOF
     use rabbitmq;
     db.createUser({
       user: 'rabbitmq',
