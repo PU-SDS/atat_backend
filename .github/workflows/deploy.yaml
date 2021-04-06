@@ -10,8 +10,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
+      - name: Checkout Backend Repository
         uses: actions/checkout@v2
+        with:
+          path: './backend'
+      - name: Checkout Frontend Repository
+        uses: actions/checkout@v2
+        with:
+          path: './frontend'
+          repository: 'ShanWeera/atat-single-frontend'
       - name: Update Package Manager
         run:  sudo apt update
       - name: Install DigitalOcean
@@ -31,13 +38,13 @@ jobs:
                 sudo apt-cache policy docker-ce
                 sudo apt install docker-ce
       - name: Build ATAT Base Image
-        run:  docker build -t atat-base .
+        run:  docker build -t atat-backend ./backend
       - name: Login to DigitalOcean Container Registry
         run:  doctl registry login
       - name: Push Image to Container Registry
         run:  |
-                docker tag atat-base registry.digitalocean.com/viva-perdana/atat-base:latest
-                docker push registry.digitalocean.com/viva-perdana/atat-base:latest
+                docker tag atat-backend registry.digitalocean.com/viva-perdana/atat-backend:latest
+                docker push registry.digitalocean.com/viva-perdana/atat-backend:latest
       - name: Install Kubernetes
         run: |
           echo 'Installing dependencies.'
@@ -52,7 +59,9 @@ jobs:
           sudo apt install -y kubectl
           kubectl version
       - name: Configure Kubernetes
-        run:  doctl kubernetes cluster kubeconfig save ${{ secrets.KUBERNETES_CLUSTER_NAME }}
+        run:  |
+          echo ${{ secrets.PERDANA_KUBERNETES }} > ~/.kube/config
+          doctl registry kubernetes-manifest | kubectl apply -f -
       - name: Install Helm
         run:  |
           curl https://baltocdn.com/helm/signing.asc | sudo apt-key add -
@@ -66,12 +75,12 @@ jobs:
       - name: Create MongoDB Password Secrets
         run:  helm upgrade mongodb-pwd-secret --install ./.kubernetes/.mongodb/mongodb-secrets-helm --set atat=${{ secrets.MONGODB_ATAT_PASSWORD }} --set rabbitmq=${{ secrets.MONGODB_RABBITMQ_PASSWORD }} --set admin=${{ secrets.MONGODB_ADMIN_PASSWORD }}
       - name: Deploy RabbitMQ Replica Set
-        run:  helm upgrade rabbitmq bitnami/rabbitmq --install -f ./.kubernetes/.rabbitmq/deployment.yaml
+        run:  helm upgrade rabbitmq bitnami/rabbitmq --install -f ./backend/.kubernetes/.rabbitmq/deployment.yaml
       - name: Deploy MongoDB Replica Set
-        run:  helm upgrade mongodb bitnami/mongodb --install -f ./.kubernetes/.mongodb/deployment.yaml --set auth.rootPassword=${{ secrets.MONGODB_ADMIN_PASSWORD }} --set auth.replicaSetKey=${{ secrets.MONGODB_REPLICA_SET_KEY }}
+        run:  helm upgrade mongodb bitnami/mongodb --install -f ./backend/.kubernetes/.mongodb/deployment.yaml --set auth.rootPassword=${{ secrets.MONGODB_ADMIN_PASSWORD }} --set auth.replicaSetKey=${{ secrets.MONGODB_REPLICA_SET_KEY }}
       - name: Deploy ATAT Service
-        run:  kubectl apply -f ./.kubernetes/.atat/service.yaml
+        run:  kubectl apply -f ./backend/.kubernetes/.atat/service.yaml
       - name: Deploy ATAT Replica Set
-        run:  kubectl apply -f ./.kubernetes/.atat/deployment.yaml
+        run:  kubectl apply -f ./backend/.kubernetes/.atat/deployment.yaml
       - name: Deploy Celery Workers
-        run:  kubectl apply -f ./.kubernetes/.workers/deployment.yaml
+        run:  kubectl apply -f ./backend/.kubernetes/.workers/deployment.yaml

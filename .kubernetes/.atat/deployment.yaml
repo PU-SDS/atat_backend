@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: atat-backend
-          image: registry.digitalocean.com/viva-perdana/atat-base:latest
+          image: registry.digitalocean.com/viva-perdana/atat-backend:latest
           env:
             - name: MONGODB_ATAT_PASSWORD
               valueFrom:
@@ -38,3 +38,5 @@ spec:
               cd /home/atat/ &&
               pip3 install -r requirements.txt &&
               gunicorn --bind 0.0.0.0:80 wsgi:app
+      imagePullSecrets:
+        - name: do-registry
