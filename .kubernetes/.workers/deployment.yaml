@@ -20,16 +20,18 @@ spec:
             - name: MONGODB_ATAT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mongodb-atat
-                  key: password
+                  name: mongodb-pwd-secret
+                  key: MONGODB_ATAT_PASSWORD
             - name: MONGODB_RABBITMQ_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mongodb-rabbitmq
-                  key: password
-          envFrom:
-            - secretRef:
-                name: rabbitmq-atat-default-user
+                  name: mongodb-pwd-secret
+                  key: MONGODB_RABBITMQ_PASSWORD
+            - name: RABBITMQ_BROKER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-broker
+                  key:  rabbitmq-password
           imagePullPolicy: Always
           command: ["/bin/bash", "-c"]
           args:
@@ -44,16 +46,18 @@ spec:
             - name: MONGODB_ATAT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mongodb-atat
-                  key: password
+                  name: mongodb-pwd-secret
+                  key: MONGODB_ATAT_PASSWORD
             - name: MONGODB_RABBITMQ_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mongodb-rabbitmq
-                  key: password
-          envFrom:
-            - secretRef:
-                name: rabbitmq-atat-default-user
+                  name: mongodb-pwd-secret
+                  key: MONGODB_RABBITMQ_PASSWORD
+            - name: RABBITMQ_BROKER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-broker
+                  key:  rabbitmq-password
           imagePullPolicy: Always
           command: [ "/bin/bash", "-c" ]
           args:
@@ -68,16 +72,18 @@ spec:
             - name: MONGODB_ATAT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mongodb-atat
-                  key: password
+                  name: mongodb-pwd-secret
+                  key: MONGODB_ATAT_PASSWORD
             - name: MONGODB_RABBITMQ_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mongodb-rabbitmq
-                  key: password
-          envFrom:
-            - secretRef:
-                name: rabbitmq-atat-default-user
+                  name: mongodb-pwd-secret
+                  key: MONGODB_RABBITMQ_PASSWORD
+            - name: RABBITMQ_BROKER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-broker
+                  key:  rabbitmq-password
           imagePullPolicy: Always
           command: [ "/bin/bash", "-c" ]
           args:
@@ -92,16 +98,18 @@ spec:
             - name: MONGODB_ATAT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mongodb-atat
-                  key: password
+                  name: mongodb-pwd-secret
+                  key: MONGODB_ATAT_PASSWORD
             - name: MONGODB_RABBITMQ_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mongodb-rabbitmq
-                  key: password
-          envFrom:
-            - secretRef:
-                name: rabbitmq-atat-default-user
+                  name: mongodb-pwd-secret
+                  key: MONGODB_RABBITMQ_PASSWORD
+            - name: RABBITMQ_BROKER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-broker
+                  key:  rabbitmq-password
           imagePullPolicy: Always
           command: [ "/bin/bash", "-c" ]
           args:
@@ -116,16 +124,18 @@ spec:
             - name: MONGODB_ATAT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mongodb-atat
-                  key: password
+                  name: mongodb-pwd-secret
+                  key: MONGODB_ATAT_PASSWORD
             - name: MONGODB_RABBITMQ_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mongodb-rabbitmq
-                  key: password
-          envFrom:
-            - secretRef:
-                name: rabbitmq-atat-default-user
+                  name: mongodb-pwd-secret
+                  key: MONGODB_RABBITMQ_PASSWORD
+            - name: RABBITMQ_BROKER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-broker
+                  key:  rabbitmq-password
           imagePullPolicy: Always
           command: [ "/bin/bash", "-c" ]
           args:
