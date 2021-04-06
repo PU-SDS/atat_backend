@@ -60,6 +60,10 @@ jobs:
           kubectl version
       - name: Configure Kubernetes
         run:  |
+          export PATH=~/bin:$PATH
+          curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.10.0/kind-linux-amd64
+          chmod +x ./kind
+          mv ./kind ~/bin/kind
           echo ${{ secrets.PERDANA_KUBERNETES }} > ~/.kube/config
           doctl registry kubernetes-manifest | kubectl apply -f -
       - name: Install Helm
