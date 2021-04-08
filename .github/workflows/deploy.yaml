@@ -82,8 +82,7 @@ jobs:
           DO_REGISTRY_AUTH: ${{secrets.DO_REGISTRY_AUTH}}
         run:  |
           sudo apt install -y gettext-base
-          envsubst < ./backend/.kubernetes/.registry/secret.yaml
-          kubectl apply -f ./backend/.kubernetes/.registry/secret.yaml
+          envsubst < ./backend/.kubernetes/.registry/secret.yaml | kubectl apply -f -
       - name: Create RabbitMQ Broker Password Secret
         run:  kubectl create secret generic rabbitmq-broker --from-literal='rabbitmq-password=${{ secrets.RABBITMQ_BROKER_PASSWORD }}' --from-literal='rabbitmq-erlang-cookie=${{ secrets.RABBITMQ_ERLANG_COOKIE }}' --save-config --dry-run=client -o yaml | kubectl apply -f -
       - name: Create MongoDB Password Secrets
