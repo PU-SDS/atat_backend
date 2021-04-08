@@ -277,7 +277,7 @@ labels: {}
 ## Number of MongoDB(R) replicas to deploy.
 ## Ignored when mongodb.architecture=standalone
 ##
-replicaCount: 3
+replicaCount: 2
 
 ## StrategyType for MongoDB(R) statefulset
 ## It can be set to RollingUpdate or Recreate by default.
@@ -506,7 +506,7 @@ persistence:
     - ReadWriteOnce
   ## PVC size
   ##
-  size: 8Gi
+  size: 4Gi
   ## PVC annotations
   ##
   annotations: {}

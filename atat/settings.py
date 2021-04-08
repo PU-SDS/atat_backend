@@ -51,7 +51,7 @@ class RabbitMQ(object):
         BACKEND_PASSWORD = environ.get('MONGODB_RABBITMQ_PASSWORD')
 
     class Prod(object):
-        HOST = 'rabbitmq.default.svc'
+        HOST = 'rabbitmq.atat-dev.svc'
         PORT = 5672
 
         USERNAME = 'rabbitmq'

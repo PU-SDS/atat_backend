@@ -325,7 +325,7 @@ extraSecrets: {}
 
 ## Number of RabbitMQ replicas to deploy
 ##
-replicaCount: 3
+replicaCount: 2
 
 ## Use an alternate scheduler, e.g. "stork".
 ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
@@ -562,7 +562,7 @@ persistence:
 
   ## If you change this value, you might have to adjust `rabbitmq.diskFreeLimit` as well.
   ##
-  size: 8Gi
+  size: 1Gi
 
   volumes:
   #  - name: volume_name
