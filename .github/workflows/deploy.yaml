@@ -73,14 +73,18 @@ jobs:
           sudo apt install -y helm
       - name: Add Bitnami Repository to Helm
         run:  helm repo add bitnami https://charts.bitnami.com/bitnami
+      - name: Set Preferred Namespace
+        run:  kubectl config set-context --current --namespace=atat-dev
+      - name: Create DigitalOcean Container Registry Secret
+        run:  doctl registry kubernetes-manifest | kubectl apply -f -
       - name: Create RabbitMQ Broker Password Secret
         run:  kubectl create secret generic rabbitmq-broker --from-literal='rabbitmq-password=${{ secrets.RABBITMQ_BROKER_PASSWORD }}' --from-literal='rabbitmq-erlang-cookie=${{ secrets.RABBITMQ_ERLANG_COOKIE }}' --save-config --dry-run=client -o yaml | kubectl apply -f -
       - name: Create MongoDB Password Secrets
         run:  helm upgrade mongodb-pwd-secret --install ./backend/.kubernetes/.mongodb/mongodb-secrets-helm --set atat=${{ secrets.MONGODB_ATAT_PASSWORD }} --set rabbitmq=${{ secrets.MONGODB_RABBITMQ_PASSWORD }} --set admin=${{ secrets.MONGODB_ADMIN_PASSWORD }}
       - name: Deploy RabbitMQ Replica Set
-        run:  helm upgrade rabbitmq-atat bitnami/rabbitmq --install -f ./backend/.kubernetes/.rabbitmq/deployment.yaml
+        run:  helm upgrade rabbitmq bitnami/rabbitmq --install -f ./backend/.kubernetes/.rabbitmq/deployment.yaml
       - name: Deploy MongoDB Replica Set
-        run:  helm upgrade mongodb-atat bitnami/mongodb --install -f ./backend/.kubernetes/.mongodb/deployment.yaml --set auth.rootPassword=${{ secrets.MONGODB_ADMIN_PASSWORD }} --set auth.replicaSetKey=${{ secrets.MONGODB_REPLICA_SET_KEY }}
+        run:  helm upgrade mongodb bitnami/mongodb --install -f ./backend/.kubernetes/.mongodb/deployment.yaml --set auth.rootPassword=${{ secrets.MONGODB_ADMIN_PASSWORD }} --set auth.replicaSetKey=${{ secrets.MONGODB_REPLICA_SET_KEY }}
       - name: Deploy ATAT Service
         run:  kubectl apply -f ./backend/.kubernetes/.atat/service.yaml
       - name: Deploy ATAT Replica Set
