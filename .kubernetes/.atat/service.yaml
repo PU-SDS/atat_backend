@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: atat-backend-service
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: atat-backend
   ports:
