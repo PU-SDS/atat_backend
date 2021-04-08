@@ -144,4 +144,4 @@ spec:
               pip3 install celery &&
               celery -A atat.celery_app worker -Q Warehousing -n Warehousing --loglevel=debug
       imagePullSecrets:
-        - name: do-registry
+        - name: registry-viva-perdana

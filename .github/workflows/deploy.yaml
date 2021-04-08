@@ -78,7 +78,7 @@ jobs:
       - name: Create Namespace
         run: kubectl create namespace atat-dev --dry-run=client -o yaml | kubectl apply --namespace=atat-dev -f -
       - name: Create DigitalOcean Container Registry Secret
-        run:  doctl registry kubernetes-manifest | kubectl apply -n atat-dev -f -
+        run:  "doctl registry kubernetes-manifest | sed  's/namespace: default/namespace: atat-dev/g | kubectl apply -f -"
       - name: Create RabbitMQ Broker Password Secret
         run:  kubectl create secret generic rabbitmq-broker --from-literal='rabbitmq-password=${{ secrets.RABBITMQ_BROKER_PASSWORD }}' --from-literal='rabbitmq-erlang-cookie=${{ secrets.RABBITMQ_ERLANG_COOKIE }}' --save-config --dry-run=client -o yaml | kubectl apply -f -
       - name: Create MongoDB Password Secrets

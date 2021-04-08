@@ -39,4 +39,4 @@ spec:
               pip3 install -r requirements.txt &&
               gunicorn --bind 0.0.0.0:80 wsgi:app
       imagePullSecrets:
-        - name: do-registry
+        - name: registry-viva-perdana
