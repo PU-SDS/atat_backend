@@ -75,6 +75,8 @@ jobs:
         run:  helm repo add bitnami https://charts.bitnami.com/bitnami
       - name: Set Preferred Namespace
         run:  kubectl config set-context --current --namespace=atat-dev
+      - name: Create Namespace
+        run: kubectl create namespace atat-dev --dry-run=client -o yaml | kubectl apply --namespace=atat-dev -f -
       - name: Create DigitalOcean Container Registry Secret
         run:  doctl registry kubernetes-manifest | kubectl apply -f -
       - name: Create RabbitMQ Broker Password Secret
