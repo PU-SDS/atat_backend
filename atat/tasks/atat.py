@@ -16,6 +16,7 @@ from .logging import Logging
 
 # Here lies constants imports
 from .constants import LogContexts
+from .run_job import JOB_ID_GLOBAL
 
 # Here lies Python default library imports
 from itertools import product
@@ -39,6 +40,10 @@ class ATAT(Task):
             :returns: A list of NamedTuple pertaining to each switch observed from Source --> Reservoir
         """
 
+        Job(_id=JOB_ID_GLOBAL).log.append(
+            Logging.make_log_entry('INFO', 'Starting transmissibility analysis.')
+        )
+
         positions = zip(*hunana_results)
         switches = list()
 
@@ -55,6 +60,10 @@ class ATAT(Task):
                                 'to': reservoir_variant.get('motif_long').upper()
                             }
                         )
+
+        Job(_id=JOB_ID_GLOBAL).log.append(
+            Logging.make_log_entry('INFO', 'Transmissibility analysis completed.')
+        )
 
         return switches
 

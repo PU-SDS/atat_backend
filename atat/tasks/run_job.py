@@ -19,9 +19,12 @@ from .constants import LogContexts
 # Here lies other imports
 from .logging import Logging
 
+JOB_ID_GLOBAL = None
 
 @app.task(name="Job")
 def run_job(source_seqs: str, reservoir_seqs: str, jobid: str, **kwargs):
+    JOB_ID_GLOBAL = jobid
+
     Job(
         _id=jobid,
         log=[Logging.make_log_entry(context=LogContexts.INFO, msg=f'Starting job {jobid}.')],

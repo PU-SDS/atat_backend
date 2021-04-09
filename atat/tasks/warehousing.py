@@ -38,9 +38,6 @@ class Warehousing(Task):
 
         # First we get the job that we just saved using the job id. Then we update the log
         job = Job.objects.get(_id=jobid)
-        job.log.append(Logging.make_log_entry(LogContexts.INFO, f'Hunana completed for job {jobid}.'))
-        job.status = 'RUNNING'
-        job.save()
 
         # Then we create an instance of the Results model that we will later link to the job
         result = Result()
@@ -49,13 +46,10 @@ class Warehousing(Task):
         result.reservoir = self._get_hunana_positions(rervoir_hunana_results)
 
         job.log.append(
-            Logging.make_log_entry(LogContexts.INFO, f'Reservoir sequence data stored successfully for '
-                                                     f'job '
-                                                     f'{jobid}'))
+            Logging.make_log_entry(LogContexts.INFO, f'K-mer data stored successfully.'))
         job.save()
 
         # Now we need to save the ATAT (motif switching) data
-        print(atat_results)
         switches = [Switch(
             position=motif_switch.get('position'),
             sequence=motif_switch.get('sequence'),
@@ -64,6 +58,9 @@ class Warehousing(Task):
         ) for motif_switch in atat_results]
 
         result.switches = switches
+
+        job.log.append(
+            Logging.make_log_entry(LogContexts.INFO, f'Transmissibility analysis data stored successfully.'))
 
         # We have everything we need. Link the results to the job and save. Then save the job itself
         job.results = result.save()
