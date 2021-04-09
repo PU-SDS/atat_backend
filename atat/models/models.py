@@ -87,5 +87,5 @@ class Job(Document):
 
     _id = StringField(primary_key=True, required=True)
     status = StringField(required=True, choices=statuses.keys(), max_length=8)
-    log = ListField(required=True)
+    log = ListField(required=True, null=True)
     results = FollowReferenceField(Result, required=False)

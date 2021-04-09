@@ -24,10 +24,8 @@ from .logging import Logging
 def run_job(source_seqs: str, reservoir_seqs: str, jobid: str, **kwargs):
     JOB_ID_GLOBAL = jobid
 
-    Job(
-        _id=jobid,
-        log=[Logging.make_log_entry(context=LogContexts.INFO, msg=f'Starting job {jobid}.')],
-        status='STARTED').save()
+    Job(_id=jobid, log=[], status='STARTED').save()
+    Logging.make_log_entry('INFO', f'Job {JOB_ID_GLOBAL} is starting.')
 
     all_hunana_tasks = group([
         hunana.s(source_seqs, **kwargs),
@@ -38,7 +36,7 @@ def run_job(source_seqs: str, reservoir_seqs: str, jobid: str, **kwargs):
 
     task_chain = chain(all_hunana_tasks, atat_task)
 
-    chord([task_chain])(Warehousing().s(jobid))
+    chord([task_chain])(Warehousing().s())
 
     # chain(all_hunana_tasks, ATAT2().s()).delay()
 

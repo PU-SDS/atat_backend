@@ -40,9 +40,7 @@ class ATAT(Task):
             :returns: A list of NamedTuple pertaining to each switch observed from Source --> Reservoir
         """
 
-        Job(_id=JOB_ID_GLOBAL).log.append(
-            Logging.make_log_entry('INFO', 'Starting transmissibility analysis.')
-        )
+        Logging.make_log_entry(LogContexts.INFO, 'Starting transmissibility analysis.')
 
         positions = zip(*hunana_results)
         switches = list()
@@ -61,9 +59,7 @@ class ATAT(Task):
                             }
                         )
 
-        Job(_id=JOB_ID_GLOBAL).log.append(
-            Logging.make_log_entry('INFO', 'Transmissibility analysis completed.')
-        )
+        Logging.make_log_entry(LogContexts.INFO, 'Transmissibility analysis completed.')
 
         return switches
 
