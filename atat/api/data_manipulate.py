@@ -1,8 +1,9 @@
 import random
-import string
 from collections import defaultdict
 
 from mongoengine.base import BaseList
+
+from .words import Words
 
 
 class DataManipulate(object):
@@ -29,7 +30,9 @@ class DataManipulate(object):
         return variant_dict
 
     @staticmethod
-    def get_random_jobid(lenx=5):
-        random_letters = [random.choice(string.ascii_lowercase) for _ in range(lenx)]
+    def get_random_jobid():
+        verb = random.choice(Words.VERBS)
+        adjective = random.choice(Words.ADJECTIVES)
+        noun = random.choice(Words.NOUNS)
 
-        return ''.join(random_letters)
+        return '-'.join((verb, adjective, noun))
