@@ -23,3 +23,4 @@ class Logging(object):
         entry = {'hash': hashx, 'context': context, 'msg': msg, 'timestamp': timestamp}
 
         job.log.append(entry)
+        job.save()

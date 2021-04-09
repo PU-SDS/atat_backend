@@ -14,7 +14,7 @@ from .warehousing import Warehousing
 from .atat import noop
 
 # Here lies the constant imports
-from .constants import LogContexts, JOB_ID_GLOBAL
+from .constants import LogContexts
 
 # Here lies other imports
 from .logging import Logging
@@ -25,7 +25,7 @@ def run_job(source_seqs: str, reservoir_seqs: str, jobid: str, **kwargs):
     JOB_ID_GLOBAL = jobid
 
     Job(_id=jobid, log=[], status='STARTED').save()
-    Logging.make_log_entry('INFO', f'Job {JOB_ID_GLOBAL} is starting.')
+    Logging.make_log_entry(LogContexts.INFO, f'Job {JOB_ID_GLOBAL} is starting.')
 
     all_hunana_tasks = group([
         hunana.s(source_seqs, **kwargs),
