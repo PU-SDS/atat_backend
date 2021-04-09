@@ -42,7 +42,7 @@ jobs:
       - name: Build ATAT Base Image
         run:  docker build -t atat-backend ./backend
       - name: Set image RootFS
-        run:  export IMAGE_ROOTFS=$(docker inspect --format='{{.RootFS}}' atat-backend)
+        run:  export IMAGE_ROOTFS=$(docker inspect --format='{{.RootFS}}' atat-backend | base64)
       - name: Login to DigitalOcean Container Registry
         run:  doctl registry login
       - name: Push Image to Container Registry
