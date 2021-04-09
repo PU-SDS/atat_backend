@@ -38,7 +38,7 @@ class JSONSerializer(object):
         items = defaultdict(list)
 
         for count, item in enumerate(document):
-            items[document.name].append(item.to_mongo().to_dict())
+            items[document._name].append(item.to_mongo().to_dict())
 
         return items
 
