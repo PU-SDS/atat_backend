@@ -1,6 +1,8 @@
 import hashlib
 from datetime import datetime
 
+from mongoengine import DoesNotExist
+
 from .constants import JOB_ID_GLOBAL
 from ..models import Job
 
@@ -18,14 +20,18 @@ class Logging(object):
             :type status: str
         """
 
-        job = Job(_id=JOB_ID_GLOBAL)
-
-        if status:
-            job.status = status
-
         timestamp = datetime.now().strftime("%Y/%M/%d at %H-%M-%S-%f")
         hashx = hashlib.md5('-'.join((msg, timestamp)).encode('utf-8')).hexdigest()
         entry = {'hash': hashx, 'context': context, 'msg': msg, 'timestamp': timestamp}
+
+        try:
+            job = Job.objects.get(_id=JOB_ID_GLOBAL)
+        except DoesNotExist:
+            Job(_id=JOB_ID_GLOBAL, log=[entry], status=status).save()
+            return
+
+        if status:
+            job.status = status
 
         job.log.append(entry)
         job.save()

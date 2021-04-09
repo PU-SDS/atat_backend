@@ -61,8 +61,7 @@ class Warehousing(Task):
 
         # We have everything we need. Link the results to the job and save. Then save the job itself
         job.results = result.save()
-        Logging.make_log_entry(LogContexts.INFO, 'Job completed successfully.')
-        job.status = 'FINISHED'
+        Logging.make_log_entry(LogContexts.INFO, 'Job completed successfully.', 'FINISHED')
         job.save()
 
     @classmethod
