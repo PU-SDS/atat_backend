@@ -10,7 +10,7 @@ from ..models import HunanaPosition, Job, Result, Switch
 from .logging import Logging
 
 # Here lies constants imports
-from .constants import LogContexts, JOB_ID_GLOBAL
+from .constants import LogContexts, JobID
 
 # Only for typing
 from .atat import ATAT
@@ -35,7 +35,7 @@ class Warehousing(Task):
         source_hunana_results, reservoir_hunana_results = hunana_results  # type: dict
 
         # First we get the job that we just saved using the job id. Then we update the log
-        job = Job.objects.get(_id=JOB_ID_GLOBAL)
+        job = Job.objects.get(_id=JobID.JOB_ID_GLOBAL)
 
         # Then we create an instance of the Results model that we will later link to the job
         result = Result()
