@@ -129,6 +129,8 @@ class GetJobLog(Resource):
 
 api.add_resource(GetJob, '/info/<string:jobid>')
 api.add_resource(GetResult, '/results/<string:jobid>')
+api.add_resource(GetJobStatus, '/status/<string:jobid>')
+api.add_resource(GetJobLog, '/log/<string:jobid>')
 api.add_resource(GetGroupedPosition, '/results/<string:jobid>/positions/<int:position>/grouped')
 api.add_resource(GetSourcePosition, '/results/<string:jobid>/positions/<int:position>/source')
 api.add_resource(GetReservoirPosition, '/results/<string:jobid>/positions/<int:position>/reservoir')
