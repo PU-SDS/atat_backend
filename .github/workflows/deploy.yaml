@@ -42,7 +42,10 @@ jobs:
       - name: Build ATAT Base Image
         run:  docker build -t atat-backend ./backend
       - name: Add image RootFS to Deployment
-        run:  IMAGE_ROOTFS=$(docker inspect --format='{{.RootFS}}' atat-backend) envsubst < ./backend/.kubernetes/.atat/deployment.yaml > ./backend/.kubernetes/.atat/deployment.yaml
+        run:  |
+          IMAGE_ROOTFS=$(docker inspect --format='{{.RootFS}}' atat-backend)
+          printenv
+          envsubst < ./backend/.kubernetes/.atat/deployment.yaml > ./backend/.kubernetes/.atat/deployment.yaml
       - name: Login to DigitalOcean Container Registry
         run:  doctl registry login
       - name: Push Image to Container Registry
