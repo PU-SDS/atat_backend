@@ -86,6 +86,6 @@ class Job(Document):
         return self.statuses.get(self.status)
 
     _id = StringField(primary_key=True, required=True)
-    status = StringField(required=True, choices=statuses.keys(), max_length=8)
-    log = ListField(required=True, null=True)
+    status = StringField(required=False, choices=statuses.keys(), max_length=8)
+    log = ListField(required=False, null=True)
     results = FollowReferenceField(Result, required=False)

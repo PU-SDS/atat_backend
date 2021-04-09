@@ -4,13 +4,6 @@ from ..celery_app import app
 # Here we import the Celery Task class
 from celery import Task
 
-# Here we import Hunana ONLY FOR TYPING
-from hunana.datatypes import Position as HunanaPosition
-from hunana.datatypes import Variant as HunanaVariant
-
-# Here lies the model imports
-from ..models import HunanaPosition, Job, Result
-
 # Here lies other imports
 from .logging import Logging
 

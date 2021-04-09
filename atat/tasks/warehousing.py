@@ -14,7 +14,7 @@ from .constants import LogContexts, JOB_ID_GLOBAL
 
 # Only for typing
 from .atat import ATAT
-from typing import List, Tuple, Union
+from typing import List, Union
 
 
 class Warehousing(Task):
@@ -23,14 +23,10 @@ class Warehousing(Task):
 
     def run(self, results: list):
         """
-            Stores the Hunana results for Source and Reservoir under the appropriate job id.
+            Stores the analysis results for Source and Reservoir under the appropriate job id.
 
-            :param hunana_results: A list containing two dicts pertaining to the Hunana results for Source a
-            Reservoir sequences.
-            :param jobid: The current job id.
-
-            :type hunana_results: list
-            :type jobid: str
+            :param results: All ATAT and Hunana results in a list.
+            :type results: list
         """
 
         Logging.make_log_entry(LogContexts.INFO, 'Storing k-mer data in database.')

@@ -24,8 +24,7 @@ from .logging import Logging
 def run_job(source_seqs: str, reservoir_seqs: str, jobid: str, **kwargs):
     JOB_ID_GLOBAL = jobid
 
-    Job(_id=jobid, log=[], status='STARTED').save()
-    Logging.make_log_entry(LogContexts.INFO, f'Job {JOB_ID_GLOBAL} is starting.')
+    Logging.make_log_entry(LogContexts.INFO, f'Job {JOB_ID_GLOBAL} is starting.', 'RUNNING')
 
     all_hunana_tasks = group([
         hunana.s(source_seqs, **kwargs),
