@@ -41,10 +41,8 @@ jobs:
         run:  sudo apt install -y gettext-base
       - name: Build ATAT Base Image
         run:  docker build -t atat-backend ./backend
-      - name: Add image RootFS to Deployment
-        run:  |
-          export IMAGE_ROOTFS=$(docker inspect --format='{{.RootFS}}' atat-backend)
-          printenv
+      - name: Set image RootFS
+        run:  export IMAGE_ROOTFS=$(docker inspect --format='{{.RootFS}}' atat-backend)
       - name: Login to DigitalOcean Container Registry
         run:  doctl registry login
       - name: Push Image to Container Registry
@@ -98,6 +96,6 @@ jobs:
       - name: Deploy ATAT Service
         run:  kubectl apply -f ./backend/.kubernetes/.atat/service.yaml
       - name: Deploy ATAT Replica Set
-        run:  envsubst < ./backend/.kubernetes/.atat/deployment.yaml | kubectl apply -f -
+        run:  envsubst "${IMAGE_ROOTFS}" < ./backend/.kubernetes/.atat/deployment.yaml | kubectl apply -f -
       - name: Deploy Celery Workers
-        run:  kubectl apply -f ./backend/.kubernetes/.workers/deployment.yaml
+        run:  envsubst "${IMAGE_ROOTFS}" < ./backend/.kubernetes/.workers/deployment.yaml | kubectl apply -f -
