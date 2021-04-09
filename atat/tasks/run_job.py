@@ -14,12 +14,11 @@ from .warehousing import Warehousing
 from .atat import noop
 
 # Here lies the constant imports
-from .constants import LogContexts
+from .constants import LogContexts, JOB_ID_GLOBAL
 
 # Here lies other imports
 from .logging import Logging
 
-JOB_ID_GLOBAL = None
 
 @app.task(name="Job")
 def run_job(source_seqs: str, reservoir_seqs: str, jobid: str, **kwargs):

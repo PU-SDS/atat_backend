@@ -3,7 +3,7 @@ from io import StringIO
 
 # Here lies the Celery app import
 from .logging import Logging
-from .run_job import JOB_ID_GLOBAL
+from .constants import JOB_ID_GLOBAL
 from ..celery_app import app
 
 # Here lies 3rd party module imports

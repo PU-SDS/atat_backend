@@ -16,7 +16,7 @@ from .logging import Logging
 
 # Here lies constants imports
 from .constants import LogContexts
-from .run_job import JOB_ID_GLOBAL
+from .constants import JOB_ID_GLOBAL
 
 # Here lies Python default library imports
 from itertools import product
