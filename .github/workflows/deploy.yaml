@@ -96,6 +96,6 @@ jobs:
       - name: Deploy ATAT Service
         run:  kubectl apply -f ./backend/.kubernetes/.atat/service.yaml
       - name: Deploy ATAT Replica Set
-        run:  envsubst "${IMAGE_ROOTFS}" < ./backend/.kubernetes/.atat/deployment.yaml | kubectl apply -f -
+        run:  envsubst < ./backend/.kubernetes/.atat/deployment.yaml | kubectl apply -f -
       - name: Deploy Celery Workers
-        run:  envsubst "${IMAGE_ROOTFS}" < ./backend/.kubernetes/.workers/deployment.yaml | kubectl apply -f -
+        run:  envsubst < ./backend/.kubernetes/.workers/deployment.yaml | kubectl apply -f -
