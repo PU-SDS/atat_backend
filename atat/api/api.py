@@ -119,12 +119,14 @@ class SubmitJob(Resource):
 
 class GetJobStatus(Resource):
     def get(self, jobid: str):
-        return JobQueries.get_job(jobid).status.to_mongo().to_dict(), 200
+        return JobQueries.get_job(jobid).status, 200
 
 
 class GetJobLog(Resource):
     def get(self, jobid: str):
-        return JobQueries.get_job(jobid).log.to_mongo().to_dict(), 200
+        logs = JobQueries.get_job(jobid).log
+
+        return DataManipulate.baselist_to_dict(logs, 'logs')
 
 
 api.add_resource(GetJob, '/info/<string:jobid>')

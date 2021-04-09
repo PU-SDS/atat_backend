@@ -4,8 +4,8 @@ FROM ubuntu:latest
 # Add basic metadata
 MAINTAINER Shan Tharanga "stwm2@student.london.ac.uk"
 
-# Then copy the repository that we checked out into the image
-COPY . /home/atat
+# We then copy the application to the image
+COPY atat requirements.txt wsgi.py /home/atat/
 
 # Update the package manager
 RUN apt update

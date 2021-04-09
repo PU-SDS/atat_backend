@@ -37,8 +37,12 @@ jobs:
                 sudo apt update
                 sudo apt-cache policy docker-ce
                 sudo apt install docker-ce
+      - name: Install envsubset
+        run:  sudo apt install -y gettext-base
       - name: Build ATAT Base Image
         run:  docker build -t atat-backend ./backend
+      - name: Add image RootFS to Deployment
+        run:  IMAGE_ROOTFS=$(docker inspect --format='{{.RootFS}}' atat-backend) envsubst < ./backend/.kubernetes/.atat/deployment.yaml > ./backend/.kubernetes/.atat/deployment.yaml
       - name: Login to DigitalOcean Container Registry
         run:  doctl registry login
       - name: Push Image to Container Registry
@@ -80,9 +84,7 @@ jobs:
       - name: Create DigitalOcean Container Registry Secret
         env:
           DO_REGISTRY_AUTH: ${{secrets.DO_REGISTRY_AUTH}}
-        run:  |
-          sudo apt install -y gettext-base
-          envsubst < ./backend/.kubernetes/.registry/secret.yaml | kubectl apply -f -
+        run:  envsubst < ./backend/.kubernetes/.registry/secret.yaml | kubectl apply -f -
       - name: Create RabbitMQ Broker Password Secret
         run:  kubectl create secret generic rabbitmq-broker --from-literal='rabbitmq-password=${{ secrets.RABBITMQ_BROKER_PASSWORD }}' --from-literal='rabbitmq-erlang-cookie=${{ secrets.RABBITMQ_ERLANG_COOKIE }}' --save-config --dry-run=client -o yaml | kubectl apply -f -
       - name: Create MongoDB Password Secrets

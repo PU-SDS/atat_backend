@@ -31,6 +31,8 @@ spec:
                 secretKeyRef:
                   name: rabbitmq-broker
                   key:  rabbitmq-password
+            - name: IMAGE_ROOTFS
+              value: $IMAGE_ROOTFS
           imagePullPolicy: Always
           command: ["/bin/bash", "-c"]
           args:
