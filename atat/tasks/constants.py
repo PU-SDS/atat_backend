@@ -1,4 +1,5 @@
-JOB_ID_GLOBAL = None
+class JobID(object):
+    JOB_ID_GLOBAL = None
 
 
 class LogContexts(object):
