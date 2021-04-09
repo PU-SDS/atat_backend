@@ -117,6 +117,16 @@ class SubmitJob(Resource):
         return jobid, 200
 
 
+class GetJobStatus(Resource):
+    def get(self, jobid: str):
+        return JobQueries.get_job(jobid).status.to_mongo().to_dict(), 200
+
+
+class GetJobLog(Resource):
+    def get(self, jobid: str):
+        return JobQueries.get_job(jobid).log.to_mongo().to_dict(), 200
+
+
 api.add_resource(GetJob, '/info/<string:jobid>')
 api.add_resource(GetResult, '/results/<string:jobid>')
 api.add_resource(GetGroupedPosition, '/results/<string:jobid>/positions/<int:position>/grouped')
