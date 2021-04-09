@@ -14,7 +14,7 @@ from .warehousing import Warehousing
 from .atat import noop
 
 # Here lies the constant imports
-from .constants import LogContexts
+from .constants import LogContexts, JOB_ID_GLOBAL
 
 # Here lies other imports
 from .logging import Logging
