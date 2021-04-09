@@ -4,8 +4,11 @@ FROM ubuntu:latest
 # Add basic metadata
 MAINTAINER Shan Tharanga "stwm2@student.london.ac.uk"
 
-# We then copy the application to the image
+# We then copy the the wsgi and requirements
 COPY atat requirements.txt wsgi.py /home/atat/
+
+# We then add the package into the image
+ADD atat /home/atat
 
 # Update the package manager
 RUN apt update
