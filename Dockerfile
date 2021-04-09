@@ -8,7 +8,7 @@ MAINTAINER Shan Tharanga "stwm2@student.london.ac.uk"
 COPY requirements.txt wsgi.py /home/atat/
 
 # We then add the package into the image
-ADD atat /home/atat/atat
+COPY atat /home/atat/atat/
 
 # Update the package manager
 RUN apt update
