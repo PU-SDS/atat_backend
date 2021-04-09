@@ -11,7 +11,7 @@ from hunana import Hunana
 
 
 @app.task(name="Hunana")
-def hunana(seqs: str, **kwargs) -> list:
+def hunana(seqs: str, jobid: str, **kwargs) -> list:
     """
         Runs Hunana. Any kwargs will be directly passed to Hunana.
 
@@ -21,10 +21,10 @@ def hunana(seqs: str, **kwargs) -> list:
         :returns: A dictionary containing a tag and Hunana results.
     """
 
-    Logging.make_log_entry(LogContexts.INFO, 'Generating k-mers using HUNANA algorithm.')
+    Logging.make_log_entry(jobid, LogContexts.INFO, 'Generating k-mers using HUNANA algorithm.')
 
     results = Hunana(StringIO(seqs), **kwargs).run()
 
-    Logging.make_log_entry(LogContexts.INFO, 'K-mer generation completed successfully.')
+    Logging.make_log_entry(jobid, LogContexts.INFO, 'K-mer generation completed successfully.')
 
     return results

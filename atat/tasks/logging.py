@@ -3,13 +3,12 @@ from datetime import datetime
 
 from mongoengine import DoesNotExist
 
-from .constants import JobID
 from ..models import Job
 
 
 class Logging(object):
     @staticmethod
-    def make_log_entry(context: str, msg: str, status: str = None):
+    def make_log_entry(jobid: str, context: str, msg: str, status: str = None):
         """
             :param context: The heading of the log entry.
             :param msg: The actual message to include in the entry.
@@ -25,9 +24,9 @@ class Logging(object):
         entry = {'hash': hashx, 'context': context, 'msg': msg, 'timestamp': timestamp}
 
         try:
-            job = Job.objects.get(_id=JobID.JOB_ID_GLOBAL)
+            job = Job.objects.get(_id=jobid)
         except DoesNotExist:
-            Job(_id=JobID.JOB_ID_GLOBAL, log=[entry], status=status).save()
+            Job(_id=jobid, log=[entry], status=status).save()
             return
 
         if status:

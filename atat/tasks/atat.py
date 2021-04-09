@@ -21,7 +21,7 @@ class ATAT(Task):
 
     switch = namedtuple('MotifSwitch', ['position', 'sequence', 'fromx', 'to'])
 
-    def run(self, hunana_results: list) -> list:
+    def run(self, hunana_results: list, jobid: str) -> list:
         """
             Stores the Hunana results for Source and Reservoir under the appropriate job id.
 
@@ -32,7 +32,7 @@ class ATAT(Task):
             :returns: A list of NamedTuple pertaining to each switch observed from Source --> Reservoir
         """
 
-        Logging.make_log_entry(LogContexts.INFO, 'Starting transmissibility analysis.')
+        Logging.make_log_entry(jobid, LogContexts.INFO, 'Starting transmissibility analysis.')
 
         positions = zip(*hunana_results)
         switches = list()
@@ -51,7 +51,7 @@ class ATAT(Task):
                             }
                         )
 
-        Logging.make_log_entry(LogContexts.INFO, 'Transmissibility analysis completed.')
+        Logging.make_log_entry(jobid, LogContexts.INFO, 'Transmissibility analysis completed.')
 
         return switches
 

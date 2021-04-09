@@ -10,7 +10,7 @@ from ..models import HunanaPosition, Job, Result, Switch
 from .logging import Logging
 
 # Here lies constants imports
-from .constants import LogContexts, JobID
+from .constants import LogContexts
 
 # Only for typing
 from .atat import ATAT
@@ -21,7 +21,7 @@ class Warehousing(Task):
     name = "Warehousing"
     queue = "Warehousing"
 
-    def run(self, results: list):
+    def run(self, results: list, jobid: str):
         """
             Stores the analysis results for Source and Reservoir under the appropriate job id.
 
@@ -29,13 +29,13 @@ class Warehousing(Task):
             :type results: list
         """
 
-        Logging.make_log_entry(LogContexts.INFO, 'Storing k-mer data in database.')
+        Logging.make_log_entry(jobid, LogContexts.INFO, 'Storing k-mer data in database.')
 
         hunana_results, atat_results = results[0]  # type: Union[list, List[ATAT.switch]]
         source_hunana_results, reservoir_hunana_results = hunana_results  # type: dict
 
         # First we get the job that we just saved using the job id. Then we update the log
-        job = Job.objects.get(_id=JobID.JOB_ID_GLOBAL)
+        job = Job.objects.get(_id=jobid)
 
         # Then we create an instance of the Results model that we will later link to the job
         result = Result()
@@ -44,8 +44,8 @@ class Warehousing(Task):
         result.reservoir = self._get_hunana_positions(reservoir_hunana_results)
         job.save()
 
-        Logging.make_log_entry(LogContexts.INFO, 'K-mer data storing completed.')
-        Logging.make_log_entry(LogContexts.INFO, 'Storing transmissibility analysis data in database.')
+        Logging.make_log_entry(jobid, LogContexts.INFO, 'K-mer data storing completed.')
+        Logging.make_log_entry(jobid, LogContexts.INFO, 'Storing transmissibility analysis data in database.')
 
         # Now we need to save the ATAT (motif switching) data
         switches = [Switch(
@@ -57,11 +57,11 @@ class Warehousing(Task):
 
         result.switches = switches
 
-        Logging.make_log_entry(LogContexts.INFO, 'Transmissibility analysis data stored successfully.')
+        Logging.make_log_entry(jobid, LogContexts.INFO, 'Transmissibility analysis data stored successfully.')
 
         # We have everything we need. Link the results to the job and save. Then save the job itself
         job.results = result.save()
-        Logging.make_log_entry(LogContexts.INFO, 'Job completed successfully.', 'FINISHED')
+        Logging.make_log_entry(jobid, LogContexts.INFO, 'Job completed successfully.', 'FINISHED')
         job.save()
 
     @classmethod
