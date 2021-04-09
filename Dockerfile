@@ -5,10 +5,10 @@ FROM ubuntu:latest
 MAINTAINER Shan Tharanga "stwm2@student.london.ac.uk"
 
 # We then copy the the wsgi and requirements
-COPY atat requirements.txt wsgi.py /home/atat/
+COPY requirements.txt wsgi.py /home/atat/
 
 # We then add the package into the image
-ADD atat /home/atat
+ADD atat /home/atat/atat
 
 # Update the package manager
 RUN apt update
