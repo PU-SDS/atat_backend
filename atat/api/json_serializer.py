@@ -23,7 +23,6 @@ class JSONSerializer(object):
                 data = self._embedded_document_to_dict(data)
 
             resp = make_response(data, code)
-            resp.headers['Access-Control-Allow-Origin'] = '*'
             resp.headers.extend(headers or {})
             return resp
 

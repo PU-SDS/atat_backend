@@ -24,6 +24,14 @@ argparser.add_argument('reservoir', type=str, required=True, help='Please provid
 JSONSerializer(api).serializer()
 
 
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+
+    return response
+
+
 class GetJob(Resource):
     def get(self, jobid: str):
         return JobQueries.get_job(jobid).to_json(indent=2), 200
@@ -126,7 +134,7 @@ class GetJobLog(Resource):
     def get(self, jobid: str):
         logs = JobQueries.get_job(jobid).log
 
-        return DataManipulate.baselist_to_dict(logs, 'logs')
+        return DataManipulate.baselist_to_dict(logs, 'logs'), 200
 
 
 api.add_resource(GetJob, '/info/<string:jobid>')
