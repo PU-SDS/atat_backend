@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_restful import Resource, Api, abort, reqparse
 from mongoengine import DoesNotExist
+from flask_cors import CORS
 
 from .json_serializer import JSONSerializer, JSONEncoder
 from ..models import Result
@@ -9,6 +10,7 @@ from .job_queries import JobQueries
 from ..tasks.run_job import run_job
 
 app = Flask(__name__)
+CORS(app)
 app.json_encoder = JSONEncoder
 api = Api(app)
 
@@ -22,14 +24,6 @@ argparser.add_argument('reservoir', type=str, required=True, help='Please provid
                                                                   '(co-aligned with the source dataset).')
 
 JSONSerializer(api).serializer()
-
-
-@app.after_request
-def after_request(response):
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
-
-    return response
 
 
 class GetJob(Resource):
