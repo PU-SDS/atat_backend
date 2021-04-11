@@ -34,5 +34,6 @@ class DataManipulate(object):
         verb = random.choice(Words.VERBS)
         adjective = random.choice(Words.ADJECTIVES)
         noun = random.choice(Words.NOUNS)
+        adverb = random.choice(Words.ADVERBS)
 
-        return '-'.join((verb, adjective, noun))
+        return '-'.join((verb, adverb, 'the', adjective, noun))
