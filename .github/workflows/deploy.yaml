@@ -90,9 +90,9 @@ jobs:
       - name: Create MongoDB Password Secrets
         run:  helm upgrade mongodb-pwd-secret --install ./backend/.kubernetes/.mongodb/mongodb-secrets-helm --set atat=${{ secrets.MONGODB_ATAT_PASSWORD }} --set rabbitmq=${{ secrets.MONGODB_RABBITMQ_PASSWORD }} --set admin=${{ secrets.MONGODB_ADMIN_PASSWORD }}
       - name: Deploy RabbitMQ Replica Set
-        run:  helm upgrade rabbitmq bitnami/rabbitmq --install -f ./backend/.kubernetes/.rabbitmq/deployment.yaml --set global.storageClass=freenas-nfs-csi
+        run:  helm upgrade rabbitmq bitnami/rabbitmq --install -f ./backend/.kubernetes/.rabbitmq/deployment.yaml --set global.storageClass=synology
       - name: Deploy MongoDB Replica Set
-        run:  helm upgrade mongodb bitnami/mongodb --install -f ./backend/.kubernetes/.mongodb/deployment.yaml --set auth.rootPassword=${{ secrets.MONGODB_ADMIN_PASSWORD }} --set auth.replicaSetKey=${{ secrets.MONGODB_REPLICA_SET_KEY }} --set global.storageClass=freenas-nfs-csi
+        run:  helm upgrade mongodb bitnami/mongodb --install -f ./backend/.kubernetes/.mongodb/deployment.yaml --set auth.rootPassword=${{ secrets.MONGODB_ADMIN_PASSWORD }} --set auth.replicaSetKey=${{ secrets.MONGODB_REPLICA_SET_KEY }} --set global.storageClass=synology
       - name: Deploy ATAT Service
         run:  kubectl apply -f ./backend/.kubernetes/.atat/service.yaml
       - name: Deploy ATAT Replica Set
