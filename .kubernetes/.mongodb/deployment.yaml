@@ -506,7 +506,7 @@ persistence:
     - ReadWriteOnce
   ## PVC size
   ##
-  size: 4Gi
+  size: 2Gi
   ## PVC annotations
   ##
   annotations: {}
@@ -1440,7 +1440,7 @@ hidden:
       - ReadWriteOnce
     ## PVC size
     ##
-    size: 8Gi
+    size: 4Gi
     ## PVC annotations
     ##
     annotations: {}
