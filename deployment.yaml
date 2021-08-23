@@ -46,7 +46,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: atat-workers-deployment
-   namespace: atat-dev
+  namespace: atat-dev
 spec:
   selector:
     matchLabels:
