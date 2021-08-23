@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: atat-backend-deployment
+  namespace: atat-dev
+spec:
+  selector:
+    matchLabels:
+      app: atat-backend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: atat-backend
+    spec:
+      containers:
+        - name: atat-backend
+          image: bilsab/atat-backend:$BUILD_NUMBER
+          env:
+            - name: MONGODB_ATAT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-pwd-secret
+                  key: MONGODB_ATAT_PASSWORD
+            - name: MONGODB_RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-pwd-secret
+                  key: MONGODB_RABBITMQ_PASSWORD
+            - name: RABBITMQ_BROKER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-broker
+                  key:  rabbitmq-password
+            - name: IMAGE_ROOTFS
+              value: $IMAGE_ROOTFS
+          imagePullPolicy: Always
+          command: ["/bin/bash", "-c"]
+          args:
+            - >-
+              cd /home/atat/ &&
+              pip3 install -r requirements.txt &&
+              gunicorn --bind 0.0.0.0:80 --limit-request-line 0 wsgi:app
