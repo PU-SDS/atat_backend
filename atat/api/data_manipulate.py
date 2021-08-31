@@ -33,4 +33,4 @@ class DataManipulate(object):
     def get_random_jobid():
         chars = string.ascii_lowercase + string.ascii_uppercase
 
-        return ''.join(random.choice(chars) for _ in range(5))
+        return ''.join(random.choice(chars) for _ in range(6))
