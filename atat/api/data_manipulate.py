@@ -1,9 +1,9 @@
 import random
+import string
+
 from collections import defaultdict
 
 from mongoengine.base import BaseList
-
-from .words import Words
 
 
 class DataManipulate(object):
@@ -31,9 +31,6 @@ class DataManipulate(object):
 
     @staticmethod
     def get_random_jobid():
-        verb = random.choice(Words.VERBS)
-        adjective = random.choice(Words.ADJECTIVES)
-        noun = random.choice(Words.NOUNS)
-        adverb = random.choice(Words.ADVERBS)
+        chars = string.ascii_lowercase + string.ascii_uppercase
 
-        return '-'.join((verb, adverb, 'the', adjective, noun))
+        return ''.join(random.choice(chars) for _ in range(5))
