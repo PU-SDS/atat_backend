@@ -8,12 +8,8 @@ class ResourceSettings(BaseSettings):
     """
 
     mongo_host: str
-    mongo_root_username: str = (
-        None  # Only needed in DEV to set up the database so we default to None in Prod
-    )
-    mongo_root_password: str = (
-        None  # Only needed in DEV to set up the database so we default to None in Prod
-    )
+    mongo_root_username: str = None  # Only needed in DEV to set up the database so we default to None in Prod
+    mongo_root_password: str = None  # Only needed in DEV to set up the database so we default to None in Prod
 
     mongo_atat_username: str
     mongo_atat_password: str
@@ -40,12 +36,8 @@ class ResourceSettings(BaseSettings):
             "mongo_root_password": {"env": ["MONGO_INITDB_ROOT_PASSWORD"]},
             "mongo_atat_username": {"env": ["MONGODB_ATAT_USERNAME"]},
             "mongo_atat_password": {"env": ["MONGODB_ATAT_PASSWORD"]},
-            "mongo_rabbitmq_username": {
-                "env": ["MONGODB_RABBITMQ_USERNAME"]
-            },  # For results backend
-            "mongo_rabbitmq_password": {
-                "env": ["MONGODB_RABBITMQ_PASSWORD"]
-            },  # For results backend
+            "mongo_rabbitmq_username": {"env": ["MONGODB_RABBITMQ_USERNAME"]},  # For results backend
+            "mongo_rabbitmq_password": {"env": ["MONGODB_RABBITMQ_PASSWORD"]},  # For results backend
             "mongo_atat_database": {"env": ["MONGO_ATAT_DATABASE"]},
             "mongo_rabbitmq_database": {"env": ["MONGO_RABBITMQ_DATABASE"]},
             "rabbitmq_host": {"env": ["RABBITMQ_SERVICE_HOST"]},
