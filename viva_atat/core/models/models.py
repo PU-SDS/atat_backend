@@ -29,7 +29,7 @@ connect(
 
 
 class JobStatus(Enum):
-    pending: str = 'pending'
+    created: str = 'created'
     running: str = 'running'
     failed: str = 'failed'
     completed: str = 'completed'
@@ -87,7 +87,7 @@ class Results(Document):
 
 class JobDBModel(Document):
     id = StringField(required=True, default=lambda: str(uuid4()), primary_key=True)
-    status = EnumField(JobStatus, default=JobStatus.pending)
+    status = EnumField(JobStatus, default=JobStatus.created)
     log = ListField(required=False, null=True)
     results = FollowReferenceField(Results, required=False, default=Results().save())
 
