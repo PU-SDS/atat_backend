@@ -21,7 +21,6 @@ connect(
     db=settings.mongo_atat_database,
     host=settings.mongo_host,
     port=settings.mongo_port,
-    replicaset='rs0',
     authentication_source=settings.mongo_atat_database,
     username=settings.mongo_atat_username,
     password=settings.mongo_atat_password,
