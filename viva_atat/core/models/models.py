@@ -69,9 +69,9 @@ class Results(Document):
     This is the model for a ATAT job result.
     """
 
-    source = EmbeddedDocumentListField(DimaPosition)
-    reservoir = EmbeddedDocumentListField(DimaPosition)
-    switches = EmbeddedDocumentListField(Switch)
+    source = EmbeddedDocumentListField(DimaPosition, required=False)
+    reservoir = EmbeddedDocumentListField(DimaPosition, required=False)
+    switches = EmbeddedDocumentListField(Switch, required=False)
 
     class ResultQuerySet(QuerySet):
         def get_grouped_position(self, idx: str, position: int):
@@ -89,6 +89,6 @@ class JobDBModel(Document):
     id = StringField(required=True, default=lambda: str(uuid4()), primary_key=True)
     status = EnumField(JobStatus, default=JobStatus.pending)
     log = ListField(required=False, null=True)
-    results = FollowReferenceField(Results, required=False)
+    results = FollowReferenceField(Results, required=False, default=Results().save())
 
     meta = {'collection': 'job'}
