@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: atat-workers-deployment
+  name: viva_atat-workers-deployment
 spec:
   selector:
     matchLabels:
-      app: atat-workers
+      app: viva_atat-workers
   replicas: 2
   template:
     metadata:
       labels:
-        app: atat-workers
+        app: viva_atat-workers
     spec:
       containers:
-        - name: atat-workers-default
-          image: registry.digitalocean.com/viva-perdana/atat-backend:latest
+        - name: viva_atat-workers-default
+          image: registry.digitalocean.com/viva-perdana/viva_atat-backend:latest
           env:
             - name: MONGODB_ATAT_PASSWORD
               valueFrom:
@@ -41,8 +41,8 @@ spec:
               pip3 install -r requirements.txt &&
               pip3 install celery &&
               celery -A atat.celery_app worker --loglevel=debug
-        - name: atat-workers-atat
-          image: registry.digitalocean.com/viva-perdana/atat-backend:latest
+        - name: viva_atat-workers-viva_atat
+          image: registry.digitalocean.com/viva-perdana/viva_atat-backend:latest
           env:
             - name: MONGODB_ATAT_PASSWORD
               valueFrom:
@@ -69,8 +69,8 @@ spec:
               pip3 install -r requirements.txt &&
               pip3 install celery &&
               celery -A atat.celery_app worker -Q ATAT -n ATAT --loglevel=debug
-        - name: atat-workers-hunana
-          image: registry.digitalocean.com/viva-perdana/atat-backend:latest
+        - name: viva_atat-workers-hunana
+          image: registry.digitalocean.com/viva-perdana/viva_atat-backend:latest
           env:
             - name: MONGODB_ATAT_PASSWORD
               valueFrom:
@@ -97,8 +97,8 @@ spec:
               pip3 install -r requirements.txt &&
               pip3 install celery &&
               celery -A atat.celery_app worker -Q Hunana -n Hunana --loglevel=debug
-        - name: atat-workers-job
-          image: registry.digitalocean.com/viva-perdana/atat-backend:latest
+        - name: viva_atat-workers-job
+          image: registry.digitalocean.com/viva-perdana/viva_atat-backend:latest
           env:
             - name: MONGODB_ATAT_PASSWORD
               valueFrom:
@@ -125,8 +125,8 @@ spec:
               pip3 install -r requirements.txt &&
               pip3 install celery &&
               celery -A atat.celery_app worker -Q Job -n Job --loglevel=debug
-        - name: atat-workers-warehousing
-          image: registry.digitalocean.com/viva-perdana/atat-backend:latest
+        - name: viva_atat-workers-warehousing
+          image: registry.digitalocean.com/viva-perdana/viva_atat-backend:latest
           env:
             - name: MONGODB_ATAT_PASSWORD
               valueFrom:

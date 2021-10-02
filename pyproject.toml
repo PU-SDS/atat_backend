@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "atat_backend"
+name = "viva_atat"
 version = "0.1.0"
 description = "The Antigenic Transmissibility Analysis Tool of the ViVA project."
 authors = ["Shan Tharanga <stwm2@student.london.ac.uk>"]
@@ -13,14 +13,19 @@ mongoengine = "^0.23.1"
 gunicorn = "^20.1.0"
 fastapi = "^0.68.1"
 pydantic = "^1.8.2"
+mongoengine-goodjson = "^1.1.8"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
 pre-commit = "^2.15.0"
+python-dotenv = "^0.19.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+setup = 'setup:main'
 
 [tool.black]
 line-length = 120

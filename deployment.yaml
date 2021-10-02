@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: atat-backend-deployment
-  namespace: atat-dev
+  name: viva_atat-backend-deployment
+  namespace: viva_atat-dev
 spec:
   selector:
     matchLabels:
-      app: atat-backend
+      app: viva_atat-backend
   replicas: 1
   template:
     metadata:
       labels:
-        app: atat-backend
+        app: viva_atat-backend
     spec:
       containers:
-        - name: atat-backend
-          image: bilsab/atat-backend:$BUILD_NUMBER
+        - name: viva_atat-backend
+          image: bilsab/viva_atat-backend:$BUILD_NUMBER
           env:
             - name: MONGODB_ATAT_PASSWORD
               valueFrom:
@@ -45,21 +45,21 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: atat-workers-deployment
-  namespace: atat-dev
+  name: viva_atat-workers-deployment
+  namespace: viva_atat-dev
 spec:
   selector:
     matchLabels:
-      app: atat-workers
+      app: viva_atat-workers
   replicas: 2
   template:
     metadata:
       labels:
-        app: atat-workers
+        app: viva_atat-workers
     spec:
       containers:
-        - name: atat-workers-default
-          image: bilsab/atat-backend:$BUILD_NUMBER
+        - name: viva_atat-workers-default
+          image: bilsab/viva_atat-backend:$BUILD_NUMBER
           env:
             - name: MONGODB_ATAT_PASSWORD
               valueFrom:
@@ -86,8 +86,8 @@ spec:
               pip3 install -r requirements.txt &&
               pip3 install celery &&
               celery -A atat.celery_app worker --loglevel=debug
-        - name: atat-workers-atat
-          image: bilsab/atat-backend:$BUILD_NUMBER
+        - name: viva_atat-workers-viva_atat
+          image: bilsab/viva_atat-backend:$BUILD_NUMBER
           env:
             - name: MONGODB_ATAT_PASSWORD
               valueFrom:
@@ -114,8 +114,8 @@ spec:
               pip3 install -r requirements.txt &&
               pip3 install celery &&
               celery -A atat.celery_app worker -Q ATAT -n ATAT --loglevel=debug
-        - name: atat-workers-hunana
-          image: bilsab/atat-backend:$BUILD_NUMBER
+        - name: viva_atat-workers-hunana
+          image: bilsab/viva_atat-backend:$BUILD_NUMBER
           env:
             - name: MONGODB_ATAT_PASSWORD
               valueFrom:
@@ -142,8 +142,8 @@ spec:
               pip3 install -r requirements.txt &&
               pip3 install celery &&
               celery -A atat.celery_app worker -Q Hunana -n Hunana --loglevel=debug
-        - name: atat-workers-job
-          image: bilsab/atat-backend:$BUILD_NUMBER
+        - name: viva_atat-workers-job
+          image: bilsab/viva_atat-backend:$BUILD_NUMBER
           env:
             - name: MONGODB_ATAT_PASSWORD
               valueFrom:
@@ -170,8 +170,8 @@ spec:
               pip3 install -r requirements.txt &&
               pip3 install celery &&
               celery -A atat.celery_app worker -Q Job -n Job --loglevel=debug
-        - name: atat-workers-warehousing
-          image: bilsab/atat-backend:$BUILD_NUMBER
+        - name: viva_atat-workers-warehousing
+          image: bilsab/viva_atat-backend:$BUILD_NUMBER
           env:
             - name: MONGODB_ATAT_PASSWORD
               valueFrom:

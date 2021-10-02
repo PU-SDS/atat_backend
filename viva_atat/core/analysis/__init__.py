@@ -1,1 +1,1 @@
-from .analysis import Analysis  # noqa
+from .atat_analysis import Analyses  # noqa

@@ -9,9 +9,9 @@ from mongoengine.base import EmbeddedDocumentList
 class JSONSerializer(object):
     def __init__(self, api):
         """
-            We need this because Flask-RESTful does not provide JSON serialization by default. But Flask does.
+        We need this because Flask-RESTful does not provide JSON serialization by default. But Flask does.
 
-            :param api: The instance of Flask-RESTful API.
+        :param api: The instance of Flask-RESTful API.
         """
 
         self.api = api
@@ -31,7 +31,7 @@ class JSONSerializer(object):
     @classmethod
     def _embedded_document_to_dict(cls, document: EmbeddedDocumentList):
         """
-            This just converts the EmbeddedDocuments inside a EmbeddedDocumentList into a dictionary.
+        This just converts the EmbeddedDocuments inside a EmbeddedDocumentList into a dictionary.
         """
 
         items = defaultdict(list)

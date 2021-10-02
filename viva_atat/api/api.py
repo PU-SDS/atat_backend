@@ -4,10 +4,10 @@ from mongoengine import DoesNotExist
 from flask_cors import CORS
 
 from .json_serializer import JSONSerializer, JSONEncoder
-from ..models import Result
+from viva_atat.core.models import Result
 from .data_manipulate import DataManipulate
 from .job_queries import JobQueries
-from ..tasks.run_job import run_job
+from viva_atat.core.tasks.run_job import run_job
 
 app = Flask(__name__)
 CORS(app)
@@ -15,13 +15,25 @@ app.json_encoder = JSONEncoder
 api = Api(app)
 
 argparser = reqparse.RequestParser()
-argparser.add_argument('email', type=str, required=True, help='Please provide your email address so we can let you '
-                                                              'know once we are done.')
+argparser.add_argument(
+    'email',
+    type=str,
+    required=True,
+    help='Please provide your email address so we can let you ' 'know once we are done.',
+)
 argparser.add_argument('kmer_length', type=int, required=True, help='Please provide a k-mer length.')
-argparser.add_argument('source', type=str, required=True, help='Please provide a source dataset in FASTA format '
-                                                               '(co-aligned with the reservoir dataset).')
-argparser.add_argument('reservoir', type=str, required=True, help='Please provide a reservoir dataset in FASTA format '
-                                                                  '(co-aligned with the source dataset).')
+argparser.add_argument(
+    'source',
+    type=str,
+    required=True,
+    help='Please provide a source dataset in FASTA format ' '(co-aligned with the reservoir dataset).',
+)
+argparser.add_argument(
+    'reservoir',
+    type=str,
+    required=True,
+    help='Please provide a reservoir dataset in FASTA format ' '(co-aligned with the source dataset).',
+)
 
 JSONSerializer(api).serializer()
 
@@ -113,7 +125,7 @@ class SubmitJob(Resource):
             jobid=jobid,
             kmer_len=args.get('kmer_length'),
             header_decode=True,
-            header_format='(accession)|(strain)|(host)|(country)'
+            header_format='(accession)|(strain)|(host)|(country)',
         )
 
         return jobid, 200

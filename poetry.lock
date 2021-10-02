@@ -165,6 +165,18 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
+name = "dateutils"
+version = "0.6.12"
+description = "Various utilities for working with date and datetime objects"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+python-dateutil = "*"
+pytz = "*"
+
+[[package]]
 name = "dima-cli"
 version = "2.0.3"
 description = "A command-line tool that analyses the diversity and motifs of protein sequences"
@@ -281,6 +293,18 @@ python-versions = ">=3.6"
 
 [package.dependencies]
 pymongo = ">=3.4,<4.0"
+
+[[package]]
+name = "mongoengine-goodjson"
+version = "1.1.8"
+description = "More human readable JSON serializer/de-serializer for MongoEngine"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+dateutils = "*"
+mongoengine = "*"
 
 [[package]]
 name = "nodeenv"
@@ -423,6 +447,28 @@ toml = "*"
 testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "requests", "xmlschema"]
 
 [[package]]
+name = "python-dateutil"
+version = "2.8.2"
+description = "Extensions to the standard Python datetime module"
+category = "main"
+optional = false
+python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7"
+
+[package.dependencies]
+six = ">=1.5"
+
+[[package]]
+name = "python-dotenv"
+version = "0.19.0"
+description = "Read key-value pairs from a .env file and set them as environment variables"
+category = "dev"
+optional = false
+python-versions = ">=3.5"
+
+[package.extras]
+cli = ["click (>=5.0)"]
+
+[[package]]
 name = "pytz"
 version = "2021.1"
 description = "World timezone definitions, modern and historical"
@@ -511,7 +557,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.9,<3.10"
-content-hash = "ab45712110bd52247a6e1837d4adcb25689a0abe25ab629caaa2890d1df50b45"
+content-hash = "2781d156b1c643903c396d4b7c4e5f9867e679329325952abee3082e0cfae76c"
 
 [metadata.files]
 amqp = [
@@ -562,6 +608,10 @@ colorama = [
     {file = "colorama-0.4.4-py2.py3-none-any.whl", hash = "sha256:9f47eda37229f68eee03b24b9748937c7dc3868f906e8ba69fbcbdd3bc5dc3e2"},
     {file = "colorama-0.4.4.tar.gz", hash = "sha256:5941b2b48a20143d2267e95b1c2a7603ce057ee39fd88e7329b0c292aa16869b"},
 ]
+dateutils = [
+    {file = "dateutils-0.6.12-py2.py3-none-any.whl", hash = "sha256:f33b6ab430fa4166e7e9cb8b21ee9f6c9843c48df1a964466f52c79b2a8d53b3"},
+    {file = "dateutils-0.6.12.tar.gz", hash = "sha256:03dd90bcb21541bd4eb4b013637e4f1b5f944881c46cc6e4b67a6059e370e3f1"},
+]
 dima-cli = [
     {file = "dima_cli-2.0.3-cp36-cp36m-macosx_10_9_x86_64.macosx_11_0_arm64.macosx_10_9_universal2.whl", hash = "sha256:c01e7468d661df7346ae81497d688eb77d27e9a2f360b8517dd84ee2a2cf19cd"},
     {file = "dima_cli-2.0.3-cp36-cp36m-manylinux_2_5_x86_64.manylinux1_x86_64.whl", hash = "sha256:53b3e33d8106a03de631724c8f8a99aa84059891921fcc848cc0a2a990569a59"},
@@ -607,6 +657,9 @@ kombu = [
 mongoengine = [
     {file = "mongoengine-0.23.1-py3-none-any.whl", hash = "sha256:3d1c8b9f5d43144bd726a3f01e58d2831c6fb112960a4a60b3a26fa85e026ab3"},
     {file = "mongoengine-0.23.1.tar.gz", hash = "sha256:de275e70cd58891dc46eef43369c522ce450dccb6d6f1979cbc9b93e6bdaf6cb"},
+]
+mongoengine-goodjson = [
+    {file = "mongoengine_goodjson-1.1.8.tar.gz", hash = "sha256:4a7c8ae67026ffb04d1e87dcaf70fd5c3bb1aa8cd10eb8115f6f5efff896e118"},
 ]
 nodeenv = [
     {file = "nodeenv-1.6.0-py2.py3-none-any.whl", hash = "sha256:621e6b7076565ddcacd2db0294c0381e01fd28945ab36bcf00f41c5daf63bef7"},
@@ -767,6 +820,14 @@ pyparsing = [
 pytest = [
     {file = "pytest-6.2.5-py3-none-any.whl", hash = "sha256:7310f8d27bc79ced999e760ca304d69f6ba6c6649c0b60fb0e04a4a77cacc134"},
     {file = "pytest-6.2.5.tar.gz", hash = "sha256:131b36680866a76e6781d13f101efb86cf674ebb9762eb70d3082b6f29889e89"},
+]
+python-dateutil = [
+    {file = "python-dateutil-2.8.2.tar.gz", hash = "sha256:0123cacc1627ae19ddf3c27a5de5bd67ee4586fbdd6440d9748f8abb483d3e86"},
+    {file = "python_dateutil-2.8.2-py2.py3-none-any.whl", hash = "sha256:961d03dc3453ebbc59dbdea9e4e11c5651520a876d0f4db161e8674aae935da9"},
+]
+python-dotenv = [
+    {file = "python-dotenv-0.19.0.tar.gz", hash = "sha256:f521bc2ac9a8e03c736f62911605c5d83970021e3fa95b37d769e2bbbe9b6172"},
+    {file = "python_dotenv-0.19.0-py2.py3-none-any.whl", hash = "sha256:aae25dc1ebe97c420f50b81fb0e5c949659af713f31fdb63c749ca68748f34b1"},
 ]
 pytz = [
     {file = "pytz-2021.1-py2.py3-none-any.whl", hash = "sha256:eb10ce3e7736052ed3623d49975ce333bcd712c7bb19a58b9e2089d4057d0798"},

@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: atat-backend-service
+  name: viva_atat-backend-service
 spec:
   selector:
-    app: atat-backend
+    app: viva_atat-backend
   ports:
     - protocol: TCP
       port: 80

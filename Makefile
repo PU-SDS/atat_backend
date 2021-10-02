@@ -34,6 +34,9 @@ install:
 	@poetry install
 	@poetry run pre-commit install -f
 
+resources:
+	@poetry run setup
+
 update:
 	@poetry self update
 	@poetry update

@@ -4,5 +4,5 @@ metadata:
   name: mongodb-pwd-secret
 type: Opaque
 data:
-  MONGODB_ATAT_PASSWORD: {{ .Values.atat | b64enc }}
+  MONGODB_ATAT_PASSWORD: {{ .Values.viva_atat | b64enc }}
   MONGODB_RABBITMQ_PASSWORD: {{ .Values.rabbitmq | b64enc }}
