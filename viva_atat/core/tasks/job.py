@@ -9,7 +9,7 @@ from .dima import dima
 
 
 @app.task(name="job")
-def run_job(source_seqs: str, reservoir_seqs: str, job_id: str):
+def run_job(host_seqs: str, reservoir_seqs: str, job_id: str):
     # We get the queryset so we can update the logs easier
     job_queryset = JobDBModel.objects.filter(id=job_id)
 
@@ -22,7 +22,7 @@ def run_job(source_seqs: str, reservoir_seqs: str, job_id: str):
 
     all_dima_tasks = group(
         [
-            dima.s(source_seqs, job_id, job.parameters.kmer_length, job.parameters.header_format),
+            dima.s(host_seqs, job_id, job.parameters.kmer_length, job.parameters.header_format),
             dima.s(reservoir_seqs, job_id, job.parameters.kmer_length, job.parameters.header_format),
         ]
     )

@@ -2,6 +2,7 @@ from celery import Celery
 from .settings import ResourceSettings
 
 settings = ResourceSettings()
+
 app = Celery(
     broker=f'amqp://{settings.rabbitmq_username}:'
     f'{settings.rabbitmq_password}@'
