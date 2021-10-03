@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .endpoints import job
+from .endpoints import job, results
 
 app = FastAPI(
     title="Antigenic Transmissibility Analysis Tool RESTful API",
@@ -19,3 +19,4 @@ app.add_middleware(
 )
 
 app.include_router(job.router)
+app.include_router(results.router)

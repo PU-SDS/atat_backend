@@ -1,4 +1,4 @@
-from ...core.models import JobDBModel, Parameters
+from ...core.models import JobDBModel, Parameters, Results
 from ..models import CreateJobParameters
 
 
@@ -32,3 +32,16 @@ class HelperMethods(object):
         """
 
         return JobDBModel.objects.get(id=job_id)
+
+    @staticmethod
+    def get_results_queryset(results_id: str):
+        """
+        Given a valid job id, returns the queryset of the job model pertaining to the job id.
+
+        :param results_id: The ID of the results.
+        :type results_id: str
+
+        :returns: The queryset of a results model pertaining to the results id.
+        """
+
+        return Results.objects.filter(id=results_id)

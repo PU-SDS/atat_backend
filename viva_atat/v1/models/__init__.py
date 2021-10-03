@@ -1,1 +1,1 @@
-from .models import CreateJobRequest, CreateJobParameters, JobLogs, JobLogEntry
+from .models import CreateJobRequest, CreateJobParameters, JobLogs, JobLogEntry, Parameters

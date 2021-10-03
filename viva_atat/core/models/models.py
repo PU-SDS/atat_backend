@@ -14,8 +14,10 @@ from mongoengine import (
     UUIDField,
     DateTimeField,
     DictField,
+    Document,
+    EmbeddedDocument,
+    ReferenceField,
 )
-from mongoengine_goodjson import Document, EmbeddedDocument, FollowReferenceField
 
 from ...settings import ResourceSettings
 
@@ -134,8 +136,8 @@ class Results(Document):
     switches = EmbeddedDocumentListField(Switch, required=False)
 
     class ResultQuerySet(QuerySet):
-        def get_grouped_position(self, idx: str, position: int):
-            result = self.get(id=idx)
+        def get_grouped_position(self, position: int):
+            result = self.get()
 
             host_position = result.host.get(position=position).to_mongo().to_dict()
             reservoir_position = result.reservoir.get(position=position).to_mongo().to_dict()
@@ -176,8 +178,8 @@ class JobDBModel(Document):
 
     id = StringField(required=True, default=lambda: str(uuid4()), primary_key=True)
     status = EnumField(JobStatus, default=JobStatus.CREATED)
-    parameters = FollowReferenceField(Parameters, required=True)
+    parameters = ReferenceField(Parameters, required=True)
     log = EmbeddedDocumentListField(LogEntryDBModel, required=False)
-    results = FollowReferenceField(Results, required=False, default=Results().save())
+    results = ReferenceField(Results, required=False, default=Results().save())
 
-    meta = {'collection': 'job', 'queryset_class': LoggerQuerySet}
+    meta = {'collection': 'job', 'queryset_gclass': LoggerQuerySet}
