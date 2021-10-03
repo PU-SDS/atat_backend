@@ -4,7 +4,7 @@ services:
     image: mongo
     restart: always
     ports:
-    - 27017:27017
+    - "27017:27017"
     environment:
       - MONGO_INITDB_ROOT_USERNAME
       - MONGO_INITDB_ROOT_PASSWORD
@@ -12,7 +12,7 @@ services:
     image: mongo-express
     restart: always
     ports:
-      - 8081:8081
+      - "8081:8081"
     environment:
       - ME_CONFIG_MONGODB_ADMINUSERNAME=${MONGO_INITDB_ROOT_USERNAME}
       - ME_CONFIG_MONGODB_ADMINPASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
@@ -21,8 +21,8 @@ services:
     image: bitnami/rabbitmq
     restart: always
     ports:
-      - 15672:15672
-      - 5672:5672
+      - "15672:15672"
+      - "5672:5672"
     environment:
       - RABBITMQ_USERNAME=${RABBITMQ_BROKER_USERNAME}
       - RABBITMQ_PASSWORD=${RABBITMQ_BROKER_PASSWORD}
