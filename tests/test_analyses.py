@@ -27,13 +27,15 @@ def assert_all_properties(model_results, new_results):
             continue
 
         for new_variant, old_variant in product(new_position.variants, old_position.get('variants')):
-            if new_variant.sequence == old_variant.get('sequence'):
-                assert new_variant.sequence == old_variant.get('sequence')
-                assert new_variant.motif_long == old_variant.get('motif_long')
-                assert new_variant.motif_short == old_variant.get('motif_short')
-                assert round(new_variant.incidence) == round(old_variant.get('incidence'))
-                assert new_variant.count == old_variant.get('count')
-                assert new_variant.metadata == old_variant.get('metadata')
+            if new_variant.sequence != old_variant.get('sequence'):
+                continue
+
+            assert new_variant.sequence == old_variant.get('sequence')
+            assert new_variant.motif_long == old_variant.get('motif_long')
+            assert new_variant.motif_short == old_variant.get('motif_short')
+            assert round(new_variant.incidence) == round(old_variant.get('incidence'))
+            assert new_variant.count == old_variant.get('count')
+            assert new_variant.metadata == old_variant.get('metadata')
 
 
 @pytest.fixture
