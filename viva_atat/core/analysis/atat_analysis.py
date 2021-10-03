@@ -62,10 +62,10 @@ class Analyses(object):
                     if host_variant.get('motif_short') != reservoir_variant.get('motif_short'):
                         switches.append(
                             MotifTransmission(
-                                position=host_variant.get('position'),
+                                position=host_position.get('position'),
                                 sequence=host_variant.get('sequence'),
-                                fromx=host_variant.get('motif_long').upper(),
-                                to=reservoir_variant.get('motif_long').upper(),
+                                source=host_variant.get('motif_long'),
+                                target=reservoir_variant.get('motif_long'),
                             )
                         )
 

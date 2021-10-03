@@ -78,8 +78,8 @@ def warehousing(results: list, job_id: str):
         Switch(
             position=motif_switch.get('position'),
             sequence=motif_switch.get('sequence'),
-            fromx=motif_switch.get('from'),
-            to=motif_switch.get('to'),
+            source=motif_switch.get('source'),
+            target=motif_switch.get('target'),
         )
         for motif_switch in atat_results
     ]
