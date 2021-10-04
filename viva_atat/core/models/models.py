@@ -182,4 +182,4 @@ class JobDBModel(Document):
     log = EmbeddedDocumentListField(LogEntryDBModel, required=False)
     results = ReferenceField(Results, required=False, default=Results().save())
 
-    meta = {'collection': 'job', 'queryset_gclass': LoggerQuerySet}
+    meta = {'collection': 'job', 'queryset_class': LoggerQuerySet}

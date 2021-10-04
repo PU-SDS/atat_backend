@@ -1,7 +1,6 @@
 import json
 from typing import List
 
-from dima.helpers import Results
 
 from ..models import JobDBModel, LogMessageFlags, LogMessages, JobStatus
 from ...celery_app import app
@@ -9,7 +8,7 @@ from ..analysis import Analyses
 
 
 @app.task(name="dima")
-def dima(sequences: str, job_id: str, kmer_length: int, header_format: List[str]) -> Results:
+def dima(sequences: str, job_id: str, kmer_length: int, header_format: List[str]) -> List[dict]:
     """
     Runs DiMA. Any kwargs will be directly passed to DiMA.
 

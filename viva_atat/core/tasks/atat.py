@@ -11,7 +11,7 @@ def atat(dima_results: List[List[dict]], job_id: str):
     Runs analysis to figure out the transmission dynamics of motifs between the two datasets. This is the core
     analysis of ATAT.
 
-    :param dima_results: This list contains two elements, the first one being the DiMA results for the source
+    :param dima_results: This list contains two elements, the first one being the DiMA results for the host
         dataset and the second being for the reservoir (same order as Celery group).
     :param job_id: The job id we are processing so that we can update the log.
 
