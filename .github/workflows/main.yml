@@ -1,6 +1,9 @@
 name: Python Tests
 
-on: [push, pull_request]
+on:
+  pull_request:
+    branches: [ master ]
+    types: [opened, synchronize]
 
 jobs:
   test:
@@ -28,4 +31,4 @@ jobs:
       run:  poetry run setup
 
     - name: Run Python Tests
-      run:  poetry run coverage run -m pytest --verbose
+      run:  poetry run coverage run -m pytest -v
