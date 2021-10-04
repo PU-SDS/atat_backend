@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: Secret
-metadata:
-  name: mongodb-pwd-secret
-type: Opaque
-data:
-  MONGODB_ATAT_PASSWORD: {{ .Values.atat | b64enc }}
-  MONGODB_RABBITMQ_PASSWORD: {{ .Values.rabbitmq | b64enc }}

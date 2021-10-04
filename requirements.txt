@@ -1,8 +1,0 @@
-HUNANA==1.0.4b0
-pymongo==3.11.3
-celery==5.0.5
-mongoengine==0.22.1
-mongoengine-goodjson==1.1.8
-Flask-RESTful==0.3.9
-gunicorn==20.1.0
-flask-cors==3.0.10
