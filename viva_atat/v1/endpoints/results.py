@@ -2,7 +2,7 @@ from fastapi import APIRouter, status, HTTPException
 from mongoengine import DoesNotExist
 
 from ..helpers import HelperMethods
-from ..models.models import GroupedPosition
+from ..models import GroupedPosition, MotifTransmissions, MotifTransmission
 
 router = APIRouter(prefix='/results', tags=['results'])
 
@@ -69,3 +69,57 @@ def get_grouped_position(job_id: str, position: int) -> GroupedPosition:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Kmer position does not exist.")
 
     return GroupedPosition(**position)
+
+
+@router.get(
+    '/{job_id}/switches',
+    status_code=status.HTTP_200_OK,
+    response_model=MotifTransmissions,
+    response_description="Get all the motif transmissions seen between the two datasets",
+)
+def get_motif_transmissions(job_id: str):
+    """
+    Get a list of all the motif transmissions seen between the two datasets.
+
+    If the job is not found, an HTTP 404 error is raised. If by some unlikely event the result data is invalid
+    (ie: sequence length of host and reservoir are not equal) an HTTP 500 error is raised. If the request is successful
+    an HTTP 200 status is returned.
+    """
+
+    try:
+        job = HelperMethods.get_job(job_id)
+    except DoesNotExist:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Job not found, consider creating one.")
+
+    transmissions = [MotifTransmission(**transmission.to_mongo().to_dict()) for transmission in job.results.switches]
+
+    return MotifTransmissions(transmissions=transmissions)
+
+
+@router.get(
+    '/{job_id}/switches/{position}',
+    status_code=status.HTTP_200_OK,
+    response_model=MotifTransmissions,
+    response_description="Get all the motif transmissions seen at a given kmer position",
+)
+def get_position_motif_transmissions(job_id: str, position: int):
+    """
+    Get a list of all the motif transmissions seen at a particular kmer position.
+
+    If the job is not found, an HTTP 404 error is raised. If by some unlikely event the result data is invalid
+    (ie: sequence length of host and reservoir are not equal) an HTTP 500 error is raised. If the request is successful
+    an HTTP 200 status is returned.
+    """
+
+    try:
+        job = HelperMethods.get_job(job_id)
+    except DoesNotExist:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Job not found, consider creating one.")
+
+    transmissions = [
+        MotifTransmission(**transmission.to_mongo().to_dict())
+        for transmission in job.results.switches
+        if transmission.position == position
+    ]
+
+    return MotifTransmissions(transmissions=transmissions)
