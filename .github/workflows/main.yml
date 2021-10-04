@@ -6,8 +6,7 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  build:
-    if: github.event.pull_request.merged == false
+  test:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
