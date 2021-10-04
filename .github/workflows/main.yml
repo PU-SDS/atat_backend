@@ -28,4 +28,4 @@ jobs:
       run:  poetry run setup
 
     - name: Run Python Tests
-      run:  poetry run coverage run -m pytest -v
+      run:  poetry run coverage run -m pytest --verbose
