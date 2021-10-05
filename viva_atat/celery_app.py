@@ -3,6 +3,13 @@ from .settings import ResourceSettings
 
 settings = ResourceSettings()
 
+task_routes = {
+    'atat': {'queue': 'atat'},
+    'dima': {'queue': 'dima'},
+    'warehousing': {'queue': 'warehousing'},
+    'job': {'queue': 'job'},
+}
+
 app = Celery(
     broker=f'amqp://{settings.rabbitmq_username}:'
     f'{settings.rabbitmq_password}@'
@@ -18,6 +25,7 @@ app = Celery(
 )
 
 app.autodiscover_tasks(['viva_atat.core.tasks'])
+app.conf.task_routes = task_routes
 
 if __name__ == "__main__":
     app.start()

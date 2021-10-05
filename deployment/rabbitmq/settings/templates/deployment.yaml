@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: rabbitmq-credentials
+type: Opaque
+data:
+  rabbitmq-username: {{ .Values.username | b64enc }} # Only the Python project uses this. (set to same as the dep. file = user)
+  rabbitmq-password: {{ .Values.password | b64enc }}
