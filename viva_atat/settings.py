@@ -37,6 +37,7 @@ class ResourceSettings(BaseSettings):
 
         # Environment variables will always take priority over values loaded from a dotenv file.
         fields = {
+            "env_state": {"env": ["ENVIRONMENT_STATE"]},
             "mongo_host": {"env": ["MONGO_ATAT_HOST"]},
             "mongo_port": {"env": ["MONGO_ATAT_PORT"]},
             "mongo_replicaset_name": {"env": ["MONGO_REPLICASET_NAME"]},
