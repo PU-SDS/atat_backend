@@ -16,7 +16,7 @@ global:
   ##   - myRegistryKeySecretName
   ##
   imagePullSecrets: []
-  storageClass: "synology"
+  storageClass: "freenas-nfs-csi"
   namespaceOverride: ""
 
 ## @section Common parameters
@@ -768,14 +768,14 @@ persistence:
   ## If undefined (the default) or set to null, no storageClassName spec is
   ## set, choosing the default provisioner.
   ##
-  storageClass: ""
+  storageClass: "freenas-nfs-csi"
   ## @param persistence.accessModes PV Access Mode
   ##
   accessModes:
     - ReadWriteOnce
   ## @param persistence.size PVC Storage Request for MongoDB&reg; data volume
   ##
-  size: 8Gi
+  size: 2Gi
   ## @param persistence.annotations PVC annotations
   ##
   annotations: {}
@@ -1462,7 +1462,7 @@ hidden:
       - ReadWriteOnce
     ## @param hidden.persistence.size PVC Storage Request for hidden node data volume
     ##
-    size: 4Gi
+    size: 2Gi
     ## @param hidden.persistence.annotations PVC annotations
     ##
     annotations: {}
