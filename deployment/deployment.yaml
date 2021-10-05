@@ -8,6 +8,18 @@ data:
   MONGO_ATAT_HOST: "mongodb-headless.atat-prod.svc.cluster.local"
   MONGO_ATAT_PORT: "27017"
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: atat-backend-service
+spec:
+  selector:
+    app: viva-atat-backend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -16,7 +28,7 @@ spec:
   selector:
     matchLabels:
       app: viva-atat-backend
-  replicas: 1
+  replicas: 2
   template:
     metadata:
       labels:
@@ -41,7 +53,7 @@ spec:
                 secretKeyRef:
                   name: rabbitmq-credentials
                   key: rabbitmq-password
-          imagePullPolicy: always
+          imagePullPolicy: Always
           command: ["/bin/bash", "-c"]
           args:
             - >-
@@ -82,103 +94,103 @@ spec:
                 secretKeyRef:
                   name: rabbitmq-credentials
                   key: rabbitmq-password
-          imagePullPolicy: always
+          imagePullPolicy: Always
           command: [ "/bin/bash", "-c" ]
           args:
             - >-
               poetry run celery -A viva_atat.celery_app worker --loglevel=debug
         - name: viva-atat-worker-atat
-            image: bilsab/atat-backend-prod
-            envFrom:
-              - secretRef:
-                  name: mongodb-db-credentials
-              - configMapRef:
-                  name: atat-envars
-            env:
-              - name: RABBITMQ_BROKER_USERNAME
-                valueFrom:
-                  secretKeyRef:
-                    name: rabbitmq-credentials
-                    key: rabbitmq-username
-              - name: RABBITMQ_BROKER_PASSWORD
-                valueFrom:
-                  secretKeyRef:
-                    name: rabbitmq-credentials
-                    key: rabbitmq-password
-            imagePullPolicy: always
-            command: [ "/bin/bash", "-c" ]
-            args:
-              - >-
-                poetry run celery -A viva_atat.celery_app worker -Q atat -n atat --loglevel=debug
+          image: bilsab/atat-backend-prod
+          envFrom:
+            - secretRef:
+                name: mongodb-db-credentials
+            - configMapRef:
+                name: atat-envars
+          env:
+            - name: RABBITMQ_BROKER_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-credentials
+                  key: rabbitmq-username
+            - name: RABBITMQ_BROKER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-credentials
+                  key: rabbitmq-password
+          imagePullPolicy: Always
+          command: [ "/bin/bash", "-c" ]
+          args:
+            - >-
+              poetry run celery -A viva_atat.celery_app worker -Q atat -n atat --loglevel=debug
         - name: viva-atat-worker-dima
-            image: bilsab/atat-backend-prod
-            envFrom:
-              - secretRef:
-                  name: mongodb-db-credentials
-              - configMapRef:
-                  name: atat-envars
-            env:
-              - name: RABBITMQ_BROKER_USERNAME
-                valueFrom:
-                  secretKeyRef:
-                    name: rabbitmq-credentials
-                    key: rabbitmq-username
-              - name: RABBITMQ_BROKER_PASSWORD
-                valueFrom:
-                  secretKeyRef:
-                    name: rabbitmq-credentials
-                    key: rabbitmq-password
-            imagePullPolicy: always
-            command: [ "/bin/bash", "-c" ]
-            args:
-              - >-
-                poetry run celery -A viva_atat.celery_app worker -Q dima -n dima --loglevel=debug
+          image: bilsab/atat-backend-prod
+          envFrom:
+            - secretRef:
+                name: mongodb-db-credentials
+            - configMapRef:
+                name: atat-envars
+          env:
+            - name: RABBITMQ_BROKER_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-credentials
+                  key: rabbitmq-username
+            - name: RABBITMQ_BROKER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-credentials
+                  key: rabbitmq-password
+          imagePullPolicy: Always
+          command: [ "/bin/bash", "-c" ]
+          args:
+            - >-
+              poetry run celery -A viva_atat.celery_app worker -Q dima -n dima --loglevel=debug
         - name: viva-atat-worker-warehousing
-            image: bilsab/atat-backend-prod
-            envFrom:
-              - secretRef:
-                  name: mongodb-db-credentials
-              - configMapRef:
-                  name: atat-envars
-            env:
-              - name: RABBITMQ_BROKER_USERNAME
-                valueFrom:
-                  secretKeyRef:
-                    name: rabbitmq-credentials
-                    key: rabbitmq-username
-              - name: RABBITMQ_BROKER_PASSWORD
-                valueFrom:
-                  secretKeyRef:
-                    name: rabbitmq-credentials
-                    key: rabbitmq-password
-            imagePullPolicy: always
-            command: [ "/bin/bash", "-c" ]
-            args:
-              - >-
-                poetry run celery -A viva_atat.celery_app worker -Q warehousing -n warehousing --loglevel=debug
+          image: bilsab/atat-backend-prod
+          envFrom:
+            - secretRef:
+                name: mongodb-db-credentials
+            - configMapRef:
+                name: atat-envars
+          env:
+            - name: RABBITMQ_BROKER_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-credentials
+                  key: rabbitmq-username
+            - name: RABBITMQ_BROKER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-credentials
+                  key: rabbitmq-password
+          imagePullPolicy: Always
+          command: [ "/bin/bash", "-c" ]
+          args:
+            - >-
+              poetry run celery -A viva_atat.celery_app worker -Q warehousing -n warehousing --loglevel=debug
         - name: viva-atat-worker-job
-            image: bilsab/atat-backend-prod
-            envFrom:
-              - secretRef:
-                  name: mongodb-db-credentials
-              - configMapRef:
-                  name: atat-envars
-            env:
-              - name: RABBITMQ_BROKER_USERNAME
-                valueFrom:
-                  secretKeyRef:
-                    name: rabbitmq-credentials
-                    key: rabbitmq-username
-              - name: RABBITMQ_BROKER_PASSWORD
-                valueFrom:
-                  secretKeyRef:
-                    name: rabbitmq-credentials
-                    key: rabbitmq-password
-            imagePullPolicy: always
-            command: [ "/bin/bash", "-c" ]
-            args:
-              - >-
-                poetry run celery -A viva_atat.celery_app worker -Q job -n job --loglevel=debug
+          image: bilsab/atat-backend-prod
+          envFrom:
+            - secretRef:
+                name: mongodb-db-credentials
+            - configMapRef:
+                name: atat-envars
+          env:
+            - name: RABBITMQ_BROKER_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-credentials
+                  key: rabbitmq-username
+            - name: RABBITMQ_BROKER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-credentials
+                  key: rabbitmq-password
+          imagePullPolicy: Always
+          command: [ "/bin/bash", "-c" ]
+          args:
+            - >-
+              poetry run celery -A viva_atat.celery_app worker -Q job -n job --loglevel=debug
       imagePullSecrets:
         - name: regcred
 ---
@@ -215,10 +227,46 @@ spec:
                 secretKeyRef:
                   name: rabbitmq-credentials
                   key: rabbitmq-password
-          imagePullPolicy: always
+          imagePullPolicy: Always
           command: ["/bin/bash", "-c"]
           args:
             - >-
-              poetry run celery -A viva_atat.celery_app worker beat --loglevel=debug
+              poetry run celery -A viva_atat.celery_app beat --loglevel=debug
       imagePullSecrets:
         - name: regcred
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"extensions/v1beta1","kind":"Ingress","metadata":{"annotations":{"cert-manager.io/cluster-issuer":"letsencrypt-prod","kubernetes.io/ingress.class":"nginx","nginx.ingress.kubernetes.io/ssl-redirect":"false"},"labels":{"app.kubernetes.io/instance":"atat-backend-devel"},"name":"atat-backend-dev","namespace":"atat-dev"},"spec":{"rules":[{"host":"atat-backend-devel.bioinfo.perdanauniversity.edu.my","http":{"paths":[{"backend":{"serviceName":"atat-backend-service","servicePort":80},"path":"/"}]}}],"tls":[{"hosts":["atat-backend-devel.bioinfo.perdanauniversity.edu.my"],"secretName":"atat-backend-devel-tls"}]}}
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+  creationTimestamp: "2021-08-23T14:18:02Z"
+  generation: 1
+  labels:
+    app.kubernetes.io/instance: atat-backend-prod
+  name: atat-backend-prod
+  namespace: atat-prod
+  resourceVersion: "96748992"
+  selfLink: /apis/extensions/v1beta1/namespaces/atat-dev/ingresses/atat-backend-prod
+  uid: 94cd6118-774a-4043-805d-b99c3325634e
+spec:
+  rules:
+  - host: atat-backend.bioinfo.perdanauniversity.edu.my
+    http:
+      paths:
+      - backend:
+          serviceName: atat-backend-service
+          servicePort: 80
+        path: /
+  tls:
+  - hosts:
+    - atat-backend.bioinfo.perdanauniversity.edu.my
+    secretName: atat-backend-tls
+status:
+  loadBalancer:
+    ingress:
+    - ip: 192.168.2.16
