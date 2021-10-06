@@ -57,7 +57,7 @@ spec:
           command: ["/bin/bash", "-c"]
           args:
             - >-
-              poetry run uvicorn --bind 0.0.0.0:80 --limit-request-line 0 wsgi:app
+              poetry run uvicorn wsgi:app --host 0.0.0.0 --port 80
       imagePullSecrets:
         - name: regcred
 ---
