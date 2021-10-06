@@ -1,7 +1,7 @@
 from fastapi import APIRouter, status, HTTPException
 from mongoengine import DoesNotExist
 
-from ..models import CreateJobRequest, JobLogs, JobLogEntry, Parameters
+from ..models import CreateStandaloneJobRequest, JobLogs, JobLogEntry, Parameters, CreateVivaJobRequest
 from ..helpers import HelperMethods
 
 from ...core.tasks import run_job
@@ -9,10 +9,29 @@ from ...core.tasks import run_job
 router = APIRouter(prefix='/job', tags=['job'])
 
 
-@router.post('/', status_code=status.HTTP_201_CREATED, response_description="Returns the auto-generated job id.")
-def create_job(payload: CreateJobRequest) -> str:
+@router.post(
+    '/create/standalone', status_code=status.HTTP_201_CREATED, response_description="Returns the auto-generated job id."
+)
+def create_standalone_job(payload: CreateStandaloneJobRequest) -> str:
     """
-    Submit a new analysis job.
+    Submit a new standalone analysis job.
+
+    A successful request will return a HTTP 201 status code, while any invalid request (missing fields) will return
+    an HTTP 500 status code with the body indicating the missing fields.
+    """
+
+    job_id = HelperMethods.register_job(payload.parameters)
+    run_job.delay(payload.host_sequences, payload.reservoir_sequences, job_id)
+
+    return job_id
+
+
+@router.post(
+    '/create/viva', status_code=status.HTTP_201_CREATED, response_description="Returns the auto-generated job id."
+)
+def create_viva_job(payload: CreateVivaJobRequest) -> str:
+    """
+    Submit a new ViVA analysis job.
 
     A successful request will return a HTTP 201 status code, while any invalid request (missing fields) will return
     an HTTP 500 status code with the body indicating the missing fields.

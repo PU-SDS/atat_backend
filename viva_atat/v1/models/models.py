@@ -70,7 +70,13 @@ class CreateJobParameters(BaseModel):
     email: EmailStr = Field(None, title='The email address of the user.')
 
 
-class CreateJobRequest(BaseModel):
+class CreateVivaJobRequest(BaseModel):
+    host_dima_positions: List[Position] = Field(..., title='DiMA positions for the host dataset.')
+    reservoir_dima_positions: List[Position] = Field(..., title='DiMA positions for the reservoir dataset.')
+    parameters: CreateJobParameters = Field(..., title='The parameters to be used to run the analysis.')
+
+
+class CreateStandaloneJobRequest(BaseModel):
     """
     This is the model for a job submit request.
     """

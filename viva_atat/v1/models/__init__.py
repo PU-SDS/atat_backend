@@ -1,5 +1,6 @@
 from .models import (
-    CreateJobRequest,
+    CreateStandaloneJobRequest,
+    CreateVivaJobRequest,
     CreateJobParameters,
     JobLogs,
     JobLogEntry,
