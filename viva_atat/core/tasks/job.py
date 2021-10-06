@@ -1,6 +1,6 @@
 from celery import chord, group, chain
 
-from .atat import atat, noop
+from .atat import atat_standalone, noop
 from .warehousing import warehousing
 from ..models import JobDBModel, LogMessageFlags, JobStatus, LogMessages
 from ...celery_app import app
@@ -27,7 +27,7 @@ def run_job(host_seqs: str, reservoir_seqs: str, job_id: str):
         ]
     )
 
-    atat_task = group(noop.s(), atat.s(job_id))
+    atat_task = group(noop.s(), atat_standalone.s(job_id))
 
     task_chain = chain(all_dima_tasks, atat_task)
 

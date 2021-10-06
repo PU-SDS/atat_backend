@@ -1,33 +1,59 @@
 from fastapi import APIRouter, status, HTTPException
 from mongoengine import DoesNotExist
 
-from ..models import CreateJobRequest, JobLogs, JobLogEntry, Parameters
+from ..helpers.exceptions import JobExists
+from ..models import CreateStandaloneJobRequest, JobLogs, JobLogEntry, Parameters, CreateVivaJobRequest
 from ..helpers import HelperMethods
-
-from ...core.tasks import run_job
+from ...core.models import JobStatus
 
 router = APIRouter(prefix='/job', tags=['job'])
 
 
-@router.post('/', status_code=status.HTTP_201_CREATED, response_description="Returns the auto-generated job id.")
-def create_job(payload: CreateJobRequest) -> str:
+@router.post(
+    '/create/standalone', status_code=status.HTTP_201_CREATED, response_description="Returns the auto-generated job id."
+)
+def create_standalone_job(payload: CreateStandaloneJobRequest) -> str:
     """
-    Submit a new analysis job.
+    Submit a new standalone analysis job.
 
     A successful request will return a HTTP 201 status code, while any invalid request (missing fields) will return
     an HTTP 500 status code with the body indicating the missing fields.
     """
 
-    job_id = HelperMethods.register_job(payload.parameters)
-    run_job.delay(payload.host_sequences, payload.reservoir_sequences, job_id)
+    job_id = HelperMethods.create_standalone_job(payload)
 
     return job_id
 
 
+@router.post('/create/viva', status_code=status.HTTP_201_CREATED, response_description="Returns the Celery task id")
+def create_viva_job(payload: CreateVivaJobRequest) -> str:
+    """
+    Submit a new ViVA analysis job.
+
+    A successful request will return a HTTP 201 status code, and the body will contain the Celery task ID while any
+    invalid request (missing fields) will return an HTTP 500 status code with the body indicating the missing fields.
+
+    If the job id already exists in the ATAT database, an HTTP 409 status will be returned.
+
+    **If the position objects contain extra keys that are not required for ATAT, they will be ignored by ATAT.**
+    Therefore it is safe to pass the DiMA positions as is without removing the extra fields.
+    """
+
+    try:
+        task_id = HelperMethods.create_viva_job(payload)
+    except JobExists:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Job id already exists.")
+
+    return str(task_id)
+
+
 @router.get(
-    '/status/{job_id}', status_code=status.HTTP_200_OK, response_description="Returns the current status of the job"
+    '/status/{job_id}',
+    status_code=status.HTTP_200_OK,
+    response_description="Returns the current status of the job",
+    response_model=JobStatus,
 )
-def get_job_status(job_id: str) -> str:
+def get_job_status(job_id: str) -> JobStatus:
     """
     Get the status of a job.
 

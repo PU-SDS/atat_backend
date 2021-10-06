@@ -1,5 +1,6 @@
 from .models import (
-    CreateJobRequest,
+    CreateStandaloneJobRequest,
+    CreateVivaJobRequest,
     CreateJobParameters,
     JobLogs,
     JobLogEntry,
@@ -7,4 +8,5 @@ from .models import (
     MotifTransmissions,
     MotifTransmission,
     GroupedPosition,
+    Position,
 )

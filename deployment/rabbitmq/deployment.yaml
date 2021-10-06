@@ -204,7 +204,7 @@ clustering:
   ## @param clustering.enabled Enable RabbitMQ clustering
   ##
   enabled: true
-  ## @param clustering.addressType Switch clustering mode. Either `ip` or `hostname`
+  ## @param clustering.addressType Transmission clustering mode. Either `ip` or `hostname`
   ##
   addressType: hostname
   ## @param clustering.rebalance Rebalance master for queues in cluster when new replica is created
