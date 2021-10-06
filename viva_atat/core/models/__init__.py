@@ -5,7 +5,7 @@ from .models import (
     LogMessageFlags,
     Results,
     DimaPosition,
-    Switch,
+    Transmission,
     Parameters,
     DimaVariant,
 )  # noqa

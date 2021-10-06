@@ -4,7 +4,8 @@ from .settings import ResourceSettings
 settings = ResourceSettings()
 
 task_routes = {
-    'atat': {'queue': 'atat'},
+    'atat-standalone': {'queue': 'atat'},
+    'atat-viva': {'queue': 'atat'},
     'dima': {'queue': 'dima'},
     'warehousing': {'queue': 'warehousing'},
     'job': {'queue': 'job'},

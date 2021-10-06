@@ -23,17 +23,20 @@ class Parameters(BaseModel):
 
 
 class Variant(BaseModel):
+    class Config:
+        allow_population_by_field_name = True
+
     sequence: str = Field(..., title='The amino-acid sequence of the variant.')
     count: int = Field(..., title='The number of times the variant was observed (frequency).')
     incidence: float = Field(..., title='The incidence of the variant.')
-    motif: MotifClasses = Field(..., title='The class the variant belongs to.')
+    motif: MotifClasses = Field(..., title='The class the variant belongs to.', alias='motif_long')
     metadata: dict = Field(..., title='Header metadata derived from the FASTA headers.')
 
 
 class Position(BaseModel):
     position: int = Field(..., title='The kmer position.')
-    supports: int = Field(..., title='The number of supports that the kmer position has.')
-    variants: List[Variant] = Field(..., title='Kmer variants seen at the kmer position.')
+    support: int = Field(..., title='The number of supports that the kmer position has.')
+    variants: List[Variant] = Field(None, title='Kmer variants seen at the kmer position.')
 
 
 class GroupedPosition(BaseModel):
@@ -71,6 +74,7 @@ class CreateJobParameters(BaseModel):
 
 
 class CreateVivaJobRequest(BaseModel):
+    id: str = Field(..., title='The DIM job id.')
     host_dima_positions: List[Position] = Field(..., title='DiMA positions for the host dataset.')
     reservoir_dima_positions: List[Position] = Field(..., title='DiMA positions for the reservoir dataset.')
     parameters: CreateJobParameters = Field(..., title='The parameters to be used to run the analysis.')

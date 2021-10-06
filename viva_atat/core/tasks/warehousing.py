@@ -1,4 +1,13 @@
-from ..models import JobDBModel, LogMessageFlags, LogMessages, Results, DimaPosition, Switch, DimaVariant, JobStatus
+from ..models import (
+    JobDBModel,
+    LogMessageFlags,
+    LogMessages,
+    Results,
+    DimaPosition,
+    Transmission,
+    DimaVariant,
+    JobStatus,
+)
 from ...celery_app import app
 
 
@@ -25,7 +34,7 @@ def get_position_objs(positions: list):
     position_data = [
         DimaPosition(
             position=position.get('position'),
-            supports=position.get('support'),
+            support=position.get('support'),
             variants=get_variant_objs(position.get('variants')) if position.get('variants') else None,
         )
         for position in positions
@@ -75,7 +84,7 @@ def warehousing(results: list, job_id: str):
 
     # Now we need to save the ATAT (motif switching) data
     switches = [
-        Switch(
+        Transmission(
             position=motif_switch.get('position'),
             sequence=motif_switch.get('sequence'),
             source=motif_switch.get('source'),

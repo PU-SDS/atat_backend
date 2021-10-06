@@ -70,16 +70,17 @@ class LogMessageFlags(Enum):
 class LogMessages(Enum):
     JOB_CREATED = 'Job created.'
     JOB_RUNNING = 'Job is running.'
+    JOB_COMPLETED = 'Analysis completed.'
+    JOB_FAILED = 'An error occurred. Job cancelled.'
     RUN_MOTIF_CLASSIFICATION = 'Running motif classification using DiMA.'
     MOTIF_CLASSIFICATION_ERROR = 'Error occurred while running DiMA.'
     MOTIF_CLASSIFICATION_COMPLETE = 'Completed motif classification.'
     RUN_TRANSMISSIBILITY_ANALYSIS = 'Running transmissibility analysis.'
     TRANSMISSIBILITY_ANALYSIS_ERROR = 'Error occurred during transmissibility analysis.'
+    TRANSMISSIBILITY_ANALYSIS_COMPLETE = 'Transmissibility analysis completed.'
     SAVING_TO_DB = 'Saving results to database.'
-    ADDED_MOTIF_RESULTS = 'Saved motif classification results on the database.'
-    ADDED_MOTIF_SWITCH_RESULTS = 'Saved motif switch results on the database.'
-    JOB_COMPLETED = 'Analysis completed.'
-    JOB_FAILED = 'An error occurred. Job cancelled.'
+    ADDED_MOTIF_RESULTS = 'Saved motif classification results in the database.'
+    ADDED_MOTIF_SWITCH_RESULTS = 'Saved motif transmission results in the database.'
 
 
 class LogEntryDBModel(EmbeddedDocument):
@@ -111,11 +112,11 @@ class DimaPosition(EmbeddedDocument):
     """
 
     position = IntField(required=True)
-    supports = IntField(required=True)
+    support = IntField(required=True)
     variants = EmbeddedDocumentListField(DimaVariant, default=[])
 
 
-class Switch(EmbeddedDocument):
+class Transmission(EmbeddedDocument):
     """
     This is the model for a motif switch.
     """
@@ -133,7 +134,7 @@ class Results(Document):
 
     host = EmbeddedDocumentListField(DimaPosition, required=False)
     reservoir = EmbeddedDocumentListField(DimaPosition, required=False)
-    switches = EmbeddedDocumentListField(Switch, required=False)
+    switches = EmbeddedDocumentListField(Transmission, required=False)
 
     class ResultQuerySet(QuerySet):
         def get_grouped_position(self, position: int):

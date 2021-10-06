@@ -8,4 +8,5 @@ from .models import (
     MotifTransmissions,
     MotifTransmission,
     GroupedPosition,
+    Position,
 )
