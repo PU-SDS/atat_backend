@@ -37,6 +37,11 @@ connect(
 class JobStatus(Enum):
     """
     Possible statuses for ATAT jobs.
+
+        - Created
+        - Running
+        - Failed
+        - Completed
     """
 
     CREATED: str = 'Created'
