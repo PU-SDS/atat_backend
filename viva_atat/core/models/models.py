@@ -17,6 +17,7 @@ from mongoengine import (
     Document,
     EmbeddedDocument,
     ReferenceField,
+    CASCADE,
 )
 
 from ...settings import ResourceSettings
@@ -184,8 +185,8 @@ class JobDBModel(Document):
 
     id = StringField(required=True, default=lambda: str(uuid4()), primary_key=True)
     status = EnumField(JobStatus, default=JobStatus.CREATED)
-    parameters = ReferenceField(Parameters, required=True)
+    parameters = ReferenceField(Parameters, required=True, reverse_delete_rule=CASCADE)
     log = EmbeddedDocumentListField(LogEntryDBModel, required=False)
-    results = ReferenceField(Results, required=False, default=Results().save())
+    results = ReferenceField(Results, required=False, default=Results().save(), reverse_delete_rule=CASCADE)
 
     meta = {'collection': 'job', 'queryset_class': LoggerQuerySet}
