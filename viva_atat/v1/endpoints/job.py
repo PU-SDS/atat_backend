@@ -34,15 +34,24 @@ def create_viva_job(payload: CreateVivaJobRequest) -> str:
     invalid request (missing fields) will return an HTTP 500 status code with the body indicating the missing fields.
 
     If the job id already exists in the ATAT database, an HTTP 409 status will be returned.
+    If some unknown error occurs, an HTTP 500 error will be raised with the body indicating the reason.
 
     **If the position objects contain extra keys that are not required for ATAT, they will be ignored by ATAT.**
     Therefore it is safe to pass the DiMA positions as is without removing the extra fields.
     """
 
+    task_id = None
+
     try:
         task_id = HelperMethods.create_viva_job(payload)
     except JobExists:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Job id already exists.")
+    except Exception:
+        HelperMethods.delete_job(payload.id)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Job creation failed. You may try again with the same job id.",
+        )
 
     return str(task_id)
 

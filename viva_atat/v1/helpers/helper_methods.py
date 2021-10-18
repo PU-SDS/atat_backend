@@ -138,3 +138,14 @@ class HelperMethods(object):
         """
 
         return Results.objects.filter(id=results_id)
+
+    @staticmethod
+    def delete_job(job_id: str):
+        """
+        Deletes a job given the job id.
+
+        :param job_id: The ID of the job to delete.
+        :type job_id: str
+        """
+
+        HelperMethods.get_job(job_id).delete()
