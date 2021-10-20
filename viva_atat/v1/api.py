@@ -7,7 +7,7 @@ app = FastAPI(
     title="Antigenic Transmissibility Analysis Tool RESTful API",
     description="This is the RESTful API of the Antigenic Transmissibility Analysis Tool.",
     contact={'name': 'Shan Tharanga', 'email': 'stwm2@student.london.ac.uk'},
-    version="0.0.1",
+    version="1.0.1",
 )
 
 app.add_middleware(
