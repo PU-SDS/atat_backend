@@ -5,42 +5,16 @@ from ..models import (
     Results,
     DimaPosition,
     Transmission,
-    DimaVariant,
     JobStatus,
 )
 from ...celery_app import app
 
 
-def get_variant_objs(variants: list):
-    """Just a helper function to get instances of the DimaVariant model"""
-
-    position_data = [
-        DimaVariant(
-            sequence=variant.get('sequence'),
-            count=variant.get('count'),
-            incidence=variant.get('incidence'),
-            motif=variant.get('motif_long'),
-            metadata=variant.get('metadata'),
-        )
-        for variant in variants
-    ]
-
-    return position_data
-
-
-def get_position_objs(positions: list):
-    """Just a helper function to get instances of the DimaPosition model"""
-
-    position_data = [
-        DimaPosition(
-            position=position.get('position'),
-            support=position.get('support'),
-            variants=get_variant_objs(position.get('variants')) if position.get('variants') else None,
-        )
-        for position in positions
-    ]
-
-    return position_data
+def _generate_pos_objs(positions):
+    for position in positions:
+        # noinspection PyProtectedMember
+        filtered = {k: v for k, v in position.items() if k in DimaPosition._fields.keys()}
+        yield DimaPosition(**filtered)
 
 
 @app.task(name="warehousing")
@@ -76,22 +50,15 @@ def warehousing(results: list, job_id: str):
     result = Results()
 
     # Add the kmer positions to the database
-    result.host = get_position_objs(host_dima_results)
-    result.reservoir = get_position_objs(reservoir_dima_results)
+    result.host = list(_generate_pos_objs(host_dima_results))
+    result.reservoir = list(_generate_pos_objs(reservoir_dima_results))
+
     job.save()
 
     job_queryset.update_log(LogMessageFlags.INFO, LogMessages.ADDED_MOTIF_RESULTS)
 
     # Now we need to save the ATAT (motif switching) data
-    switches = [
-        Transmission(
-            position=motif_switch.get('position'),
-            sequence=motif_switch.get('sequence'),
-            source=motif_switch.get('source'),
-            target=motif_switch.get('target'),
-        )
-        for motif_switch in atat_results
-    ]
+    switches = [Transmission(**motif_switch) for motif_switch in atat_results]
 
     result.switches = switches
 

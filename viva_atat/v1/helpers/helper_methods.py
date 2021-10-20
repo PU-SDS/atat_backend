@@ -92,9 +92,9 @@ class HelperMethods(object):
         job_queryset.update_log(LogMessageFlags.INFO, LogMessages.JOB_CREATED)
 
         # Create save the DiMA results in the database
-        host_positions = [DimaPosition(**json.loads(position.json())) for position in payload.host_dima_positions]
+        host_positions = [DimaPosition(**position.dict()) for position in payload.host_dima_positions]
         reservoir_positions = [
-            DimaPosition(**json.loads(position.json())) for position in payload.reservoir_dima_positions
+            DimaPosition(**position.dict()) for position in payload.reservoir_dima_positions
         ]
         results = Results(host=host_positions, reservoir=reservoir_positions).save()
 

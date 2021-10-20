@@ -46,7 +46,8 @@ def create_viva_job(payload: CreateVivaJobRequest) -> str:
         task_id = HelperMethods.create_viva_job(payload)
     except JobExists:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Job id already exists.")
-    except Exception:
+    except Exception as ex:
+        print(ex)
         HelperMethods.delete_job(payload.id)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

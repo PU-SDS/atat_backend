@@ -57,16 +57,21 @@ class Analyses(object):
             if not host_variants or not reservoir_variants:
                 continue
 
-            for host_variant, reservoir_variant in product(host_variants, reservoir_variants):  # type: dict
-                if host_variant.get('sequence') == reservoir_variant.get('sequence'):
-                    if host_variant.get('motif_short') != reservoir_variant.get('motif_short'):
-                        switches.append(
-                            MotifTransmission(
-                                position=host_position.get('position'),
-                                sequence=host_variant.get('sequence'),
-                                source=host_variant.get('motif_long'),
-                                target=reservoir_variant.get('motif_long'),
-                            )
+            for host_variant in host_variants:
+                reservoir_variant_match = [reservoir_variant for reservoir_variant in reservoir_variants if
+                                           reservoir_variant.get('sequence') == host_variant.get('sequence')]
+
+                if not reservoir_variant_match:
+                    continue
+
+                if host_variant.get('motif_long') != reservoir_variant_match[0].get('motif_long'):
+                    switches.append(
+                        MotifTransmission(
+                            position=host_position.get('position'),
+                            sequence=host_variant.get('sequence'),
+                            source=host_variant.get('motif_long'),
+                            target=reservoir_variant_match[0].get('motif_long')
                         )
+                    )
 
         return switches
