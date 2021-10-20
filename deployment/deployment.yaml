@@ -36,7 +36,7 @@ spec:
     spec:
       containers:
         - name: viva-atat-backend
-          image: bilsab/atat-backend-prod:v1.0.1
+          image: bilsab/atat-backend-prod:v1.0.2
           envFrom:
             - secretRef:
                 name: mongodb-db-credentials
@@ -77,7 +77,7 @@ spec:
     spec:
       containers:
         - name: viva-atat-worker-default
-          image: bilsab/atat-backend-prod:v1.0.1
+          image: bilsab/atat-backend-prod:v1.0.2
           envFrom:
             - secretRef:
                 name: mongodb-db-credentials
@@ -100,7 +100,7 @@ spec:
             - >-
               poetry run celery -A viva_atat.celery_app worker --loglevel=debug
         - name: viva-atat-worker-atat
-          image: bilsab/atat-backend-prod:v1.0.1
+          image: bilsab/atat-backend-prod:v1.0.2
           envFrom:
             - secretRef:
                 name: mongodb-db-credentials
@@ -123,7 +123,7 @@ spec:
             - >-
               poetry run celery -A viva_atat.celery_app worker -Q atat -n atat --loglevel=debug
         - name: viva-atat-worker-dima
-          image: bilsab/atat-backend-prod:v1.0.1
+          image: bilsab/atat-backend-prod:v1.0.2
           envFrom:
             - secretRef:
                 name: mongodb-db-credentials
@@ -146,7 +146,7 @@ spec:
             - >-
               poetry run celery -A viva_atat.celery_app worker -Q dima -n dima --loglevel=debug
         - name: viva-atat-worker-warehousing
-          image: bilsab/atat-backend-prod:v1.0.1
+          image: bilsab/atat-backend-prod:v1.0.2
           envFrom:
             - secretRef:
                 name: mongodb-db-credentials
@@ -169,7 +169,7 @@ spec:
             - >-
               poetry run celery -A viva_atat.celery_app worker -Q warehousing -n warehousing --loglevel=debug
         - name: viva-atat-worker-job
-          image: bilsab/atat-backend-prod:v1.0.1
+          image: bilsab/atat-backend-prod:v1.0.2
           envFrom:
             - secretRef:
                 name: mongodb-db-credentials
@@ -210,7 +210,7 @@ spec:
     spec:
       containers:
         - name: mongodb-beat
-          image: bilsab/atat-backend-prod:v1.0.1
+          image: bilsab/atat-backend-prod:v1.0.2
           envFrom:
             - secretRef:
                 name: mongodb-db-credentials
