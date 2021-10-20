@@ -37,7 +37,6 @@ def assert_all_properties(model_results, new_results):
             assert new_variant.count == old_variant.get('count')
             assert new_variant.metadata == old_variant.get('metadata')
 
-
 @pytest.fixture
 def test_host_sequences():
     return open(join(dirname(__file__), 'data/host_sequences.afa'), 'r').read()
