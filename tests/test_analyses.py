@@ -11,7 +11,7 @@ HEADER_FORMAT = ["Country", "Host"]
 
 
 def assert_all_properties(model_results, new_results):
-    assert new_results.low_support == model_results.get('low_support')
+    assert new_results.low_support_count == model_results.get('low_support_count')
     assert new_results.protein_name == model_results.get('protein_name')
     assert new_results.sequence_count == model_results.get('sequence_count')
     assert new_results.support_threshold == model_results.get('support_threshold')
@@ -36,7 +36,6 @@ def assert_all_properties(model_results, new_results):
             assert round(new_variant.incidence) == round(old_variant.get('incidence'))
             assert new_variant.count == old_variant.get('count')
             assert new_variant.metadata == old_variant.get('metadata')
-
 
 @pytest.fixture
 def test_host_sequences():
