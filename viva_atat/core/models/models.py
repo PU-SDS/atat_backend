@@ -108,8 +108,10 @@ class DimaVariant(EmbeddedDocument):
     sequence = StringField(required=True)
     count = IntField(required=True)
     incidence = FloatField(required=True)
-    motif = StringField(required=True, choices=[motif.value for motif in MotifClasses])
+    motif_long = EnumField(MotifClasses, required=True)
     metadata = DictField(required=True)
+
+    meta = {'strict': False}
 
 
 class DimaPosition(EmbeddedDocument):
@@ -117,9 +119,12 @@ class DimaPosition(EmbeddedDocument):
     This is the model for a Hunana result position. For both host, and reservoir.
     """
 
+    _fields = None
     position = IntField(required=True)
     support = IntField(required=True)
     variants = EmbeddedDocumentListField(DimaVariant, default=[])
+
+    meta = {'strict': False}
 
 
 class Transmission(EmbeddedDocument):

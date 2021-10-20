@@ -29,7 +29,7 @@ class Variant(BaseModel):
     sequence: str = Field(..., title='The amino-acid sequence of the variant.')
     count: int = Field(..., title='The number of times the variant was observed (frequency).')
     incidence: float = Field(..., title='The incidence of the variant.')
-    motif: MotifClasses = Field(..., title='The class the variant belongs to.', alias='motif_long')
+    motif_long: MotifClasses = Field(..., title='The class the variant belongs to.', alias='motif')
     metadata: dict = Field(..., title='Header metadata derived from the FASTA headers.')
 
 
