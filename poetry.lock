@@ -177,7 +177,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
 name = "dima-cli"
-version = "2.0.3"
+version = "2.1.0"
 description = "A command-line tool that analyses the diversity and motifs of protein sequences"
 category = "main"
 optional = false
@@ -578,7 +578,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.9,<3.10"
-content-hash = "f06bab849f12075985c210e18e145258fc65f814c9c9e5d87ea286dfca56bc28"
+content-hash = "310b4015fa7c37e6e3474de393bbb0e59a234f116343493a1c930a991dba28ec"
 
 [metadata.files]
 amqp = [
@@ -634,18 +634,18 @@ colorama = [
     {file = "colorama-0.4.4.tar.gz", hash = "sha256:5941b2b48a20143d2267e95b1c2a7603ce057ee39fd88e7329b0c292aa16869b"},
 ]
 dima-cli = [
-    {file = "dima_cli-2.0.3-cp36-cp36m-macosx_10_9_x86_64.macosx_11_0_arm64.macosx_10_9_universal2.whl", hash = "sha256:c01e7468d661df7346ae81497d688eb77d27e9a2f360b8517dd84ee2a2cf19cd"},
-    {file = "dima_cli-2.0.3-cp36-cp36m-manylinux_2_5_x86_64.manylinux1_x86_64.whl", hash = "sha256:53b3e33d8106a03de631724c8f8a99aa84059891921fcc848cc0a2a990569a59"},
-    {file = "dima_cli-2.0.3-cp36-none-win_amd64.whl", hash = "sha256:ee798de0b101e976ef300aa6dbcfda945d3d720ea454fabe35d1f30c3ec204fc"},
-    {file = "dima_cli-2.0.3-cp37-cp37m-macosx_10_9_x86_64.macosx_11_0_arm64.macosx_10_9_universal2.whl", hash = "sha256:3715283a9051d3f5a59be3bae935fcfda0f9579c1682c726d4f91353e7fa92ff"},
-    {file = "dima_cli-2.0.3-cp37-cp37m-manylinux_2_5_x86_64.manylinux1_x86_64.whl", hash = "sha256:77e6a701b232c10cadd2f93ed3b65765b150a7d49c4998ae9a0a692cd82cdec3"},
-    {file = "dima_cli-2.0.3-cp37-none-win_amd64.whl", hash = "sha256:ac9f43ad60598e645a8ff8c406d9591ccb2e2dac007a30fc86368f6deaaf77a9"},
-    {file = "dima_cli-2.0.3-cp38-cp38-macosx_10_9_x86_64.macosx_11_0_arm64.macosx_10_9_universal2.whl", hash = "sha256:1908b86bbe5558f78d1e89f2c32435c9196a8510e0206fb78e001f35b0fe1225"},
-    {file = "dima_cli-2.0.3-cp38-cp38-manylinux_2_5_x86_64.manylinux1_x86_64.whl", hash = "sha256:adb71e739176f60f89ef974374461c8f141fd77bebe8c6598f2e6bd7ed092401"},
-    {file = "dima_cli-2.0.3-cp38-none-win_amd64.whl", hash = "sha256:bff1bc896a7265bfc7f561612c4448c6551514bbf1d0c726e78439cc5bba8b0a"},
-    {file = "dima_cli-2.0.3-cp39-cp39-macosx_10_9_x86_64.macosx_11_0_arm64.macosx_10_9_universal2.whl", hash = "sha256:6e2ab3ad8cdbe1e3e23ed3ad6254a0c8abb8667b10f4372fb82f08ba97e3aecd"},
-    {file = "dima_cli-2.0.3-cp39-cp39-manylinux_2_5_x86_64.manylinux1_x86_64.whl", hash = "sha256:e69ed819b9a2a1cf465b931c85170b2bd20f26c8bbf07bab07e18a12b4e05b5a"},
-    {file = "dima_cli-2.0.3-cp39-none-win_amd64.whl", hash = "sha256:d7603afddf3597ee620f17ff1816608aa6f3e5ba465127a0c222250c9624c8d8"},
+    {file = "dima_cli-2.1.0-cp36-cp36m-macosx_10_9_x86_64.macosx_11_0_arm64.macosx_10_9_universal2.whl", hash = "sha256:b24c1a6b2abfd191d03837ee2995251cd252cab1838b56074d157c5007b212d6"},
+    {file = "dima_cli-2.1.0-cp36-cp36m-manylinux_2_5_x86_64.manylinux1_x86_64.whl", hash = "sha256:8c01e2e2d6dd501b64fb910f650dcd060b5c8809a984a4b8828d7ff9fe4f4214"},
+    {file = "dima_cli-2.1.0-cp36-none-win_amd64.whl", hash = "sha256:d7a413ed5fa99cf1fa61d1ad26db39bd953b0c888896ce062563717455b56126"},
+    {file = "dima_cli-2.1.0-cp37-cp37m-macosx_10_9_x86_64.macosx_11_0_arm64.macosx_10_9_universal2.whl", hash = "sha256:8865b40b6ac28457758471ec9f909393fe653e3c9cac02b6e2ea340fc90e6673"},
+    {file = "dima_cli-2.1.0-cp37-cp37m-manylinux_2_5_x86_64.manylinux1_x86_64.whl", hash = "sha256:35f45ce4865134e584150687c5aaf300150638617ce73c76163024570a089708"},
+    {file = "dima_cli-2.1.0-cp37-none-win_amd64.whl", hash = "sha256:3bef192a14dbb5e0bf15f1ee0d0d0d2b038615236c5d751749533f4270878026"},
+    {file = "dima_cli-2.1.0-cp38-cp38-macosx_10_9_x86_64.macosx_11_0_arm64.macosx_10_9_universal2.whl", hash = "sha256:a24ddf0054eb99611771c077b0eee73b6eacd409056353e1224f4365c1bae8a0"},
+    {file = "dima_cli-2.1.0-cp38-cp38-manylinux_2_5_x86_64.manylinux1_x86_64.whl", hash = "sha256:6ea6bfacc4c3180acacd04d40c17ccd9529fdeb632dc43e8ba05e99c259d09a9"},
+    {file = "dima_cli-2.1.0-cp38-none-win_amd64.whl", hash = "sha256:23b96b629a74e27528309f14bb232229b48061e67f233f40050a4ab7ea332d86"},
+    {file = "dima_cli-2.1.0-cp39-cp39-macosx_10_9_x86_64.macosx_11_0_arm64.macosx_10_9_universal2.whl", hash = "sha256:8c34124ad3b81fc69eeed789ea9a237728bf27e9e89228a9dc6b4d38af2c028b"},
+    {file = "dima_cli-2.1.0-cp39-cp39-manylinux_2_5_x86_64.manylinux1_x86_64.whl", hash = "sha256:1e880a0d30e7c06dcf03ede43773c61577fc4e7c647c3441ff9966bdf64b6413"},
+    {file = "dima_cli-2.1.0-cp39-none-win_amd64.whl", hash = "sha256:5f06af2ac881bd6ec2d6a7d961b8cc0add355b5f9c31889538041a7beb48b5e4"},
 ]
 distlib = [
     {file = "distlib-0.3.3-py2.py3-none-any.whl", hash = "sha256:c8b54e8454e5bf6237cc84c20e8264c3e991e824ef27e8f1e81049867d861e31"},
