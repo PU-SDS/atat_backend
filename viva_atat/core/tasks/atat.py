@@ -1,6 +1,6 @@
 from typing import List
 
-from ..models import JobDBModel, LogMessageFlags, LogMessages, JobStatus, Transmission
+from ..models import JobDBModel, LogMessageFlags, LogMessages, JobStatus, Transmission, Results
 from ...celery_app import app
 from ..analysis import Analyses
 
@@ -68,10 +68,12 @@ def atat_viva(job_id: str):
         exit(1)
 
     job_queryset.update_log(LogMessageFlags.INFO, LogMessages.SAVING_TO_DB)
-    job_queryset.update_log(LogMessageFlags.INFO, LogMessages.ADDED_MOTIF_SWITCH_RESULTS)
-    job.results.switches = [Transmission(**transmission.dict()) for transmission in transmissions]
-    job.save()
 
+    results = Results.objects.get(id=job.results.id)
+    results.switches = [Transmission(**transmission.dict()) for transmission in transmissions]
+    results.save()
+
+    job_queryset.update_log(LogMessageFlags.INFO, LogMessages.ADDED_MOTIF_SWITCH_RESULTS)
     job_queryset.update_log(LogMessageFlags.SUCCESS, LogMessages.JOB_COMPLETED)
     job_queryset.update_status(JobStatus.COMPLETED)
 
