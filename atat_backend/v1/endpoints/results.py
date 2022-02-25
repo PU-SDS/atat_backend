@@ -57,17 +57,26 @@ def get_grouped_position(job_id: str, position: int) -> GroupedPosition:
     """
 
     try:
-        results_id = HelperMethods.get_job(job_id).results.id
-        queryset = HelperMethods.get_results_queryset(results_id)
+        job = HelperMethods.get_job(job_id)
     except DoesNotExist:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Job not found, consider creating one.")
 
-    try:
-        position = queryset.get_grouped_position(position)
-    except DoesNotExist:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Kmer position does not exist.")
+    dataset_one_position = HelperMethods.get_lazy_ref_field_by_pos(position, job.results.dataset_one).fetch()
+    dataset_two_position = HelperMethods.get_lazy_ref_field_by_pos(position, job.results.dataset_two).fetch()
 
-    return GroupedPosition(**position)
+    if not dataset_one_position or not dataset_two_position:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="k-mer position not found.")
+
+    dataset_one_position_dict = HelperMethods.append_pos_to_pos_dict(
+        dataset_one_position.to_mongo().to_dict(),
+        position
+    )
+    dataset_two_position_dict = HelperMethods.append_pos_to_pos_dict(
+        dataset_two_position.to_mongo().to_dict(),
+        position
+    )
+
+    return GroupedPosition(**{'dataset_one': dataset_one_position_dict, 'dataset_two': dataset_two_position_dict})
 
 
 @router.get(

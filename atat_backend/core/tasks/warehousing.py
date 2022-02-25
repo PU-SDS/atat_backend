@@ -10,11 +10,23 @@ from ..models import (
 from ...celery_app import app
 
 
-def _generate_pos_objs(positions):
+def _generate_pos_objs(positions, job_id: str):
+    pos_objs = list()
+
     for position in positions:
-        # noinspection PyProtectedMember
-        filtered = {k: v for k, v in position.items() if k in DimaPosition._fields.keys()}
-        yield DimaPosition(**filtered)
+        pos_dict = dict()
+
+        for k, v in position.items():
+            # noinspection PyProtectedMember
+            if k in DimaPosition._fields.keys():
+                if k == 'position':
+                    v = f'{v}|{job_id}'
+
+                pos_dict.update({k: v})
+
+        pos_objs.append(DimaPosition(**pos_dict).save())
+
+    return pos_objs
 
 
 @app.task(name="warehousing")
@@ -24,8 +36,8 @@ def warehousing(results: list, job_id: str):
 
     :param results: All the results generated upstream are contained within this variable.
                 |_____ dima
-                |        |______ host
-                |        |______ reservoir
+                |        |______ dataset one
+                |        |______ dataset two
                 |_____ atat
     :param job_id: The job id we are processing currently.
 
@@ -44,21 +56,21 @@ def warehousing(results: list, job_id: str):
 
     # Separate the data from the aggregate
     dima_results, atat_results = results[0]
-    host_dima_results, reservoir_dima_results = dima_results
+    dataset_one_dima_results, dataset_two_dima_results = dima_results
 
     # Then we create an instance of the Results model that we will later link to the job
     result = Results()
 
     # Add the kmer positions to the database
-    result.host = list(_generate_pos_objs(host_dima_results))
-    result.reservoir = list(_generate_pos_objs(reservoir_dima_results))
+    result.dataset_one = list(_generate_pos_objs(dataset_one_dima_results, job_id))
+    result.dataset_two = list(_generate_pos_objs(dataset_two_dima_results, job_id))
 
     job.save()
 
     job_queryset.update_log(LogMessageFlags.INFO, LogMessages.ADDED_MOTIF_RESULTS)
 
     # Now we need to save the ATAT (motif switching) data
-    switches = [Transmission(**motif_switch) for motif_switch in atat_results]
+    switches = [Transmission(**motif_switch).save() for motif_switch in atat_results]
 
     result.switches = switches
 

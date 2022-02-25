@@ -44,8 +44,8 @@ class GroupedPosition(BaseModel):
     The API model for a grouped position response.
     """
 
-    host: Position = Field(..., title='The host kmer position.')
-    reservoir: Position = Field(..., title='The reservoir kmer position.')
+    dataset_one: Position = Field(..., title='The dataset one kmer position.')
+    dataset_two: Position = Field(..., title='The dataset two kmer position.')
 
 
 class JobLogEntry(BaseModel):
@@ -70,13 +70,14 @@ class JobLogs(BaseModel):
 class CreateJobParameters(BaseModel):
     kmer_length: int = Field(..., title='The length of the kmers that need to be generated using DiMA.')
     header_format: List[str] = Field(..., title='The ordered list of components of the FASTA header.')
+    protein_name: str = Field('Unknown Protein', title='The name of the protein being worked with.')
     email: EmailStr = Field(None, title='The email address of the user.')
 
 
 class CreateVivaJobRequest(BaseModel):
     id: str = Field(..., title='The DIM job id.')
-    host_dima_positions: List[Position] = Field(..., title='DiMA positions for the host dataset.')
-    reservoir_dima_positions: List[Position] = Field(..., title='DiMA positions for the reservoir dataset.')
+    dataset_one_positions: List[Position] = Field(..., title='DiMA positions for the host dataset.')
+    dataset_two_positions: List[Position] = Field(..., title='DiMA positions for the reservoir dataset.')
     parameters: CreateJobParameters = Field(..., title='The parameters to be used to run the analysis.')
 
 
@@ -85,6 +86,6 @@ class CreateStandaloneJobRequest(BaseModel):
     This is the model for a job submit request.
     """
 
-    host_sequences: str = Field(..., title='The aligned FASTA from the host species.')
-    reservoir_sequences: str = Field(..., title='The aligned FASTA from the reservoir species.')
+    dataset_one: str = Field(..., title='The aligned FASTA from the dataset one.')
+    dataset_two: str = Field(..., title='The aligned FASTA from the dataset two.')
     parameters: CreateJobParameters = Field(..., title='The parameters to be used to run the analysis.')

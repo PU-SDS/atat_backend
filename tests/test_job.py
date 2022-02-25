@@ -4,10 +4,10 @@ from os.path import join, dirname
 
 import pytest
 
-from viva_atat.core.models import JobDBModel, Parameters
-from viva_atat.core.tasks import dima, atat_standalone, warehousing
-from viva_atat.v1.helpers import HelperMethods
-from viva_atat.v1.models import CreateVivaJobRequest, Position, CreateJobParameters
+from atat_backend.core.models import JobDBModel, Parameters
+from atat_backend.core.tasks import dima, atat_standalone, warehousing
+from atat_backend.v1.helpers import HelperMethods
+from atat_backend.v1.models import CreateVivaJobRequest, Position, CreateJobParameters
 
 
 @pytest.fixture

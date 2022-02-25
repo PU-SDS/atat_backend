@@ -7,7 +7,7 @@ import time
 from pymongo import MongoClient
 from pymongo.errors import ServerSelectionTimeoutError, OperationFailure, CollectionInvalid
 
-from viva_atat.settings import ResourceSettings
+from atat_backend.settings import ResourceSettings
 
 
 class Setup(object):

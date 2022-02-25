@@ -4,7 +4,7 @@ from os.path import join, dirname
 import pytest
 import json
 
-from viva_atat.core.analysis import Analyses
+from atat_backend.core.analysis import Analyses
 
 KMER_LENGTH = 9
 HEADER_FORMAT = ["Country", "Host"]

@@ -18,6 +18,7 @@ from mongoengine import (
     EmbeddedDocument,
     ReferenceField,
     CASCADE,
+    LazyReferenceField
 )
 
 from ...settings import ResourceSettings
@@ -100,7 +101,7 @@ class LogEntryDBModel(EmbeddedDocument):
     message = EnumField(LogMessages, required=True)
 
 
-class DimaVariant(EmbeddedDocument):
+class DimaVariant(Document):
     """
     This is the model for a kmer variant.
     """
@@ -114,20 +115,20 @@ class DimaVariant(EmbeddedDocument):
     meta = {'strict': False}
 
 
-class DimaPosition(EmbeddedDocument):
+class DimaPosition(Document):
     """
-    This is the model for a Hunana result position. For both host, and reservoir.
+    This is the model for a Hunana result position. For both dataset one, and dataset two.
     """
 
     _fields = None
-    position = IntField(required=True)
+    position = StringField(required=True, primary_key=True)
     support = IntField(required=True)
-    variants = EmbeddedDocumentListField(DimaVariant, default=[])
+    variants = ListField(ReferenceField(DimaVariant, reverse_delete_rule=CASCADE))
 
     meta = {'strict': False}
 
 
-class Transmission(EmbeddedDocument):
+class Transmission(Document):
     """
     This is the model for a motif switch.
     """
@@ -143,20 +144,9 @@ class Results(Document):
     This is the model for a ATAT job result.
     """
 
-    host = EmbeddedDocumentListField(DimaPosition, required=False)
-    reservoir = EmbeddedDocumentListField(DimaPosition, required=False)
-    switches = EmbeddedDocumentListField(Transmission, required=False)
-
-    class ResultQuerySet(QuerySet):
-        def get_grouped_position(self, position: int):
-            result = self.get()
-
-            host_position = result.host.get(position=position).to_mongo().to_dict()
-            reservoir_position = result.reservoir.get(position=position).to_mongo().to_dict()
-
-            return {"host": host_position, "reservoir": reservoir_position}
-
-    meta = {'queryset_class': ResultQuerySet}
+    dataset_one = ListField(LazyReferenceField(DimaPosition, reverse_delete_rule=CASCADE))
+    dataset_two = ListField(LazyReferenceField(DimaPosition, reverse_delete_rule=CASCADE))
+    switches = ListField(ReferenceField(Transmission, reverse_delete_rule=CASCADE), default=[])
 
 
 class Parameters(Document):

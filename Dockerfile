@@ -1,4 +1,4 @@
-# Use a dedicated base image for viva_atat
+# Use a dedicated base image for atat_backend
 FROM ubuntu:latest
 
 # Add basic metadata
@@ -29,4 +29,4 @@ RUN poetry install
 
 # Then we add the most dynamic parts of the project in to the image
 COPY poetry.lock /home/viva_atat/
-COPY viva_atat /home/viva_atat/viva_atat/
+COPY atat_backend /home/viva_atat/viva_atat/

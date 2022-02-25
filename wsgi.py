@@ -1,6 +1,6 @@
 import uvicorn
 
-from viva_atat.v1.api import app
+from atat_backend.v1.api import app
 
 
 def main():

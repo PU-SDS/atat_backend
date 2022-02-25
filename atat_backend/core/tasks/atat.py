@@ -27,10 +27,10 @@ def atat_standalone(dima_results: List[List[dict]], job_id: str):
     try:
         job_queryset.update_log(LogMessageFlags.INFO, LogMessages.RUN_TRANSMISSIBILITY_ANALYSIS)
         transmissions = Analyses.at_analysis(dima_results[0], dima_results[1])
-    except Exception:
+    except Exception as ex:
         job_queryset.update_log(LogMessageFlags.ERROR, LogMessages.TRANSMISSIBILITY_ANALYSIS_ERROR)
         job_queryset.update_status(JobStatus.FAILED)
-        exit(1)
+        raise ex
 
     return transmissions
 

@@ -1,6 +1,6 @@
 import json
 
-from mongoengine import DoesNotExist
+from mongoengine import DoesNotExist, LazyReferenceField
 
 from .exceptions import JobExists
 from ...core.models import JobDBModel, Parameters, Results, DimaPosition, LogMessageFlags, LogMessages
@@ -57,7 +57,7 @@ class HelperMethods(object):
         parameters = cls._create_db_parameter_obj(payload.parameters)
         job = JobDBModel(parameters=parameters).save()
 
-        run_job.delay(payload.host_sequences, payload.reservoir_sequences, job.id)
+        run_job.delay(payload.dataset_one, payload.dataset_two, job.id)
 
         return job.id
 
@@ -149,3 +149,62 @@ class HelperMethods(object):
         """
 
         HelperMethods.get_job(job_id).delete()
+
+    @staticmethod
+    def get_id_from_pk(pk: str) -> int:
+        """
+        Since we are using a whole new document for each dima k-mer position, it gets expensive when we need to get
+        a single position by position number (because have to dereference each document).
+        A solution to this is to use LazyReference field which gives us access to the pk without dereferencing.
+        So we store the position in the pk like so "1|jobid". We then split it during fetching, see if it's the
+        position we want, when we find, we do a fetch() on it
+
+        :param pk: The primary key from the position we want.
+        :type pk: str
+
+        :returns: A number pertaining to the kmer position.
+        """
+
+        return int(pk.split('|')[0])
+
+    @staticmethod
+    def get_lazy_ref_field_by_pos(pos_num: int, positions: list[LazyReferenceField]) -> LazyReferenceField:
+        """
+        A quick method to get the matching lazy ref field using position number.
+
+        :param pos_num: The k-mer position number
+        :param positions: A list of lazy ref fields of positions for a given job
+
+        :type pos_num: int
+        :type positions: List[LazyReferenceField]
+
+        :returns: A LazyReferenceField for the provided k-mer position
+        """
+
+        for position_qs in positions:
+            if not HelperMethods.get_id_from_pk(position_qs.pk) == pos_num:
+                continue
+
+            return position_qs
+
+    @staticmethod
+    def append_pos_to_pos_dict(pos_dict: dict, position: int) -> dict:
+        """
+        A quick method to get the matching lazy ref field using position number.
+
+        :param pos_dict: The position dictionary after it was derived from the LazyReferenceField
+        :param position: The position number.
+
+        :type pos_dict: dict
+        :type position: int
+
+        :returns: A corrected dict containing the correct position number.
+        """
+
+        # Delete the pk which contains "posnum|job_id" because we do not need it
+        del pos_dict['_id']
+
+        # Add the position number
+        pos_dict['position'] = position
+
+        return pos_dict
