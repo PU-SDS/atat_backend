@@ -18,6 +18,7 @@ from mongoengine import (
     EmbeddedDocument,
     ReferenceField,
     CASCADE,
+    LazyReferenceField
 )
 
 from ...settings import ResourceSettings
@@ -100,7 +101,7 @@ class LogEntryDBModel(EmbeddedDocument):
     message = EnumField(LogMessages, required=True)
 
 
-class DimaVariant(EmbeddedDocument):
+class DimaVariantDBModel(Document):
     """
     This is the model for a kmer variant.
     """
@@ -114,20 +115,20 @@ class DimaVariant(EmbeddedDocument):
     meta = {'strict': False}
 
 
-class DimaPosition(EmbeddedDocument):
+class DimaPositionDBModel(Document):
     """
-    This is the model for a Hunana result position. For both host, and reservoir.
+    This is the model for a Hunana result position. For both dataset one, and dataset two.
     """
 
     _fields = None
-    position = IntField(required=True)
+    position = StringField(required=True, primary_key=True)
     support = IntField(required=True)
-    variants = EmbeddedDocumentListField(DimaVariant, default=[])
+    variants = ListField(ReferenceField(DimaVariantDBModel, reverse_delete_rule=CASCADE))
 
     meta = {'strict': False}
 
 
-class Transmission(EmbeddedDocument):
+class TransmissionDBModel(Document):
     """
     This is the model for a motif switch.
     """
@@ -136,36 +137,28 @@ class Transmission(EmbeddedDocument):
     sequence = StringField(required=True)
     source = EnumField(MotifClasses, required=True)
     target = EnumField(MotifClasses, required=True)
+    source_incidence = FloatField(required=True)
+    target_incidence = FloatField(required=True)
 
 
-class Results(Document):
+class ResultsDBModel(Document):
     """
     This is the model for a ATAT job result.
     """
 
-    host = EmbeddedDocumentListField(DimaPosition, required=False)
-    reservoir = EmbeddedDocumentListField(DimaPosition, required=False)
-    switches = EmbeddedDocumentListField(Transmission, required=False)
-
-    class ResultQuerySet(QuerySet):
-        def get_grouped_position(self, position: int):
-            result = self.get()
-
-            host_position = result.host.get(position=position).to_mongo().to_dict()
-            reservoir_position = result.reservoir.get(position=position).to_mongo().to_dict()
-
-            return {"host": host_position, "reservoir": reservoir_position}
-
-    meta = {'queryset_class': ResultQuerySet}
+    dataset_one = ListField(LazyReferenceField(DimaPositionDBModel, reverse_delete_rule=CASCADE))
+    dataset_two = ListField(LazyReferenceField(DimaPositionDBModel, reverse_delete_rule=CASCADE))
+    switches = ListField(ReferenceField(TransmissionDBModel, reverse_delete_rule=CASCADE), default=[])
 
 
-class Parameters(Document):
+class ParametersDBModel(Document):
     """
     The model for the job and DiMA parameters
     """
 
     kmer_length = IntField(required=True)
     header_format = ListField(required=True)
+    protein_name = StringField(required=False, default="Unknown Protein")
     email = StringField(required=False, default=None)
 
 
@@ -190,8 +183,8 @@ class JobDBModel(Document):
 
     id = StringField(required=True, default=lambda: str(uuid4()), primary_key=True)
     status = EnumField(JobStatus, default=JobStatus.CREATED)
-    parameters = ReferenceField(Parameters, required=True, reverse_delete_rule=CASCADE)
+    parameters = ReferenceField(ParametersDBModel, required=True, reverse_delete_rule=CASCADE)
     log = EmbeddedDocumentListField(LogEntryDBModel, required=False)
-    results = ReferenceField(Results, required=False, default=Results().save(), reverse_delete_rule=CASCADE)
+    results = ReferenceField(ResultsDBModel, required=False, default=ResultsDBModel().save(), reverse_delete_rule=CASCADE)
 
     meta = {'collection': 'job', 'queryset_class': LoggerQuerySet}

@@ -4,10 +4,10 @@ from os.path import join, dirname
 
 import pytest
 
-from viva_atat.core.models import JobDBModel, Parameters
-from viva_atat.core.tasks import dima, atat_standalone, warehousing
-from viva_atat.v1.helpers import HelperMethods
-from viva_atat.v1.models import CreateVivaJobRequest, Position, CreateJobParameters
+from atat_backend.core.models import JobDBModel, Parameters
+from atat_backend.core.tasks import dima, atat_standalone, warehousing
+from atat_backend.v1.helpers import HelperMethods
+from atat_backend.v1.models import CreateVivaJobRequest, Position, Parameters
 
 
 @pytest.fixture
@@ -52,7 +52,7 @@ def test_viva_job_steps(test_host_dima_results, test_reservoir_dima_results):
     idx = str(uuid4())
     host_positions = [Position(**position) for position in test_host_dima_results.get('results')]
     reservoir_positions = [Position(**position) for position in test_reservoir_dima_results.get('results')]
-    parameters = CreateJobParameters(kmer_length=9, header_format=['Country', 'Host'])
+    parameters = Parameters(kmer_length=9, header_format=['Country', 'Host'])
 
     payload = CreateVivaJobRequest(
         id=idx, host_dima_positions=host_positions, reservoir_dima_positions=reservoir_positions, parameters=parameters

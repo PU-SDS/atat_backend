@@ -1,26 +1,25 @@
-import json
-
-from mongoengine import DoesNotExist
+from mongoengine import DoesNotExist, LazyReferenceField
 
 from .exceptions import JobExists
-from ...core.models import JobDBModel, Parameters, Results, DimaPosition, LogMessageFlags, LogMessages
-from ..models import CreateStandaloneJobRequest, CreateVivaJobRequest, CreateJobParameters
+from ...core.models import JobDBModel, ParametersDBModel, ResultsDBModel, DimaPositionDBModel, LogMessageFlags, LogMessages
+from ..models import CreateStandaloneJobRequest, CreateVivaJobRequest, Parameters
 from ...core.tasks import atat_viva, run_job
 
 
 class HelperMethods(object):
     @staticmethod
-    def _create_db_parameter_obj(parameters: CreateJobParameters) -> Parameters:
+    def _create_db_parameter_obj(parameters: Parameters) -> ParametersDBModel:
         """
         Private method that creates a parameter object, saves it in the database and returns a Parameters object.
 
         :param parameters: The parameters to be used for the job.
-        :type parameters: CreateJobParameters
+        :type parameters: Parameters
 
         :returns: A DB parameters object that can be linked with a job in the database.
         """
 
-        return Parameters(kmer_length=parameters.kmer_length, header_format=parameters.header_format).save()
+        return ParametersDBModel(kmer_length=parameters.kmer_length, header_format=parameters.header_format,
+                                 protein_name=parameters.protein_name).save()
 
     @classmethod
     def _check_job_exists(cls, job_id: str) -> bool:
@@ -57,7 +56,7 @@ class HelperMethods(object):
         parameters = cls._create_db_parameter_obj(payload.parameters)
         job = JobDBModel(parameters=parameters).save()
 
-        run_job.delay(payload.host_sequences, payload.reservoir_sequences, job.id)
+        run_job.delay(payload.dataset_one, payload.dataset_two, job.id)
 
         return job.id
 
@@ -92,11 +91,11 @@ class HelperMethods(object):
         job_queryset.update_log(LogMessageFlags.INFO, LogMessages.JOB_CREATED)
 
         # Create save the DiMA results in the database
-        host_positions = [DimaPosition(**position.dict()) for position in payload.host_dima_positions]
-        reservoir_positions = [
-            DimaPosition(**position.dict()) for position in payload.reservoir_dima_positions
+        dataset_one_positions = [DimaPositionDBModel(**position.dict()) for position in payload.dataset_one_positions]
+        dataset_two_positions = [
+            DimaPositionDBModel(**position.dict()) for position in payload.dataset_two_positions
         ]
-        results = Results(host=host_positions, reservoir=reservoir_positions).save()
+        results = ResultsDBModel(dataset_one=dataset_one_positions, dataset_two=dataset_two_positions).save()
 
         # Save the dima results
         job.results = results
@@ -137,7 +136,7 @@ class HelperMethods(object):
         :returns: The queryset of a results model pertaining to the results id.
         """
 
-        return Results.objects.filter(id=results_id)
+        return ResultsDBModel.objects.filter(id=results_id)
 
     @staticmethod
     def delete_job(job_id: str):
@@ -149,3 +148,62 @@ class HelperMethods(object):
         """
 
         HelperMethods.get_job(job_id).delete()
+
+    @staticmethod
+    def get_id_from_pk(pk: str) -> int:
+        """
+        Since we are using a whole new document for each dima k-mer position, it gets expensive when we need to get
+        a single position by position number (because have to dereference each document).
+        A solution to this is to use LazyReference field which gives us access to the pk without dereferencing.
+        So we store the position in the pk like so "1|jobid". We then split it during fetching, see if it's the
+        position we want, when we find, we do a fetch() on it
+
+        :param pk: The primary key from the position we want.
+        :type pk: str
+
+        :returns: A number pertaining to the kmer position.
+        """
+
+        return int(pk.split('|')[0])
+
+    @staticmethod
+    def get_lazy_ref_field_by_pos(pos_num: int, positions: list[LazyReferenceField]) -> LazyReferenceField:
+        """
+        A quick method to get the matching lazy ref field using position number.
+
+        :param pos_num: The k-mer position number
+        :param positions: A list of lazy ref fields of positions for a given job
+
+        :type pos_num: int
+        :type positions: List[LazyReferenceField]
+
+        :returns: A LazyReferenceField for the provided k-mer position
+        """
+
+        for position_qs in positions:
+            if not HelperMethods.get_id_from_pk(position_qs.pk) == pos_num:
+                continue
+
+            return position_qs
+
+    @staticmethod
+    def append_pos_to_pos_dict(pos_dict: dict, position: int) -> dict:
+        """
+        A quick method to get the matching lazy ref field using position number.
+
+        :param pos_dict: The position dictionary after it was derived from the LazyReferenceField
+        :param position: The position number.
+
+        :type pos_dict: dict
+        :type position: int
+
+        :returns: A corrected dict containing the correct position number.
+        """
+
+        # Delete the pk which contains "posnum|job_id" because we do not need it
+        del pos_dict['_id']
+
+        # Add the position number
+        pos_dict['position'] = position
+
+        return pos_dict

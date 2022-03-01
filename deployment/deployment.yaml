@@ -36,7 +36,7 @@ spec:
     spec:
       containers:
         - name: viva-atat-backend
-          image: bilsab/atat-backend-prod:v1.0.2
+          image: bilsab/atat-backend-prod:v2.0.0
           envFrom:
             - secretRef:
                 name: mongodb-db-credentials
@@ -77,7 +77,7 @@ spec:
     spec:
       containers:
         - name: viva-atat-worker-default
-          image: bilsab/atat-backend-prod:v1.0.2
+          image: bilsab/atat-backend-prod:v2.0.0
           envFrom:
             - secretRef:
                 name: mongodb-db-credentials
@@ -98,9 +98,9 @@ spec:
           command: [ "/bin/bash", "-c" ]
           args:
             - >-
-              poetry run celery -A viva_atat.celery_app worker --loglevel=debug
+              poetry run celery -A atat_backend.celery_app worker --loglevel=debug
         - name: viva-atat-worker-atat
-          image: bilsab/atat-backend-prod:v1.0.2
+          image: bilsab/atat-backend-prod:v2.0.0
           envFrom:
             - secretRef:
                 name: mongodb-db-credentials
@@ -121,9 +121,9 @@ spec:
           command: [ "/bin/bash", "-c" ]
           args:
             - >-
-              poetry run celery -A viva_atat.celery_app worker -Q atat -n atat --loglevel=debug
+              poetry run celery -A atat_backend.celery_app worker -Q atat -n atat --loglevel=debug
         - name: viva-atat-worker-dima
-          image: bilsab/atat-backend-prod:v1.0.2
+          image: bilsab/atat-backend-prod:v2.0.0
           envFrom:
             - secretRef:
                 name: mongodb-db-credentials
@@ -144,9 +144,9 @@ spec:
           command: [ "/bin/bash", "-c" ]
           args:
             - >-
-              poetry run celery -A viva_atat.celery_app worker -Q dima -n dima --loglevel=debug
+              poetry run celery -A atat_backend.celery_app worker -Q dima -n dima --loglevel=debug
         - name: viva-atat-worker-warehousing
-          image: bilsab/atat-backend-prod:v1.0.2
+          image: bilsab/atat-backend-prod:v2.0.0
           envFrom:
             - secretRef:
                 name: mongodb-db-credentials
@@ -167,9 +167,9 @@ spec:
           command: [ "/bin/bash", "-c" ]
           args:
             - >-
-              poetry run celery -A viva_atat.celery_app worker -Q warehousing -n warehousing --loglevel=debug
+              poetry run celery -A atat_backend.celery_app worker -Q warehousing -n warehousing --loglevel=debug
         - name: viva-atat-worker-job
-          image: bilsab/atat-backend-prod:v1.0.2
+          image: bilsab/atat-backend-prod:v2.0.0
           envFrom:
             - secretRef:
                 name: mongodb-db-credentials
@@ -190,7 +190,7 @@ spec:
           command: [ "/bin/bash", "-c" ]
           args:
             - >-
-              poetry run celery -A viva_atat.celery_app worker -Q job -n job --loglevel=debug
+              poetry run celery -A atat_backend.celery_app worker -Q job -n job --loglevel=debug
       imagePullSecrets:
         - name: regcred
 ---
@@ -210,7 +210,7 @@ spec:
     spec:
       containers:
         - name: mongodb-beat
-          image: bilsab/atat-backend-prod:v1.0.2
+          image: bilsab/atat-backend-prod:v2.0.0
           envFrom:
             - secretRef:
                 name: mongodb-db-credentials
@@ -231,6 +231,6 @@ spec:
           command: ["/bin/bash", "-c"]
           args:
             - >-
-              poetry run celery -A viva_atat.celery_app beat --loglevel=debug
+              poetry run celery -A atat_backend.celery_app beat --loglevel=debug
       imagePullSecrets:
         - name: regcred

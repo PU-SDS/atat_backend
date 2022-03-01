@@ -25,7 +25,7 @@ app = Celery(
     + (f'&replicaSet={settings.mongo_replicaset_name}' if settings.env_state == "prod" else ''),
 )
 
-app.autodiscover_tasks(['viva_atat.core.tasks'])
+app.autodiscover_tasks(['atat_backend.core.tasks'])
 app.conf.task_routes = task_routes
 
 if __name__ == "__main__":
