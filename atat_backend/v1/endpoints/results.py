@@ -28,8 +28,8 @@ def get_position_count(job_id: str) -> int:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Job not found, consider creating one.")
 
     # Upstream we always make sure the lengths of these two are equal. But just to be thorough we check once again
-    host_seq_length = len(job.results.host)
-    reservoir_seq_length = len(job.results.host)
+    host_seq_length = len(job.results.dataset_one)
+    reservoir_seq_length = len(job.results.dataset_two)
 
     # If by some unlikely event they are not equal, we raise an HTTP error
     if host_seq_length == reservoir_seq_length and host_seq_length > 0:

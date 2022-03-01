@@ -101,7 +101,7 @@ class LogEntryDBModel(EmbeddedDocument):
     message = EnumField(LogMessages, required=True)
 
 
-class DimaVariant(Document):
+class DimaVariantDBModel(Document):
     """
     This is the model for a kmer variant.
     """
@@ -115,7 +115,7 @@ class DimaVariant(Document):
     meta = {'strict': False}
 
 
-class DimaPosition(Document):
+class DimaPositionDBModel(Document):
     """
     This is the model for a Hunana result position. For both dataset one, and dataset two.
     """
@@ -123,12 +123,12 @@ class DimaPosition(Document):
     _fields = None
     position = StringField(required=True, primary_key=True)
     support = IntField(required=True)
-    variants = ListField(ReferenceField(DimaVariant, reverse_delete_rule=CASCADE))
+    variants = ListField(ReferenceField(DimaVariantDBModel, reverse_delete_rule=CASCADE))
 
     meta = {'strict': False}
 
 
-class Transmission(Document):
+class TransmissionDBModel(Document):
     """
     This is the model for a motif switch.
     """
@@ -137,25 +137,28 @@ class Transmission(Document):
     sequence = StringField(required=True)
     source = EnumField(MotifClasses, required=True)
     target = EnumField(MotifClasses, required=True)
+    source_incidence = FloatField(required=True)
+    target_incidence = FloatField(required=True)
 
 
-class Results(Document):
+class ResultsDBModel(Document):
     """
     This is the model for a ATAT job result.
     """
 
-    dataset_one = ListField(LazyReferenceField(DimaPosition, reverse_delete_rule=CASCADE))
-    dataset_two = ListField(LazyReferenceField(DimaPosition, reverse_delete_rule=CASCADE))
-    switches = ListField(ReferenceField(Transmission, reverse_delete_rule=CASCADE), default=[])
+    dataset_one = ListField(LazyReferenceField(DimaPositionDBModel, reverse_delete_rule=CASCADE))
+    dataset_two = ListField(LazyReferenceField(DimaPositionDBModel, reverse_delete_rule=CASCADE))
+    switches = ListField(ReferenceField(TransmissionDBModel, reverse_delete_rule=CASCADE), default=[])
 
 
-class Parameters(Document):
+class ParametersDBModel(Document):
     """
     The model for the job and DiMA parameters
     """
 
     kmer_length = IntField(required=True)
     header_format = ListField(required=True)
+    protein_name = StringField(required=False, default="Unknown Protein")
     email = StringField(required=False, default=None)
 
 
@@ -180,8 +183,8 @@ class JobDBModel(Document):
 
     id = StringField(required=True, default=lambda: str(uuid4()), primary_key=True)
     status = EnumField(JobStatus, default=JobStatus.CREATED)
-    parameters = ReferenceField(Parameters, required=True, reverse_delete_rule=CASCADE)
+    parameters = ReferenceField(ParametersDBModel, required=True, reverse_delete_rule=CASCADE)
     log = EmbeddedDocumentListField(LogEntryDBModel, required=False)
-    results = ReferenceField(Results, required=False, default=Results().save(), reverse_delete_rule=CASCADE)
+    results = ReferenceField(ResultsDBModel, required=False, default=ResultsDBModel().save(), reverse_delete_rule=CASCADE)
 
     meta = {'collection': 'job', 'queryset_class': LoggerQuerySet}

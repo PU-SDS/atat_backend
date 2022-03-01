@@ -1,5 +1,4 @@
 from io import StringIO
-from itertools import product
 from typing import List
 
 from dima import Dima
@@ -70,7 +69,9 @@ class Analyses(object):
                             position=host_position.get('position'),
                             sequence=host_variant.get('sequence'),
                             source=host_variant.get('motif_long'),
-                            target=reservoir_variant_match[0].get('motif_long')
+                            target=reservoir_variant_match[0].get('motif_long'),
+                            source_incidence=host_variant.get('incidence'),
+                            target_incidence=reservoir_variant_match[0].get('incidence')
                         )
                     )
 

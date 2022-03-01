@@ -1,26 +1,25 @@
-import json
-
 from mongoengine import DoesNotExist, LazyReferenceField
 
 from .exceptions import JobExists
-from ...core.models import JobDBModel, Parameters, Results, DimaPosition, LogMessageFlags, LogMessages
-from ..models import CreateStandaloneJobRequest, CreateVivaJobRequest, CreateJobParameters
+from ...core.models import JobDBModel, ParametersDBModel, ResultsDBModel, DimaPositionDBModel, LogMessageFlags, LogMessages
+from ..models import CreateStandaloneJobRequest, CreateVivaJobRequest, Parameters
 from ...core.tasks import atat_viva, run_job
 
 
 class HelperMethods(object):
     @staticmethod
-    def _create_db_parameter_obj(parameters: CreateJobParameters) -> Parameters:
+    def _create_db_parameter_obj(parameters: Parameters) -> ParametersDBModel:
         """
         Private method that creates a parameter object, saves it in the database and returns a Parameters object.
 
         :param parameters: The parameters to be used for the job.
-        :type parameters: CreateJobParameters
+        :type parameters: Parameters
 
         :returns: A DB parameters object that can be linked with a job in the database.
         """
 
-        return Parameters(kmer_length=parameters.kmer_length, header_format=parameters.header_format).save()
+        return ParametersDBModel(kmer_length=parameters.kmer_length, header_format=parameters.header_format,
+                                 protein_name=parameters.protein_name).save()
 
     @classmethod
     def _check_job_exists(cls, job_id: str) -> bool:
@@ -92,11 +91,11 @@ class HelperMethods(object):
         job_queryset.update_log(LogMessageFlags.INFO, LogMessages.JOB_CREATED)
 
         # Create save the DiMA results in the database
-        host_positions = [DimaPosition(**position.dict()) for position in payload.host_dima_positions]
-        reservoir_positions = [
-            DimaPosition(**position.dict()) for position in payload.reservoir_dima_positions
+        dataset_one_positions = [DimaPositionDBModel(**position.dict()) for position in payload.dataset_one_positions]
+        dataset_two_positions = [
+            DimaPositionDBModel(**position.dict()) for position in payload.dataset_two_positions
         ]
-        results = Results(host=host_positions, reservoir=reservoir_positions).save()
+        results = ResultsDBModel(dataset_one=dataset_one_positions, dataset_two=dataset_two_positions).save()
 
         # Save the dima results
         job.results = results
@@ -137,7 +136,7 @@ class HelperMethods(object):
         :returns: The queryset of a results model pertaining to the results id.
         """
 
-        return Results.objects.filter(id=results_id)
+        return ResultsDBModel.objects.filter(id=results_id)
 
     @staticmethod
     def delete_job(job_id: str):

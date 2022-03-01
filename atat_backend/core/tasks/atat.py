@@ -1,6 +1,6 @@
 from typing import List
 
-from ..models import JobDBModel, LogMessageFlags, LogMessages, JobStatus, Transmission, Results
+from ..models import JobDBModel, LogMessageFlags, LogMessages, JobStatus, TransmissionDBModel, ResultsDBModel
 from ...celery_app import app
 from ..analysis import Analyses
 
@@ -30,9 +30,10 @@ def atat_standalone(dima_results: List[List[dict]], job_id: str):
     except Exception as ex:
         job_queryset.update_log(LogMessageFlags.ERROR, LogMessages.TRANSMISSIBILITY_ANALYSIS_ERROR)
         job_queryset.update_status(JobStatus.FAILED)
+
         raise ex
 
-    return transmissions
+    return [transmission.dict() for transmission in transmissions]
 
 
 @app.task(name="atat-viva")

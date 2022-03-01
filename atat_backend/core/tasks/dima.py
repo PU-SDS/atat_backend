@@ -31,11 +31,11 @@ def dima(sequences: str, job_id: str, kmer_length: int, header_format: List[str]
     try:
         job_queryset.update_log(LogMessageFlags.INFO, LogMessages.RUN_MOTIF_CLASSIFICATION)
         results = Analyses.dima_analysis(sequences, kmer_length, header_format)
-    except Exception:
+    except Exception as ex:
         job_queryset.update_log(LogMessageFlags.ERROR, LogMessages.MOTIF_CLASSIFICATION_ERROR)
         job_queryset.update_status(JobStatus.FAILED)
 
-        exit(1)
+        raise ex
 
     job_queryset.update_log(LogMessageFlags.INFO, LogMessages.MOTIF_CLASSIFICATION_COMPLETE)
     # Unfortunate that we have to deserialize the results here. Alternative is to use the "pickle" option of Celery
