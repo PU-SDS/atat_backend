@@ -1,3 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/proxy-body-size: 100m
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+  name: crosta-backend
+spec:
+  rules:
+  - host: crosta-backend.bezmialem.edu.tr
+    http:
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: crosta-backend-service
+              port:
+                number: 80
+  tls:
+  - hosts:
+    - crosta-backend.bezmialem.edu.tr
+    secretName: bvu-tls-cert
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -5,13 +30,13 @@ metadata:
 data:
   MONGO_REPLICASET_NAME: "rs0"
   ENVIRONMENT_STATE: "prod"
-  MONGO_ATAT_HOST: "mongodb-headless.atat-prod.svc.cluster.local"
+  MONGO_ATAT_HOST: "mongodb-headless.crosta.svc.cluster.local"
   MONGO_ATAT_PORT: "27017"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: atat-backend-service
+  name: crosta-backend-service
 spec:
   selector:
     app: viva-atat-backend
@@ -36,7 +61,7 @@ spec:
     spec:
       containers:
         - name: viva-atat-backend
-          image: bilsab/atat-backend-prod:v2.0.0
+          image: bilsab/atat-backend-prod:v2.1.0
           envFrom:
             - secretRef:
                 name: mongodb-db-credentials
@@ -77,7 +102,7 @@ spec:
     spec:
       containers:
         - name: viva-atat-worker-default
-          image: bilsab/atat-backend-prod:v2.0.0
+          image: bilsab/atat-backend-prod:v2.1.0
           envFrom:
             - secretRef:
                 name: mongodb-db-credentials
@@ -100,7 +125,7 @@ spec:
             - >-
               poetry run celery -A atat_backend.celery_app worker --loglevel=debug
         - name: viva-atat-worker-atat
-          image: bilsab/atat-backend-prod:v2.0.0
+          image: bilsab/atat-backend-prod:v2.1.0
           envFrom:
             - secretRef:
                 name: mongodb-db-credentials
@@ -123,7 +148,7 @@ spec:
             - >-
               poetry run celery -A atat_backend.celery_app worker -Q atat -n atat --loglevel=debug
         - name: viva-atat-worker-dima
-          image: bilsab/atat-backend-prod:v2.0.0
+          image: bilsab/atat-backend-prod:v2.1.0
           envFrom:
             - secretRef:
                 name: mongodb-db-credentials
@@ -146,7 +171,7 @@ spec:
             - >-
               poetry run celery -A atat_backend.celery_app worker -Q dima -n dima --loglevel=debug
         - name: viva-atat-worker-warehousing
-          image: bilsab/atat-backend-prod:v2.0.0
+          image: bilsab/atat-backend-prod:v2.1.0
           envFrom:
             - secretRef:
                 name: mongodb-db-credentials
@@ -169,7 +194,7 @@ spec:
             - >-
               poetry run celery -A atat_backend.celery_app worker -Q warehousing -n warehousing --loglevel=debug
         - name: viva-atat-worker-job
-          image: bilsab/atat-backend-prod:v2.0.0
+          image: bilsab/atat-backend-prod:v2.1.0
           envFrom:
             - secretRef:
                 name: mongodb-db-credentials
@@ -210,7 +235,7 @@ spec:
     spec:
       containers:
         - name: mongodb-beat
-          image: bilsab/atat-backend-prod:v2.0.0
+          image: bilsab/atat-backend-prod:v2.1.0
           envFrom:
             - secretRef:
                 name: mongodb-db-credentials

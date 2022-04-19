@@ -56,12 +56,12 @@ def atat_viva(job_id: str):
 
     job_queryset.update_status(JobStatus.RUNNING)
 
-    host_dima_positions = [position.to_mongo().to_dict() for position in job.results.host]
-    reservoir_dima_positions = [position.to_mongo().to_dict() for position in job.results.reservoir]
+    dataset_one_dima_positions = [position.to_mongo().to_dict() for position in job.results.dataset_one]
+    dataset_two_dima_positions = [position.to_mongo().to_dict() for position in job.results.dataset_two]
 
     try:
         job_queryset.update_log(LogMessageFlags.INFO, LogMessages.RUN_TRANSMISSIBILITY_ANALYSIS)
-        transmissions = Analyses.at_analysis(host_dima_positions, reservoir_dima_positions)
+        transmissions = Analyses.at_analysis(dataset_one_dima_positions, dataset_two_dima_positions)
         job_queryset.update_log(LogMessageFlags.INFO, LogMessages.TRANSMISSIBILITY_ANALYSIS_COMPLETE)
     except Exception:
         job_queryset.update_log(LogMessageFlags.ERROR, LogMessages.TRANSMISSIBILITY_ANALYSIS_ERROR)
@@ -70,8 +70,8 @@ def atat_viva(job_id: str):
 
     job_queryset.update_log(LogMessageFlags.INFO, LogMessages.SAVING_TO_DB)
 
-    results = Results.objects.get(id=job.results.id)
-    results.switches = [Transmission(**transmission.dict()) for transmission in transmissions]
+    results = ResultsDBModel.objects.get(id=job.results.id)
+    results.switches = [TransmissionDBModel(**transmission.dict()) for transmission in transmissions]
     results.save()
 
     job_queryset.update_log(LogMessageFlags.INFO, LogMessages.ADDED_MOTIF_SWITCH_RESULTS)
