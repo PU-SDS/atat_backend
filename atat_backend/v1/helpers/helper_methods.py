@@ -77,6 +77,7 @@ class HelperMethods(object):
 
         # First we find out of the job exists, if so, we raise a custom error that we can handle upstream
         status = cls._check_job_exists(payload.id)
+
         if status:
             raise JobExists
 
@@ -91,9 +92,9 @@ class HelperMethods(object):
         job_queryset.update_log(LogMessageFlags.INFO, LogMessages.JOB_CREATED)
 
         # Create save the DiMA results in the database
-        dataset_one_positions = [DimaPositionDBModel(**position.dict()) for position in payload.dataset_one_positions]
+        dataset_one_positions = [DimaPositionDBModel(**position.dict()).save() for position in payload.dataset_one_positions]
         dataset_two_positions = [
-            DimaPositionDBModel(**position.dict()) for position in payload.dataset_two_positions
+            DimaPositionDBModel(**position.dict()).save() for position in payload.dataset_two_positions
         ]
         results = ResultsDBModel(dataset_one=dataset_one_positions, dataset_two=dataset_two_positions).save()
 
