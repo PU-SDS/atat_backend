@@ -1,3 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/proxy-body-size: 100m
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+  name: crosta-backend
+spec:
+  rules:
+  - host: crosta-backend.bezmialem.edu.tr
+    http:
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: crosta-backend-service
+              port:
+                number: 80
+  tls:
+  - hosts:
+    - crosta-backend.bezmialem.edu.tr
+    secretName: bvu-tls-cert
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -11,7 +36,7 @@ data:
 apiVersion: v1
 kind: Service
 metadata:
-  name: atat-backend-service
+  name: crosta-backend-service
 spec:
   selector:
     app: viva-atat-backend
